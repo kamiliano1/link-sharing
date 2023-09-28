@@ -19,4 +19,5 @@ export type ActiveLinksType = {
   icon: IconType;
   style?: string;
   placeholder: string;
+  validatePattern?: string[];
 };
