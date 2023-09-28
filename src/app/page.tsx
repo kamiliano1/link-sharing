@@ -30,11 +30,38 @@ export default function Home() {
   });
   const sprwadz = () => {
     // console.log(watch(`id.${0}.platform`));
-    console.log(
-      linksList.find((item) => item.name === watch(`id.${0}.platform`))
-        ?.placeholder
-    );
+    // console.log(
+    //   linksList.find((item) => item.name === watch(`id.${0}.platform`))
+    //     ?.placeholder
+    // );
+    console.log(errors);
+    // console.log(errors.id?.[0]);
+    console.log(errors.id?.[0]?.link?.message);
   };
+
+  const validateName = async (value: string) => {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    return value !== "Pizza" || "Recipe with the name 'Pizza' already exists";
+  };
+  const validatePlatformLink = async (value: string) => {
+    const activePlatformPattern = linksList.find(
+      (item) => item.name === watch(`id.${0}.platform`)
+    )?.validatePattern;
+
+    const kk = activePlatformPattern?.find((item) => {
+      return value.includes(item);
+    });
+    console.log(kk);
+    console.log(
+      activePlatformPattern?.filter((item) => {
+        return value.includes(item);
+      })
+    );
+    if (kk) return true;
+    return false || "Please check the URL";
+    // return value !== "Pizza" || "Recipe with the name 'Pizza' already exists";
+  };
+
   return (
     <main className="p-[15rem] bg-black h-[100vh]">
       <form onSubmit={handleSubmit((data) => console.log(data))}>
@@ -63,7 +90,25 @@ export default function Home() {
             <Controller
               control={control}
               name={`id.${index}.link`}
-              rules={{ required: true }}
+              rules={{
+                required: "Can`t be empty",
+                validate: validatePlatformLink,
+                // validate: {
+                //   matchPattern: (value) => {
+                //     console.log(watch(`id.${0}.platform`));
+                //     // const activePlatformPattern = linksList.find(
+                //     //   (item) => item.name === watch(`id.${0}.platform`)
+                //     // )?.validatePattern;
+
+                //     // const kk = activePlatformPattern?.find((item) => {
+                //     //   return value.includes(item);
+                //     // });
+
+                //     // if (kk) return true;
+                //     // return false || "Please check the URL";
+                //   },
+                // },
+              }}
               defaultValue={""}
               render={({ field }) => (
                 <div className="flex relative w-min">
@@ -80,16 +125,18 @@ export default function Home() {
                         (item) => item.name === watch(`id.${0}.platform`)
                       )?.placeholder
                     }
-                    className={`pl-9 pr-4 py-3 border-[1px] border-borders text-bodyM rounded-lg
+                    className={`pl-9 pr-4 py-3 border-[1px] w-[500px] border-borders text-bodyM rounded-lg
                   text-black 
                   hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple ${
                     errors.id?.[index]?.link && "text-red border-red"
                   }`}
                   />
                   {errors.id?.[index] && (
-                    <p className="text-red text-bodyS absolute top-4 right-4">
-                      Please check again
-                    </p>
+                    <>
+                      <p className="text-red text-bodyS absolute top-4 right-4">
+                        {errors.id?.[index]?.link?.message}
+                      </p>
+                    </>
                   )}
                 </div>
               )}
