@@ -19,25 +19,25 @@ type SelectInputProps = {
 export const SelectInput = forwardRef<HTMLButtonElement, SelectInputProps>(
   ({ value, onChange }, ref) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [isSelectUpdated, setIsSelectUpdated] = useState(false);
-    const [counter, setCounter] = useState(0);
-    const [currentValue, setCurrentValue] = useState({
-      name: linksList[0].name,
-      icon: linksList[0].icon,
-    });
+    // const [isSelectUpdated, setIsSelectUpdated] = useState(false);
+    // const [counter, setCounter] = useState(0);
+    // const [currentValue, setCurrentValue] = useState({
+    //   name: linksList[0].name,
+    //   icon: linksList[0].icon,
+    // });
 
-    const updatePlatform = (value: string) => {
-      setCurrentValue((prev) => ({ ...prev, name: value as PlatfromsType }));
-      setIsSelectUpdated(true);
-    };
+    // const updatePlatform = (value: string) => {
+    //   setCurrentValue((prev) => ({ ...prev, name: value as PlatfromsType }));
+    //   setIsSelectUpdated(true);
+    // };
 
-    useEffect(() => {
-      setCounter((prev) => prev + 1);
-    }, [value]);
+    // useEffect(() => {
+    //   setCounter((prev) => prev + 1);
+    // }, [value]);
 
-    useEffect(() => {
-      if (counter === 3) setIsSelectUpdated(true);
-    }, [counter]);
+    // useEffect(() => {
+    //   if (counter === 3) setIsSelectUpdated(true);
+    // }, [counter]);
     return (
       <Select.Root
         value={value}
