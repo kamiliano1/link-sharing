@@ -1,12 +1,18 @@
 "use client";
 import Image from "next/image";
 import { SelectInput } from "./Layout/Select/SelectInput";
-import { useForm, Controller, useFieldArray } from "react-hook-form";
+import {
+  useForm,
+  Controller,
+  useFieldArray,
+  SubmitHandler,
+} from "react-hook-form";
 import Button from "./Layout/Button/Button";
 import { nanoid } from "nanoid";
 import { MdDragHandle } from "react-icons/md";
 import LinkIcon from "../../public/icons/icon-link.svg";
 import { linksList } from "./Layout/Select/linkList";
+import { useState } from "react";
 export default function Home() {
   const {
     register,
@@ -28,43 +34,27 @@ export default function Home() {
     control,
     name: "id",
   });
-  const sprwadz = () => {
-    // console.log(watch(`id.${0}.platform`));
-    // console.log(
-    //   linksList.find((item) => item.name === watch(`id.${0}.platform`))
-    //     ?.placeholder
-    // );
-    console.log(errors);
-    // console.log(errors.id?.[0]);
-    console.log(errors.id?.[0]?.link?.message);
-  };
-
-  const validateName = async (value: string) => {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    return value !== "Pizza" || "Recipe with the name 'Pizza' already exists";
-  };
+  const sprwadz = () => {};
+  const [generatedLinks, setGeneratedLinks] = useState<UserLinks>();
   const validatePlatformLink = async (value: string) => {
+    let isValidateLink = false;
     const activePlatformPattern = linksList.find(
       (item) => item.name === watch(`id.${0}.platform`)
     )?.validatePattern;
-
-    const kk = activePlatformPattern?.find((item) => {
-      return value.includes(item);
+    activePlatformPattern?.map((item) => {
+      if (value.startsWith(item)) return (isValidateLink = true);
     });
-    console.log(kk);
-    console.log(
-      activePlatformPattern?.filter((item) => {
-        return value.includes(item);
-      })
-    );
-    if (kk) return true;
+
+    if (isValidateLink) return true;
     return false || "Please check the URL";
-    // return value !== "Pizza" || "Recipe with the name 'Pizza' already exists";
   };
 
+  const formSubmit: SubmitHandler<UserLinks> = (data) => {
+    console.log(data);
+  };
   return (
     <main className="p-[15rem] bg-black h-[100vh]">
-      <form onSubmit={handleSubmit((data) => console.log(data))}>
+      <form onSubmit={handleSubmit(formSubmit)}>
         {fields.map((item, index) => (
           <li key={item.id}>
             <Controller
