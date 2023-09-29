@@ -18,6 +18,6 @@ export type ActiveLinksType = {
   name: PlatfromsType;
   icon: IconType;
   style?: string;
-  placeholder: string;
+  placeholder?: string;
   validatePattern?: string[];
 };
