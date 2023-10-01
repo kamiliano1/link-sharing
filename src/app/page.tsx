@@ -13,6 +13,44 @@ import { MdDragHandle } from "react-icons/md";
 import LinkIcon from "../../public/icons/icon-link.svg";
 import { linksList } from "./Layout/Select/linkList";
 import { useState } from "react";
+import PreviewLink from "./Layout/Select/PreviewLink";
+import { PlatfromsType } from "./Layout/Select/ActiveLinksType";
+type UserLinkss = {
+  userLink: {
+    platform: PlatfromsType;
+    link: string;
+    id: string;
+  }[];
+};
+const startingLinks: UserLinkss = {
+  userLink: [
+    {
+      platform: "GitHub",
+      link: "wp.pl",
+      id: "4oUElfs-a1pOJKiCQ_U2W",
+    },
+    {
+      platform: "freeCodeCamp",
+      link: "onet.pl",
+      id: "4sisNDO1DEaxSDUD45hoi",
+    },
+    {
+      platform: "GitLab",
+      link: "google.pl",
+      id: "-tT4YoMfsdyK63bpvaxmK",
+    },
+    {
+      platform: "Codewars",
+      link: "",
+      id: "QrCZVWMR6HaQPJclPrMuI",
+    },
+    {
+      platform: "Stack Overflow",
+      link: "",
+      id: "ww1NWuGlUcn8_rRW0UtwI",
+    },
+  ],
+};
 export default function Home() {
   const {
     register,
@@ -22,24 +60,24 @@ export default function Home() {
     getValues,
     control,
     formState: { errors },
-  } = useForm<UserLinks>();
+  } = useForm<UserLinks>({ defaultValues: startingLinks || [] });
   type UserLinks = {
-    id: {
-      platform: string;
+    userLink: {
+      platform: PlatfromsType;
       link: string;
       id: string;
     }[];
   };
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "id",
+    name: "userLink",
   });
   const sprwadz = () => {};
   const [generatedLinks, setGeneratedLinks] = useState<UserLinks>();
   const validatePlatformLink = async (value: string) => {
     let isValidateLink = false;
     const activePlatformPattern = linksList.find(
-      (item) => item.name === watch(`id.${0}.platform`)
+      (item) => item.name === watch(`userLink.${0}.platform`)
     )?.validatePattern;
     activePlatformPattern?.map((item) => {
       if (value.startsWith(item)) return (isValidateLink = true);
@@ -51,6 +89,7 @@ export default function Home() {
 
   const formSubmit: SubmitHandler<UserLinks> = (data) => {
     console.log(data);
+    setGeneratedLinks(data);
   };
   return (
     <main className="p-[15rem] bg-black h-[100vh]">
@@ -59,7 +98,7 @@ export default function Home() {
           <li key={item.id}>
             <Controller
               control={control}
-              name={`id.${index}.platform`}
+              name={`userLink.${index}.platform`}
               defaultValue={"GitHub"}
               render={({ field: { onChange, value, ref } }) => (
                 <>
@@ -79,26 +118,7 @@ export default function Home() {
             />
             <Controller
               control={control}
-              name={`id.${index}.link`}
-              rules={{
-                required: "Can`t be empty",
-                validate: validatePlatformLink,
-                // validate: {
-                //   matchPattern: (value) => {
-                //     console.log(watch(`id.${0}.platform`));
-                //     // const activePlatformPattern = linksList.find(
-                //     //   (item) => item.name === watch(`id.${0}.platform`)
-                //     // )?.validatePattern;
-
-                //     // const kk = activePlatformPattern?.find((item) => {
-                //     //   return value.includes(item);
-                //     // });
-
-                //     // if (kk) return true;
-                //     // return false || "Please check the URL";
-                //   },
-                // },
-              }}
+              name={`userLink.${index}.link`}
               defaultValue={""}
               render={({ field }) => (
                 <div className="flex relative w-min">
@@ -112,19 +132,19 @@ export default function Home() {
                     type="text"
                     placeholder={
                       linksList.find(
-                        (item) => item.name === watch(`id.${0}.platform`)
+                        (item) => item.name === watch(`userLink.${0}.platform`)
                       )?.placeholder
                     }
                     className={`pl-9 pr-4 py-3 border-[1px] w-[500px] border-borders text-bodyM rounded-lg
                   text-black 
                   hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple ${
-                    errors.id?.[index]?.link && "text-red border-red"
+                    errors.userLink?.[index]?.link && "text-red border-red"
                   }`}
                   />
-                  {errors.id?.[index] && (
+                  {errors.userLink?.[index] && (
                     <>
                       <p className="text-red text-bodyS absolute top-4 right-4">
-                        {errors.id?.[index]?.link?.message}
+                        {errors.userLink?.[index]?.link?.message}
                       </p>
                     </>
                   )}
@@ -147,6 +167,9 @@ export default function Home() {
           Sprawdz
         </Button>
       </form>
+      {generatedLinks?.userLink.map((item) => (
+        <PreviewLink key={item.id} platform={item.platform} link={item.link} />
+      ))}
     </main>
   );
 }
