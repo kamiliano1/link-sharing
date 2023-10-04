@@ -19,25 +19,6 @@ type SelectInputProps = {
 export const SelectInput = forwardRef<HTMLButtonElement, SelectInputProps>(
   ({ value, onChange }, ref) => {
     const [isOpen, setIsOpen] = useState(false);
-    // const [isSelectUpdated, setIsSelectUpdated] = useState(false);
-    // const [counter, setCounter] = useState(0);
-    // const [currentValue, setCurrentValue] = useState({
-    //   name: linksList[0].name,
-    //   icon: linksList[0].icon,
-    // });
-
-    // const updatePlatform = (value: string) => {
-    //   setCurrentValue((prev) => ({ ...prev, name: value as PlatfromsType }));
-    //   setIsSelectUpdated(true);
-    // };
-
-    // useEffect(() => {
-    //   setCounter((prev) => prev + 1);
-    // }, [value]);
-
-    // useEffect(() => {
-    //   if (counter === 3) setIsSelectUpdated(true);
-    // }, [counter]);
     return (
       <Select.Root
         value={value}
@@ -46,7 +27,7 @@ export const SelectInput = forwardRef<HTMLButtonElement, SelectInputProps>(
       >
         <Select.Trigger
           ref={ref}
-          className="inline-flex items-center text-black justify-center rounded py-3 px-4 w-full leading-none bg-white text-bodyS focus:shadow-black outline-none"
+          className="inline-flex items-center border-[1px] border-borders max-w-[668px] text-black justify-center rounded py-3 px-4 w-full leading-none bg-white bodyXS-bodyS hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple outline-none"
           aria-label="platform"
         >
           <Select.Value aria-label={value} />
@@ -73,7 +54,7 @@ export const SelectInput = forwardRef<HTMLButtonElement, SelectInputProps>(
                 );
               })}
             </Select.Group>
-            <Select.ScrollDownButton className="flex items-center justify-center h-[25px] bg-white text-bodyS cursor-default"></Select.ScrollDownButton>
+            <Select.ScrollDownButton className="flex items-center justify-center h-[25px] bg-white bodyXS-bodyS cursor-default"></Select.ScrollDownButton>
           </Select.Content>
         </Select.Portal>
       </Select.Root>
@@ -92,9 +73,9 @@ const SelectItem = React.forwardRef<
 >(({ children, ...rest }, forwardedRef) => {
   return (
     <Select.Item
-      className="text-[13px] text-grey leading-none text-bodyS border-[1px] rounded-lg border-[#D9D9D9] 
+      className="text-[13px] text-grey leading-none text-bodyXS border-[1px] rounded-lg border-[#D9D9D9] 
       px-4 py-3 relative select-none data-[disabled]:pointer-events-none data-[highlighted]:outline-none 
-      flex items-center cursor-pointer hover:text-purple --radix-select-trigger-width "
+      flex items-center cursor-pointer hover:text-purple --radix-select-trigger-width"
       {...rest}
       ref={forwardedRef}
     >
