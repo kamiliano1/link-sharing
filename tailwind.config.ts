@@ -50,6 +50,13 @@ const config: Config = {
         },
       ],
       bodyS: [
+        ".875rem",
+        {
+          lineHeight: "150%",
+          fontWeight: "400",
+        },
+      ],
+      bodyXS: [
         ".75rem",
         {
           lineHeight: "150%",
