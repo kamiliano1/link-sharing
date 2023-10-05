@@ -13,7 +13,7 @@ import { MdDragHandle } from "react-icons/md";
 import LinkIcon from "../../public/icons/icon-link.svg";
 import PhoneMockup from "../../public/icons/illustration-phone-mockup.svg";
 import { linksList } from "./Layout/Select/linkList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PreviewLink from "./Layout/Select/PreviewLink";
 import { PlatfromsType } from "./Layout/Select/ActiveLinksType";
 import Navbar from "./Layout/Navbar/Navbar";
@@ -65,6 +65,10 @@ export default function Home() {
   } = useForm<UserLinks>();
   // } = useForm<UserLinks>({ defaultValues: startingLinks || [] });
   type UserLinks = {
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    picture?: string;
     userLink: {
       platform: PlatfromsType;
       link: string;
@@ -76,7 +80,7 @@ export default function Home() {
     name: "userLink",
   });
   const sprwadz = () => {
-    console.log(watch(`userLink`));
+    console.log(fields);
   };
   const [generatedLinks, setGeneratedLinks] = useState<UserLinks>();
   const [previewLink, setPreviewLink] = useState<UserLinks | undefined>();
@@ -92,26 +96,36 @@ export default function Home() {
     if (isValidateLink) return true;
     return false || "Please check the URL";
   };
-
+  useEffect(() => {
+    setPreviewLink({ userLink: fields });
+  }, [fields]);
   const formSubmit: SubmitHandler<UserLinks> = (data) => {
-    console.log(data);
     setGeneratedLinks(data);
   };
   const onChange = () => {
-    setPreviewLink(watch(`userLink`));
-    console.log(previewLink);
+    setPreviewLink(getValues());
   };
+
   return (
     <main className="min-h-[100vh]">
+      <button onClick={sprwadz}>SPRWAWDZ</button>
       <Navbar />
-      <div className="lg:flex lg:justify-evenly lg:items-center bg-grey">
-        <button onClick={sprwadz}>SPRWAWDZ</button>
-        <div className=" bg-purple relative">
+      <div className="lg:flex lg:justify-evenly lg:items-center gap-5">
+        <div className="hidden lg:block  relative">
           <Image src={PhoneMockup} alt="Phone Mockup" />
           <div className="absolute mt-14 w-full top-0  flex flex-col items-center">
-            <div className="bg-red aspect-square rounded-full w-[96px] border-[4px] border-purple mb-6"></div>
-            <h2 className="text-headingS mb-2">Ben Wright</h2>
-            <p className="text-bodyS mb-2">ben@example.com</p>
+            <div className="aspect-square rounded-full w-[96px] border-[4px] border-purple mb-6"></div>
+            <h2 className="text-headingS ">Ben Wright</h2>
+            <p className="text-bodyS mb-14">ben@example.com</p>
+            <div className="max-h-[305px]  overflow-y-auto scrollbar">
+              {previewLink?.userLink.map((item) => (
+                <PreviewLink
+                  key={item.id}
+                  platform={item.platform}
+                  link={item.link}
+                />
+              ))}
+            </div>
           </div>
         </div>
         <form
@@ -119,7 +133,7 @@ export default function Home() {
           // onChange={() => setPreviewLink(watch(`userLink`))}
           onChange={onChange}
           className="flex flex-col max-w-[668px] mx-auto lg:mx-0
-          lg:max-w-[728px] lg:w-full bg-purpleHover"
+          lg:max-w-[728px] lg:w-full"
         >
           <div className="p-10 sm:p-16 flex flex-col bg-lightGrey">
             <h1 className="text-headingMmobile mb-2">Customize your links</h1>
@@ -136,7 +150,7 @@ export default function Home() {
             >
               + Add new link
             </Button>
-            <div className="min-h-[453px] p-5">
+            <div className="h-[453px] overflow-y-auto scrollbar p-5 mt-5">
               {fields.map((item, index) => (
                 <li key={item.id} className="list-none my-5">
                   <Controller
@@ -202,7 +216,7 @@ export default function Home() {
                         />
                         {errors.userLink?.[index] && (
                           <>
-                            <p className="text-red bodyXS-bodyS absolute top-4 right-4">
+                            <p className="text-red bodyXS-bodyS absolute top-3 right-4">
                               {errors.userLink?.[index]?.link?.message}
                             </p>
                           </>
@@ -238,11 +252,12 @@ export default function Home() {
             <Button
               role="primary"
               disabled={fields.length ? false : true}
-              cssClass="sm:w-min sm:px-5 "
+              cssClass="sm:w-min sm:px-5"
             >
               Save
             </Button>
           </div>
+
           {/* {generatedLinks?.userLink.map((item) => (
             <PreviewLink
               key={item.id}
