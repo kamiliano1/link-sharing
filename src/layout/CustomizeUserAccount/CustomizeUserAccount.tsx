@@ -3,9 +3,12 @@ import Button from "../Button/Button";
 import { UserAccountState } from "@/atoms/userAccountAtom";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { LiaImageSolid } from "react-icons/lia";
+import { useRecoilState } from "recoil";
+import { previewUserLink } from "@/atoms/previewUserLinkAtom";
 type CustomizeUserAccountProps = {};
 
 const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
+  const [previewLink, setPreviewLink] = useRecoilState(previewUserLink);
   const {
     register,
     handleSubmit,
@@ -16,16 +19,22 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
     formState: { errors },
   } = useForm<UserAccountState>();
 
-  const formSubmit: SubmitHandler<UserAccountState> = (data) => {
-    // setGeneratedLinks(data);
+  const formSubmit: SubmitHandler<UserAccountState> = (data) => {};
+
+  const onChange = (e: React.ChangeEvent<HTMLFormElement>) => {
+    const value = e.target.value;
+    const name = e.target.name;
+    setPreviewLink((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
   return (
     <form
       onSubmit={handleSubmit(formSubmit)}
-      //   onChange={onChange}
+      onChange={onChange}
       className="flex flex-col max-w-[668px] mx-auto lg:mx-0
-lg:max-w-[728px] lg:w-full"
-    >
+lg:max-w-[728px] lg:w-full">
       <div className="p-10 sm:p-16 flex flex-col bg-lightGrey">
         <h1 className="text-headingMmobile sm:text-headingM mb-2">
           Profile Details
@@ -85,7 +94,7 @@ lg:max-w-[728px] lg:w-full"
               }`}
             />
             <p className="text-red text-bodyXS absolute top-[2.4rem] sm:top-4 right-4">
-              {errors.firstName?.message}
+              {errors.lastName?.message}
             </p>
           </div>
           <div className="relative sm:flex sm:gap-4 sm:items-center">
@@ -106,11 +115,7 @@ lg:max-w-[728px] lg:w-full"
       </div>
       <span className="w-full h-[1px] mb-4 inline-block bg-borders mx-4"></span>
       <div className="mx-8 sm:self-end">
-        <Button
-          role="primary"
-          //   disabled={fields.length ? false : true}
-          cssClass="sm:w-min sm:px-5"
-        >
+        <Button role="primary" cssClass="sm:w-min sm:px-5">
           Save
         </Button>
       </div>
@@ -118,22 +123,3 @@ lg:max-w-[728px] lg:w-full"
   );
 };
 export default CustomizeUserAccount;
-
-{
-  /* 
-  <input
-  {...field}
-  type="text"
-  placeholder={
-    linksList.find(
-      (item) =>
-        item.name === watch(`userLink.${index}.platform`)
-    )?.placeholder
-  }
-  className={`px-4 w-full py-3 border-[1px] mb-6 border-borders max-w-[668px] text-bodyM rounded-lg
-text-black
-hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple ${
-errors.userLink?.[index]?.link && "text-red border-red"
-}`}
-/> */
-}
