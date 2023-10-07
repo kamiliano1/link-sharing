@@ -11,11 +11,13 @@ const LinkPreview: React.FC<LinkPreviewProps> = () => {
   return (
     <div className="hidden lg:block relative">
       <Image src={PhoneMockup} alt="Phone Mockup" />
-      <div className="absolute mt-14 w-full top-0  flex flex-col items-center">
-        <div className="aspect-square rounded-full w-[96px] border-[4px] border-purple mb-6"></div>
-        <h2 className="text-headingS ">Ben Wright</h2>
-        <p className="text-bodyS mb-14">ben@example.com</p>
-        <div className="max-h-[305px]  overflow-y-auto scrollbar">
+      <div className="absolute mt-16 w-full top-0 flex flex-col items-center">
+        <div className="aspect-square rounded-full w-[96px] border-[4px] border-purple mb-[1.125rem]"></div>
+        <h2 className="text-headingS capitalize">
+          {previewLink.firstName} {previewLink.lastName}
+        </h2>
+        <p className="text-bodyS mb-20">{previewLink.email}</p>
+        <div className="max-h-[305px] overflow-y-auto scrollbar">
           {previewLink?.userLink.map((item) => (
             <PreviewLink
               key={item.id}
