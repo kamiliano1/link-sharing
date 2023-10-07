@@ -1,0 +1,14 @@
+{
+    "editor.fontSize": 16,
+    "editor.lineHeight": 28,
+    "editor.fontLigatures": false,
+    "editor.mouseWheelZoom": true,
+    "editor.tabSize": 4,
+    "editor.rulers": [
+        100
+    ],
+    "editor.guides.indentation": true,
+    "diffEditor.wordWrap": "inherit",
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.cursorBlinking": "phase"
+}
