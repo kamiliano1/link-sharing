@@ -20,8 +20,7 @@ const PreviewLink: React.FC<PreviewLinkProps> = ({ platform, link }) => {
   return (
     <Link
       href={link}
-      className={`mx-auto w-[237px] p-4 flex text-bodyM items-center rounded-lg mb-5 mr-[.3rem] ${linkStyle.style}`}
-    >
+      className={`mx-auto w-[237px] p-4 flex text-bodyM items-center rounded-lg mb-5 mr-[.3rem] ${linkStyle.style}`}>
       <linkStyle.icon />
       <p className="ml-3 mr-auto">{linkStyle.name}</p>
       <AiOutlineArrowRight className="text-[1.5rem]" />
