@@ -9,9 +9,9 @@ export default function Home() {
   };
   return (
     <main className="min-h-[100vh]">
-      <button onClick={sprwadz}>SPRWAWDZ</button>
+      {/* <button onClick={sprwadz}>SPRWAWDZ</button> */}
       <Navbar />
-      <div className="lg:flex lg:justify-evenly lg:items-center gap-5">
+      <div className="lg:flex lg:justify-evenly lg:items-center gap-5  bg-purple">
         <LinkPreview />
         <CustomizeUserLinks />
       </div>
