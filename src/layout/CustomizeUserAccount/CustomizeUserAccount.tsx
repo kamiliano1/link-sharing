@@ -1,14 +1,38 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import Button from "../Button/Button";
-import { UserAccountState } from "@/atoms/userAccountAtom";
+import { UserAccountState, userAccountState } from "@/atoms/userAccountAtom";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { LiaImageSolid } from "react-icons/lia";
 import { useRecoilState } from "recoil";
 import { previewUserLink } from "@/atoms/previewUserLinkAtom";
 type CustomizeUserAccountProps = {};
 
+// const useSelectFile = () => {
+//   const [selectedFile, setSelectedFile] = useState<string>();
+//   const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     const reader = new FileReader();
+
+//     if (e.target.files?.[0]) {
+//       reader.readAsDataURL(e.target.files[0]);
+//     }
+//     reader.onload = (readerE) => {
+//       if (readerE.target?.result) {
+//         setSelectedFile(readerE.target?.result as string);
+//       }
+//     };
+//   };
+//   return {
+//     selectedFile,
+//     setSelectedFile,
+//     onSelectFile,
+//   };
+// };
+// export default useSelectFile;
+
 const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
+  // const { selectedFile, setSelectedFile, onSelectFile } = useSelectFile();
   const [previewLink, setPreviewLink] = useRecoilState(previewUserLink);
+  const [userAccount, setUserAccount] = useRecoilState(userAccountState);
   const {
     register,
     handleSubmit,
@@ -18,35 +42,60 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
     control,
     formState: { errors },
   } = useForm<UserAccountState>();
-
-  const formSubmit: SubmitHandler<UserAccountState> = (data) => {};
+  const { onChange: onChangePicture, onBlur, name, ref } = register("picture");
+  const formSubmit: SubmitHandler<UserAccountState> = (data) => {
+    // console.log(data);
+    setUserAccount((prev) => ({
+      ...prev,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+    }));
+    // console.log(userAccount, "ussAccount");
+  };
 
   const onChange = (e: React.ChangeEvent<HTMLFormElement>) => {
-    const value = e.target.value;
-    const name = e.target.name;
-    setPreviewLink((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    // const value = e.target.value;
+    // const name = e.target.name;
+    // // console.log(e.target.value, e.target.name);
+    // setPreviewLink((prev) => ({
+    //   ...prev,
+    //   [name]: value,
+    // }));
   };
+  const selectedFileRef = useRef<HTMLInputElement>(null);
   return (
     <form
       onSubmit={handleSubmit(formSubmit)}
       onChange={onChange}
       className="flex flex-col max-w-[668px] mx-auto lg:mx-0
-lg:max-w-[728px] lg:w-full">
-      <div className="p-10 sm:p-16 flex flex-col bg-lightGrey">
+lg:max-w-[728px] lg:w-full "
+    >
+      <div className="p-10 sm:p-16 flex flex-col bg-lightGrey h-[768.33px]">
         <h1 className="text-headingMmobile sm:text-headingM mb-2">
           Profile Details
         </h1>
         <p className="text-bodyM text-grey mb-10">
           Add your details to create a personal touch to your profile.
         </p>
+        <input
+          type="file"
+          onChange={onChangePicture}
+          onBlur={onBlur}
+          name={name}
+          ref={selectedFileRef}
+          // {...register("picture", {ref:selectedFileRef})}
+          className="hidden"
+          // ref={selectedFileRef}
+        />
         <div className="sm:flex items-center">
           <p className="text-bodyM text-grey mb-10 sm:mb-0 sm:w-[240px]">
             Profile picture.
           </p>
-          <div className="text-purple flex flex-col items-center text-headingS w-min px-10 py-[3.75rem]">
+          <div
+            className="text-purple flex flex-col items-center text-headingS w-min px-10 py-[3.75rem] cursor-pointer"
+            onClick={() => selectedFileRef.current?.click()}
+          >
             <LiaImageSolid className="text-[2.5rem]" />
             <p className="w-[116px]">+ Upload Image</p>
           </div>
@@ -67,6 +116,7 @@ lg:max-w-[728px] lg:w-full">
               })}
               id="firstName"
               type="text"
+              defaultValue={userAccount.firstName}
               placeholder="e.g. John"
               className={`px-4 w-full py-3 border-[1px] mb-3 sm:mb-0 border-borders max-w-[668px] text-bodyM rounded-lg text-black hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple ${
                 errors.firstName && "text-red border-red"
@@ -88,6 +138,7 @@ lg:max-w-[728px] lg:w-full">
               })}
               id="lastName"
               type="text"
+              defaultValue={userAccount.lastName}
               placeholder="e.g. Appleseed"
               className={`px-4 w-full py-3 border-[1px] mb-3 sm:mb-0 border-borders max-w-[668px] text-bodyM rounded-lg text-black hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple ${
                 errors.lastName && "text-red border-red"
@@ -107,6 +158,7 @@ lg:max-w-[728px] lg:w-full">
               {...register("email", {})}
               id="email"
               type="text"
+              defaultValue={userAccount.email}
               placeholder="e.g. email@example.com"
               className="px-4 w-full py-3 border-[1px] mb-3 sm:mb-0 border-borders max-w-[668px] text-bodyM rounded-lg text-black hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple"
             />
