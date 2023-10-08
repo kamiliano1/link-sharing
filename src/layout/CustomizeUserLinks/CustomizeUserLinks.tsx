@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Controller,
   SubmitHandler,
@@ -9,7 +9,7 @@ import { MdDragHandle } from "react-icons/md";
 import Button from "../Button/Button";
 import { SelectInput } from "../Select/SelectInput";
 import { linksList } from "../Select/linkList";
-import { UserAccountState } from "@/atoms/userAccountAtom";
+import { UserAccountState, userAccountState } from "@/atoms/userAccountAtom";
 import { previewUserLink } from "@/atoms/previewUserLinkAtom";
 import { useRecoilState } from "recoil";
 import Image from "next/image";
@@ -19,6 +19,8 @@ type CustomizeUserLinksProps = {};
 
 const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
   const [previewLink, setPreviewLink] = useRecoilState(previewUserLink);
+  const [userAccount, setUserAccount] = useRecoilState(userAccountState);
+  // const [previewLinks, setPreviewLinks] = useState([]);
   const {
     register,
     handleSubmit,
@@ -27,7 +29,9 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
     getValues,
     control,
     formState: { errors },
-  } = useForm<UserAccountState>();
+  } = useForm<UserAccountState>({
+    defaultValues: { userLink: userAccount.userLink },
+  });
   const { fields, append, remove } = useFieldArray({
     control,
     name: "userLink",
@@ -35,6 +39,12 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
 
   const formSubmit: SubmitHandler<UserAccountState> = (data) => {
     // setGeneratedLinks(data);
+    // setPreviewLink(data);
+    setUserAccount((prev) => ({ ...prev, userLink: data.userLink }));
+
+    // console.log(data, "data");
+    // console.log(userAccount);
+    // setPreviewLinkss({ userLink: getValues("userLink") });
   };
   const validatePlatformLink = async (value: string) => {
     let isValidateLink = false;
@@ -52,12 +62,58 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
     setPreviewLink({ userLink: fields });
   }, [fields, setPreviewLink]);
   const onChange = () => {
-    setPreviewLink(getValues());
+    // setPreviewLinks(getValues("userLink"));
+    // setPreviewLink({ userLink: getValues("userLink") });
+    // setPreviewLink();
+    // setPreviewLink({
+    //   userLink: [
+    //     {
+    //       platform: "GitHub",
+    //       link: "a",
+    //       id: "Lt-Dg502uKj0FtSMIMBvL",
+    //     },
+    //     {
+    //       platform: "GitHub",
+    //       link: "",
+    //       id: "cvpBc_dL35-NFfN4riZYT",
+    //     },
+    //     {
+    //       platform: "GitHub",
+    //       link: "",
+    //       id: "sZ65S9-AscBLTZ7vEOS2K",
+    //     },
+    //     {
+    //       platform: "GitHub",
+    //       link: "",
+    //       id: "xI79aU-wBJNn1yQuOTgHX",
+    //     },
+    //     {
+    //       platform: "GitHub",
+    //       link: "",
+    //       id: "3yGi3eMnLL79fm-FuKN1D",
+    //     },
+    //     {
+    //       platform: "GitHub",
+    //       link: "",
+    //       id: "H1m1BQnZhZZddaWZ7ACq_",
+    //     },
+    //     {
+    //       platform: "GitHub",
+    //       link: "aasf",
+    //       id: "L7bilWHUJjdSbrawC8Bk6",
+    //     },
+    //     {
+    //       platform: "GitHub",
+    //       link: "",
+    //       id: "j7e8Z-sOiTOzLeUP-ujUY",
+    //     },
+    //   ],
+    // });
   };
   return (
     <form
       onSubmit={handleSubmit(formSubmit)}
-      onChange={onChange}
+      // onChange={onChange}
       className="flex flex-col max-w-[668px] mx-auto lg:mx-0
     lg:max-w-[728px] lg:w-full"
     >
@@ -109,7 +165,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
                 defaultValue={""}
                 rules={{
                   required: "Can`t be empty",
-                  validate: validatePlatformLink,
+                  // validate: validatePlatformLink,
                 }}
                 render={({ field }) => (
                   <div className="flex relative">
