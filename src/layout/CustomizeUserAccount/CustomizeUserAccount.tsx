@@ -4,6 +4,7 @@ import { UserAccountState, userAccountState } from "@/atoms/userAccountAtom";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { LiaImageSolid } from "react-icons/lia";
 import { useRecoilState } from "recoil";
+import Image from "next/image";
 import { previewUserLink } from "@/atoms/previewUserLinkAtom";
 type CustomizeUserAccountProps = {};
 
@@ -32,6 +33,7 @@ type CustomizeUserAccountProps = {};
 const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
   // const { selectedFile, setSelectedFile, onSelectFile } = useSelectFile();
   const [previewLink, setPreviewLink] = useRecoilState(previewUserLink);
+  const [pictureURL, setPictureURL] = useState<string>("");
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
   const {
     register,
@@ -42,7 +44,7 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
     control,
     formState: { errors },
   } = useForm<UserAccountState>();
-  const { onChange: onChangePicture, onBlur, name, ref } = register("picture");
+  // const { onChange: onChangePicture, onBlur, name, ref } = register("picture");
   const formSubmit: SubmitHandler<UserAccountState> = (data) => {
     // console.log(data);
     setUserAccount((prev) => ({
@@ -50,8 +52,25 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
       firstName: data.firstName,
       lastName: data.lastName,
       email: data.email,
+      picture: data.picture,
+      // picture: pictureURL,
     }));
-    // console.log(userAccount, "ussAccount");
+
+    console.log(userAccount, "ussAccount");
+  };
+
+  const onSelectAvatar = (e: React.ChangeEvent<HTMLFormElement>) => {
+    const reader = new FileReader();
+
+    if (e.target.files?.[0]) {
+      reader.readAsDataURL(e.target.files[0]);
+    }
+    reader.onload = (readerEvent) => {
+      if (readerEvent.target?.result) {
+        setPictureURL(readerEvent.target.result as string);
+        setValue("picture", readerEvent.target.result as string);
+      }
+    };
   };
 
   const onChange = (e: React.ChangeEvent<HTMLFormElement>) => {
@@ -75,29 +94,34 @@ lg:max-w-[728px] lg:w-full "
         <h1 className="text-headingMmobile sm:text-headingM mb-2">
           Profile Details
         </h1>
+
+        {/* <Image src={userAccount.picture} alt="" /> */}
         <p className="text-bodyM text-grey mb-10">
           Add your details to create a personal touch to your profile.
         </p>
-        <input
-          type="file"
-          onChange={onChangePicture}
-          onBlur={onBlur}
-          name={name}
-          ref={selectedFileRef}
-          // {...register("picture", {ref:selectedFileRef})}
-          className="hidden"
-          // ref={selectedFileRef}
-        />
         <div className="sm:flex items-center">
           <p className="text-bodyM text-grey mb-10 sm:mb-0 sm:w-[240px]">
             Profile picture.
           </p>
+          <input
+            type="file"
+            // {...register("picture", {})}
+            onChange={onSelectAvatar}
+            ref={selectedFileRef}
+            // {...register("picture", {ref:selectedFileRef})}
+            hidden
+          />
           <div
-            className="text-purple flex flex-col items-center text-headingS w-min px-10 py-[3.75rem] cursor-pointer"
+            style={{
+              backgroundImage: `url(${pictureURL})`,
+            }}
+            className={`text-purple flex flex-col items-center text-headingS bg-cover bg-no-repeat w-min px-10 py-[3.75rem] cursor-pointer relative rounded-xl ${
+              pictureURL && "hover:text-white hover:bg-grey bg-blend-multiply "
+            }`}
             onClick={() => selectedFileRef.current?.click()}
           >
-            <LiaImageSolid className="text-[2.5rem]" />
-            <p className="w-[116px]">+ Upload Image</p>
+            <LiaImageSolid className="text-[2.5rem] " />
+            <p className="w-[116px] ">+ Upload Image</p>
           </div>
           <p className="text-bodyXS text-grey sm:max-w-[127px]">
             Image must be below 1024x1024px. Use PNG or JPG format.
@@ -171,6 +195,8 @@ lg:max-w-[728px] lg:w-full "
           Save
         </Button>
       </div>
+      {/* <Image src={pictureURL} width={100} height={100} alt="" />
+      <Image src={userAccount.picture} width={100} height={100} alt="" /> */}
     </form>
   );
 };
