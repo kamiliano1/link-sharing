@@ -14,7 +14,15 @@ const LinkPreview: React.FC<LinkPreviewProps> = () => {
     <div className="hidden lg:block relative">
       <Image src={PhoneMockup} alt="Phone Mockup" />
       <div className="absolute mt-16 w-full top-0 flex flex-col items-center">
-        <div className="aspect-square rounded-full w-[96px] border-[4px] border-purple mb-[1.125rem]"></div>
+        {userAccount.picture && (
+          <Image
+            width={96}
+            height={96}
+            src={userAccount.picture}
+            alt="user Avatar"
+            className="aspect-square rounded-full w-[96px] border-[4px] border-purple mb-[1.125rem]"
+          />
+        )}
         <h2 className="text-headingS capitalize">
           {userAccount.firstName} {userAccount.lastName}
         </h2>
