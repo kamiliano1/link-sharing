@@ -20,6 +20,7 @@ const config: Config = {
       red: "hsl(0, 100%, 61%)",
       black: "hsl(0, 0%, 0%)",
     },
+
     fontSize: {
       headingM: [
         "2rem",
@@ -64,7 +65,43 @@ const config: Config = {
         },
       ],
     },
-    extend: {},
+    extend: {
+      // keyframes: {
+      //   popUpOpen: {
+      //     from: { transform: "translateY(2000px)" },
+      //     to: { transform: "translateY(0)" },
+      //   },
+      //   popUpClose: {
+      //     from: { transform: "translateY(0)" },
+      //     to: { transform: "translateY(2000px)" },
+      //   },
+      // },
+      // animation: {
+      //   popUpOpen: "popUpOpen 1000ms cubic-bezier(0.16, 1, 0.3, 1)",
+      //   popUpClose: "popUpClose 1000ms cubic-bezier(0.16, 1, 0.3, 1)",
+      // },
+      keyframes: {
+        hide: {
+          from: { opacity: "1" },
+          to: { opacity: "0" },
+        },
+        slideIn: {
+          from: {
+            transform: "translateX(calc(100% + var(--viewport-padding)))",
+          },
+          to: { transform: "translateX(0)" },
+        },
+        swipeOut: {
+          from: { transform: "translateX(var(--radix-toast-swipe-end-x))" },
+          to: { transform: "translateX(calc(100% + var(--viewport-padding)))" },
+        },
+      },
+      animation: {
+        hide: "hide 100ms ease-in",
+        slideIn: "slideIn 150ms cubic-bezier(0.16, 1, 0.3, 1)",
+        swipeOut: "swipeOut 100ms ease-out",
+      },
+    },
   },
   plugins: [],
 };
