@@ -6,6 +6,7 @@ import { LiaImageSolid } from "react-icons/lia";
 import { useRecoilState } from "recoil";
 import Image from "next/image";
 import { previewUserLink } from "@/atoms/previewUserLinkAtom";
+import { IoMdSave } from "react-icons/io";
 type CustomizeUserAccountProps = {};
 
 // const useSelectFile = () => {
@@ -33,8 +34,10 @@ type CustomizeUserAccountProps = {};
 const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
   // const { selectedFile, setSelectedFile, onSelectFile } = useSelectFile();
   const [previewLink, setPreviewLink] = useRecoilState(previewUserLink);
-  const [pictureURL, setPictureURL] = useState<string>("");
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
+  const [pictureURL, setPictureURL] = useState<string>(
+    userAccount.picture || ""
+  );
   const {
     register,
     handleSubmit,
@@ -44,25 +47,23 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
     control,
     formState: { errors },
   } = useForm<UserAccountState>();
+  const selectedFileRef = useRef<HTMLInputElement>(null);
   // const { onChange: onChangePicture, onBlur, name, ref } = register("picture");
   const formSubmit: SubmitHandler<UserAccountState> = (data) => {
-    // console.log(data);
     setUserAccount((prev) => ({
       ...prev,
       firstName: data.firstName,
       lastName: data.lastName,
       email: data.email,
       picture: data.picture,
-      // picture: pictureURL,
     }));
-
-    console.log(userAccount, "ussAccount");
   };
 
-  const onSelectAvatar = (e: React.ChangeEvent<HTMLFormElement>) => {
+  const onSelectAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
     const reader = new FileReader();
 
     if (e.target.files?.[0]) {
+      if (e.target.files[0].size / 1024 > 1024) return;
       reader.readAsDataURL(e.target.files[0]);
     }
     reader.onload = (readerEvent) => {
@@ -82,13 +83,13 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
     //   [name]: value,
     // }));
   };
-  const selectedFileRef = useRef<HTMLInputElement>(null);
+
   return (
     <form
       onSubmit={handleSubmit(formSubmit)}
       onChange={onChange}
       className="flex flex-col max-w-[668px] mx-auto lg:mx-0
-lg:max-w-[728px] lg:w-full "
+lg:max-w-[728px] lg:w-full relative"
     >
       <div className="p-10 sm:p-16 flex flex-col bg-lightGrey h-[768.33px]">
         <h1 className="text-headingMmobile sm:text-headingM mb-2">
@@ -110,6 +111,7 @@ lg:max-w-[728px] lg:w-full "
             ref={selectedFileRef}
             // {...register("picture", {ref:selectedFileRef})}
             hidden
+            accept=".png,.jpg"
           />
           <div
             style={{
@@ -123,7 +125,7 @@ lg:max-w-[728px] lg:w-full "
             <LiaImageSolid className="text-[2.5rem] " />
             <p className="w-[116px] ">+ Upload Image</p>
           </div>
-          <p className="text-bodyXS text-grey sm:max-w-[127px]">
+          <p className="text-bodyXS text-grey sm:max-w-[127px] sm:ml-6">
             Image must be below 1024x1024px. Use PNG or JPG format.
           </p>
         </div>
