@@ -11,7 +11,7 @@ export default function Home() {
     <main className="min-h-[100vh]">
       {/* <button onClick={sprwadz}>SPRWAWDZ</button> */}
       <Navbar />
-      <div className="lg:flex lg:justify-evenly lg:items-center gap-5  bg-purple">
+      <div className="lg:flex lg:justify-evenly lg:items-center gap-5">
         <LinkPreview />
         <CustomizeUserLinks />
       </div>
