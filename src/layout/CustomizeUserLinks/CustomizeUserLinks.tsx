@@ -15,11 +15,14 @@ import { useRecoilState } from "recoil";
 import Image from "next/image";
 import LinkIcon from "../../../public/icons/icon-link.svg";
 import { nanoid } from "nanoid";
+import PopUp from "../PopUp/PopUp";
+import { popUpState } from "@/atoms/togglePopUpAtom";
 type CustomizeUserLinksProps = {};
 
 const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
   const [previewLink, setPreviewLink] = useRecoilState(previewUserLink);
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
+  const [isPopUpOpen, setIsPopUpOpen] = useRecoilState(popUpState);
   // const [previewLinks, setPreviewLinks] = useState([]);
   const {
     register,
@@ -45,6 +48,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
     // console.log(data, "data");
     // console.log(userAccount);
     // setPreviewLinkss({ userLink: getValues("userLink") });
+    setIsPopUpOpen({ togglePopUp: true });
   };
   const validatePlatformLink = async (value: string) => {
     let isValidateLink = false;
@@ -58,6 +62,9 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
     if (isValidateLink) return true;
     return false || "Please check the URL";
   };
+  useEffect(() => {
+    setIsPopUpOpen({ togglePopUp: false });
+  }, [setIsPopUpOpen]);
   useEffect(() => {
     setPreviewLink({ userLink: fields });
   }, [fields, setPreviewLink]);
@@ -117,7 +124,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
       className="flex flex-col max-w-[668px] mx-auto lg:mx-0
     lg:max-w-[728px] lg:w-full"
     >
-      <div className="p-10 sm:p-16 flex flex-col bg-lightGrey">
+      <div className="p-10 sm:p-16 flex flex-col bg-lightGrey relative">
         <h1 className="text-headingMmobile sm:text-headingM mb-2">
           Customize your links
         </h1>

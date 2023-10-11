@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Button from "../Button/Button";
 import { UserAccountState, userAccountState } from "@/atoms/userAccountAtom";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -7,6 +7,7 @@ import { useRecoilState } from "recoil";
 import Image from "next/image";
 import { previewUserLink } from "@/atoms/previewUserLinkAtom";
 import { IoMdSave } from "react-icons/io";
+import { popUpState } from "@/atoms/togglePopUpAtom";
 type CustomizeUserAccountProps = {};
 
 // const useSelectFile = () => {
@@ -35,6 +36,7 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
   // const { selectedFile, setSelectedFile, onSelectFile } = useSelectFile();
   const [previewLink, setPreviewLink] = useRecoilState(previewUserLink);
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
+  const [isPopUpOpen, setIsPopUpOpen] = useRecoilState(popUpState);
   const [pictureURL, setPictureURL] = useState<string>(
     userAccount.picture || ""
   );
@@ -57,8 +59,11 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
       email: data.email,
       picture: data.picture,
     }));
+    setIsPopUpOpen({ togglePopUp: true });
   };
-
+  useEffect(() => {
+    setIsPopUpOpen({ togglePopUp: false });
+  }, [setIsPopUpOpen]);
   const onSelectAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
     const reader = new FileReader();
 
