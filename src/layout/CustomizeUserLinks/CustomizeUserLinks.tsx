@@ -1,22 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Controller,
   SubmitHandler,
   useFieldArray,
   useForm,
 } from "react-hook-form";
-import { MdDragHandle } from "react-icons/md";
+
+import { previewUserLink } from "@/atoms/previewUserLinkAtom";
+import { popUpState } from "@/atoms/togglePopUpAtom";
+import { UserAccountState, userAccountState } from "@/atoms/userAccountAtom";
+import {
+  DndContext,
+  DragEndEvent,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { nanoid } from "nanoid";
+import Image from "next/image";
+import { useRecoilState } from "recoil";
+import LinkIcon from "../../../public/icons/icon-link.svg";
 import Button from "../Button/Button";
 import { SelectInput } from "../Select/SelectInput";
 import { linksList } from "../Select/linkList";
-import { UserAccountState, userAccountState } from "@/atoms/userAccountAtom";
-import { previewUserLink } from "@/atoms/previewUserLinkAtom";
-import { useRecoilState } from "recoil";
-import Image from "next/image";
-import LinkIcon from "../../../public/icons/icon-link.svg";
-import { nanoid } from "nanoid";
-import PopUp from "../PopUp/PopUp";
-import { popUpState } from "@/atoms/togglePopUpAtom";
+import DraggableLink from "./DraggableLink";
 type CustomizeUserLinksProps = {};
 
 const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
@@ -35,7 +47,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
   } = useForm<UserAccountState>({
     defaultValues: { userLink: userAccount.userLink },
   });
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, swap } = useFieldArray({
     control,
     name: "userLink",
   });
@@ -62,6 +74,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
     if (isValidateLink) return true;
     return false || "Please check the URL";
   };
+
   useEffect(() => {
     setIsPopUpOpen({ togglePopUp: false });
   }, [setIsPopUpOpen]);
@@ -117,6 +130,20 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
     //   ],
     // });
   };
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  );
+
+  const handleDragDrop = async (e: DragEndEvent) => {
+    if (e.active.id === e.over?.id) return;
+    const startLinkIndex = fields.findIndex((item) => item.id === e.active.id);
+    const dropLinkIndex = fields.findIndex((item) => item.id === e.over?.id);
+    swap(startLinkIndex, dropLinkIndex);
+  };
   return (
     <form
       onSubmit={handleSubmit(formSubmit)}
@@ -140,72 +167,92 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
           + Add new link
         </Button>
         <div className="h-[453px] overflow-y-auto scrollbar p-5 mt-5">
-          {fields.map((item, index) => (
-            <li key={item.id} className="list-none my-5">
-              <Controller
-                control={control}
-                name={`userLink.${index}.platform`}
-                defaultValue={"GitHub"}
-                render={({ field: { onChange, value, ref } }) => (
-                  <>
-                    <div className="flex justify-between text-grey mb-3">
-                      <h2 className="text-headingS inline-block">
-                        <MdDragHandle className="inline-block mr-2" />
-                        Link #{index + 1}
-                      </h2>
-                      <button
-                        type="button"
-                        className="hover:text-black"
-                        onClick={() => remove(index)}
-                      >
-                        Remove
-                      </button>
-                    </div>
-                    <SelectInput onChange={onChange} value={value} ref={ref} />
-                    <p className="bodyXS-bodyS mb-1 mt-3 text-darkGrey">Link</p>
-                  </>
-                )}
-              />
-              <Controller
-                control={control}
-                name={`userLink.${index}.link`}
-                defaultValue={""}
-                rules={{
-                  required: "Can`t be empty",
-                  // validate: validatePlatformLink,
-                }}
-                render={({ field }) => (
-                  <div className="flex relative">
-                    <Image
-                      src={LinkIcon}
-                      alt="link icon"
-                      className="absolute top-4 left-4"
+          <DndContext
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragDrop}
+            sensors={sensors}
+          >
+            <SortableContext
+              items={fields}
+              strategy={verticalListSortingStrategy}
+            >
+              {fields.map((item, index) => (
+                <DraggableLink key={item.id} id={item.id}>
+                  <li className="list-none my-5 relative">
+                    <Controller
+                      control={control}
+                      name={`userLink.${index}.platform`}
+                      defaultValue={"GitHub"}
+                      render={({ field: { onChange, value, ref } }) => (
+                        <>
+                          <div className="flex justify-between text-grey mb-3">
+                            <h2 className="text-headingS inline-block ml-7">
+                              Link #{index + 1}
+                            </h2>
+                            <button
+                              type="button"
+                              className="hover:text-black"
+                              onClick={() => remove(index)}
+                            >
+                              Remove
+                            </button>
+                          </div>
+                          <SelectInput
+                            onChange={onChange}
+                            value={value}
+                            ref={ref}
+                          />
+                          <p className="bodyXS-bodyS mb-1 mt-3 text-darkGrey">
+                            Link
+                          </p>
+                        </>
+                      )}
                     />
-                    <input
-                      {...field}
-                      type="text"
-                      placeholder={
-                        linksList.find(
-                          (item) =>
-                            item.name === watch(`userLink.${index}.platform`)
-                        )?.placeholder
-                      }
-                      className={`pl-9 pr-4 w-full py-3 border-[1px] mb-6 border-borders max-w-[668px] text-bodyM rounded-lg text-black hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple ${
-                        errors.userLink?.[index]?.link && "text-red border-red"
-                      }`}
+                    <Controller
+                      control={control}
+                      name={`userLink.${index}.link`}
+                      defaultValue={""}
+                      rules={{
+                        required: "Can`t be empty",
+                        // validate: validatePlatformLink,
+                      }}
+                      render={({ field }) => (
+                        <div className="flex relative">
+                          <Image
+                            src={LinkIcon}
+                            alt="link icon"
+                            className="absolute top-4 left-4"
+                          />
+                          <input
+                            {...field}
+                            type="text"
+                            placeholder={
+                              linksList.find(
+                                (item) =>
+                                  item.name ===
+                                  watch(`userLink.${index}.platform`)
+                              )?.placeholder
+                            }
+                            className={`pl-9 pr-4 w-full py-3 border-[1px] mb-6 border-borders max-w-[668px] text-bodyM rounded-lg text-black hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple ${
+                              errors.userLink?.[index]?.link &&
+                              "text-red border-red"
+                            }`}
+                          />
+                          {errors.userLink?.[index] && (
+                            <>
+                              <p className="text-red text-bodyXS absolute top-4 right-4">
+                                {errors.userLink?.[index]?.link?.message}
+                              </p>
+                            </>
+                          )}
+                        </div>
+                      )}
                     />
-                    {errors.userLink?.[index] && (
-                      <>
-                        <p className="text-red text-bodyXS absolute top-4 right-4">
-                          {errors.userLink?.[index]?.link?.message}
-                        </p>
-                      </>
-                    )}
-                  </div>
-                )}
-              />
-            </li>
-          ))}
+                  </li>
+                </DraggableLink>
+              ))}
+            </SortableContext>
+          </DndContext>
           {!fields.length && (
             <>
               <Image
