@@ -148,11 +148,11 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
     <form
       onSubmit={handleSubmit(formSubmit)}
       // onChange={onChange}
-      className="flex flex-col max-w-[668px] mx-auto lg:mx-0
+      className="flex flex-col  mx-auto lg:mx-0
     lg:max-w-[728px] lg:w-full"
     >
-      <div className="p-10 sm:p-16 flex flex-col bg-lightGrey relative">
-        <h1 className="text-headingMmobile sm:text-headingM mb-2">
+      <div className="p-6 m-4 mb-0 flex flex-col bg-white relative rounded-md">
+        <h1 className="text-headingMmobile sm:text-headingM mb-2 ">
           Customize your links
         </h1>
         <p className="text-bodyM text-grey mb-10">
@@ -166,7 +166,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
         >
           + Add new link
         </Button>
-        <div className="h-[453px] overflow-y-auto scrollbar p-5 mt-5">
+        <div className="h-[550px] overflow-y-auto scrollbar">
           <DndContext
             collisionDetection={closestCenter}
             onDragEnd={handleDragDrop}
@@ -178,7 +178,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
             >
               {fields.map((item, index) => (
                 <DraggableLink key={item.id} id={item.id}>
-                  <li className="list-none my-5 relative">
+                  <li className="list-none my-5 relative bg-lightGrey p-5 rounded-xl">
                     <Controller
                       control={control}
                       name={`userLink.${index}.platform`}
@@ -197,14 +197,14 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
                               Remove
                             </button>
                           </div>
+                          <p className="text-bodyXS mb-1 mt-3 text-darkGrey">
+                            Platform
+                          </p>
                           <SelectInput
                             onChange={onChange}
                             value={value}
                             ref={ref}
                           />
-                          <p className="bodyXS-bodyS mb-1 mt-3 text-darkGrey">
-                            Link
-                          </p>
                         </>
                       )}
                     />
@@ -217,35 +217,43 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
                         // validate: validatePlatformLink,
                       }}
                       render={({ field }) => (
-                        <div className="flex relative">
-                          <Image
-                            src={LinkIcon}
-                            alt="link icon"
-                            className="absolute top-4 left-4"
-                          />
-                          <input
-                            {...field}
-                            type="text"
-                            placeholder={
-                              linksList.find(
-                                (item) =>
-                                  item.name ===
-                                  watch(`userLink.${index}.platform`)
-                              )?.placeholder
-                            }
-                            className={`pl-9 pr-4 w-full py-3 border-[1px] mb-6 border-borders max-w-[668px] text-bodyM rounded-lg text-black hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple ${
-                              errors.userLink?.[index]?.link &&
-                              "text-red border-red"
-                            }`}
-                          />
-                          {errors.userLink?.[index] && (
-                            <>
-                              <p className="text-red text-bodyXS absolute top-4 right-4">
-                                {errors.userLink?.[index]?.link?.message}
-                              </p>
-                            </>
-                          )}
-                        </div>
+                        <>
+                          <label htmlFor={`userLink.${index}.platform`}>
+                            <p className="text-bodyXS mb-1 mt-3 text-darkGrey">
+                              Link
+                            </p>
+                          </label>
+                          <div className="flex relative">
+                            <Image
+                              src={LinkIcon}
+                              alt="link icon"
+                              className="absolute top-4 left-4"
+                            />
+                            <input
+                              {...field}
+                              type="text"
+                              id={`userLink.${index}.platform`}
+                              placeholder={
+                                linksList.find(
+                                  (item) =>
+                                    item.name ===
+                                    watch(`userLink.${index}.platform`)
+                                )?.placeholder
+                              }
+                              className={`pl-9 pr-4 w-full py-3 border-[1px] border-borders max-w-[668px] text-bodyM rounded-lg text-black hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple ${
+                                errors.userLink?.[index]?.link &&
+                                "text-red border-red"
+                              }`}
+                            />
+                            {errors.userLink?.[index] && (
+                              <>
+                                <p className="text-red text-bodyXS absolute top-4 right-4">
+                                  {errors.userLink?.[index]?.link?.message}
+                                </p>
+                              </>
+                            )}
+                          </div>
+                        </>
                       )}
                     />
                   </li>
@@ -254,7 +262,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
             </SortableContext>
           </DndContext>
           {!fields.length && (
-            <>
+            <div className="p-5 mt-6 rounded-xl bg-lightGrey">
               <Image
                 className="mx-auto mt-10 mb-6"
                 src="/icons/illustration-empty.svg"
@@ -265,21 +273,21 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
               <h2 className="text-headingMmobile text-center">
                 Let`s get you started
               </h2>
-              <p className="text-grey mt-6 mb-16">
+              <p className="text-grey mt-6 mb-7">
                 Use the “Add new link” button to get started. Once you have more
                 than one link, you can reorder and edit them. We`re here to help
                 you share your profiles with everyone!
               </p>
-            </>
+            </div>
           )}
         </div>
       </div>
-      <span className="w-full h-[1px] mb-4 inline-block bg-borders mx-4"></span>
-      <div className="mx-8 sm:self-end">
+      <span className="h-[1px] inline-block bg-borders mx-4"></span>
+      <div className=" bg-white m-4 mt-0 p-4">
         <Button
           role="primary"
           disabled={fields.length ? false : true}
-          cssClass="sm:w-min sm:px-5"
+          cssClass="sm:w-min sm:px-7 sm:ml-auto"
         >
           Save
         </Button>
