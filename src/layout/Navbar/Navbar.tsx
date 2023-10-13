@@ -18,7 +18,7 @@ const Navbar: React.FC<NavbarProps> = () => {
     <NavigationMenu.Root>
       <NavigationMenu.List>
         {pathname === "/previewProfile" ? (
-          <div className="bg-white sm:m-6 px-6 py-4 sm:rounded-xl flex justify-between gap-4 items-center self-stretch">
+          <div className="bg-white sm:m-6 px-6 py-4 sm:rounded-xl flex justify-between gap-4 items-center self-stretch relative z-[5]">
             <NavigationMenu.Item className="w-full max-w-[159px]">
               <NavigationMenu.Trigger className="w-full">
                 <Link href="/profileDetails">
@@ -39,27 +39,33 @@ const Navbar: React.FC<NavbarProps> = () => {
             </NavigationMenu.Item>
           </div>
         ) : (
-          <div className="py-4 sm:py-10 pl-6 pr-4 sm:pl-12 sm:pr-10 flex items-center justify-between self-stretch">
+          <div className="py-4 pl-6 pr-4 sm:m-6 sm:rounded-xl bg-white flex items-center justify-between">
             <NavigationMenu.Item>
               <NavigationMenu.Trigger>
                 <Link href="/">
-                  <Image src={logoSmall} className="sm:hidden" alt="web logo" />
+                  <Image
+                    src={logoSmall}
+                    className="sm:hidden "
+                    alt="web logo"
+                  />
                   <Image
                     src={logoBig}
-                    className="hidden sm:block"
+                    className="hidden sm:block sm:mt-2"
                     alt="web logo"
                   />
                 </Link>
               </NavigationMenu.Trigger>
             </NavigationMenu.Item>
-            <div className="flex gap-[3.375rem]">
+            <div className="flex">
               {" "}
               <NavigationMenu.Item>
                 <NavigationMenu.Trigger>
                   <Link
                     href="/"
-                    className={`flex items-center hover:text-purple  ${
-                      pathname === "/" ? "text-purple" : "text-grey"
+                    className={`flex items-center hover:text-purple py-3 px-7 rounded-lg  ${
+                      pathname === "/"
+                        ? "flex items-center bg-lightPurple text-purple "
+                        : "text-grey"
                     } `}
                   >
                     <AiOutlineLink />
@@ -71,9 +77,9 @@ const Navbar: React.FC<NavbarProps> = () => {
                 <NavigationMenu.Trigger>
                   <Link
                     href="/profileDetails"
-                    className={`flex items-center hover:text-purple ${
+                    className={`flex items-center hover:text-purple py-3 px-7 rounded-lg ${
                       pathname === "/profileDetails"
-                        ? "text-purple"
+                        ? "flex items-center bg-lightPurple text-purple "
                         : "text-grey"
                     } `}
                   >
