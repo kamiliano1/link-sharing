@@ -6,7 +6,9 @@
   width: var(--radix-select-trigger-width);
   max-height: var(--radix-select-content-available-height);
 }
-
+body {
+  @apply bg-lightGrey;
+}
 @layer utilities {
   .scrollbar::-webkit-scrollbar {
     width: 10px;
