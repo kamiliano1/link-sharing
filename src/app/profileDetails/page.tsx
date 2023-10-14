@@ -9,7 +9,7 @@ const ProfileDetails: React.FC = () => {
   return (
     <main className="min-h-[100vh]">
       <Navbar />
-      <div className="lg:flex lg:justify-evenly lg:items-center gap-5 relative pb-5">
+      <div className="lg:flex relative pb-5 lg:justify-center">
         <LinkPreview />
         <CustomizeUserAccount />
         <PopUp type="changesSuccessfullySaved" />
