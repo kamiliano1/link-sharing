@@ -90,13 +90,12 @@ const Navbar: React.FC<NavbarProps> = () => {
               </NavigationMenu.Item>
             </div>
             <NavigationMenu.Item>
-              <NavigationMenu.Trigger
-                className="border-[1px] border-purple rounded-lg text-purple
-                  px-4 sm:px-[1.6875rem] py-[0.6875rem] flex"
-              >
+              <NavigationMenu.Trigger className="">
                 <Link href="/previewProfile">
-                  <AiOutlineEye className="sm:hidden text-purple" />
-                  <p className="hidden sm:block">Preview</p>
+                  <Button role="secondary" cssClass="px-4 py-3">
+                    <AiOutlineEye className="sm:hidden" />
+                    <p className="hidden sm:block">Preview</p>
+                  </Button>
                 </Link>
               </NavigationMenu.Trigger>
             </NavigationMenu.Item>
