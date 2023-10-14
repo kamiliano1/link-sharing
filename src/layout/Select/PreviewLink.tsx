@@ -33,7 +33,7 @@ const PreviewLink: React.FC<PreviewLinkProps> = ({ platform, link, id }) => {
       {...attributes}
       {...listeners}
       href={link}
-      className={`mx-auto w-[237px] px-4 py-3 flex text-bodyM items-center rounded-lg mb-4 mr-[.3rem] border-[1px] ${linkStyle.style}`}
+      className={`mx-auto w-[237px] px-4 py-3 flex text-bodyM items-center rounded-lg mb-4 mr-[.3rem] border-[1px] hover:bg-opacity-60 ${linkStyle.style}`}
     >
       <linkStyle.icon />
       <p className="ml-3 mr-auto">{linkStyle.name}</p>
