@@ -148,11 +148,10 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
     <form
       onSubmit={handleSubmit(formSubmit)}
       // onChange={onChange}
-      className="flex flex-col  mx-auto lg:mx-0
-    lg:max-w-[728px] lg:w-full"
+      className="flex flex-col mx-auto lg:mx-0 lg:max-w-[808px] lg:w-full"
     >
-      <div className="p-6 m-4 mb-0 flex flex-col bg-white relative rounded-md">
-        <h1 className="text-headingMmobile sm:text-headingM mb-2 ">
+      <div className="p-6 m-4 sm:m-6 sm:mb-0 mb-0 flex flex-col bg-white relative rounded-md">
+        <h1 className="text-headingMmobile sm:text-headingM mb-2">
           Customize your links
         </h1>
         <p className="text-bodyM text-grey mb-10">
@@ -282,8 +281,8 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
           )}
         </div>
       </div>
-      <span className="h-[1px] inline-block bg-borders mx-4"></span>
-      <div className=" bg-white m-4 mt-0 p-4">
+      <span className="h-[1px] inline-block bg-borders mx-4 sm:mx-6"></span>
+      <div className="bg-white m-4 sm:m-6 sm:mt-0 mt-0 p-4">
         <Button
           role="primary"
           disabled={fields.length ? false : true}
