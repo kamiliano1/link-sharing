@@ -37,6 +37,7 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
   const [previewLink, setPreviewLink] = useRecoilState(previewUserLink);
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
   const [isPopUpOpen, setIsPopUpOpen] = useRecoilState(popUpState);
+  const [isAvatarChanged, setIsAvatarChanged] = useState<boolean>(false);
   const [pictureURL, setPictureURL] = useState<string>(
     userAccount.picture || ""
   );
@@ -57,7 +58,7 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
       firstName: data.firstName,
       lastName: data.lastName,
       email: data.email,
-      picture: data.picture,
+      picture: isAvatarChanged ? data.picture : userAccount.picture,
     }));
     setIsPopUpOpen({ togglePopUp: true });
   };
@@ -65,6 +66,7 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
     setIsPopUpOpen({ togglePopUp: false });
   }, [setIsPopUpOpen]);
   const onSelectAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsAvatarChanged(false);
     const reader = new FileReader();
 
     if (e.target.files?.[0]) {
@@ -77,6 +79,7 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
         setValue("picture", readerEvent.target.result as string);
       }
     };
+    setIsAvatarChanged(true);
   };
 
   const onChange = (e: React.ChangeEvent<HTMLFormElement>) => {
@@ -93,10 +96,9 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
     <form
       onSubmit={handleSubmit(formSubmit)}
       onChange={onChange}
-      className="flex flex-col max-w-[668px] mx-auto lg:mx-0
-lg:max-w-[728px] lg:w-full relative"
+      className="flex flex-col mx-auto lg:mx-0 lg:max-w-[808px] lg:w-full"
     >
-      <div className="p-10 sm:p-16 flex flex-col bg-lightGrey h-[768.33px]">
+      <div className="p-6 m-4 sm:m-6 sm:mb-0 mb-0 flex flex-col bg-white h-[765.33px] relative rounded-md">
         <h1 className="text-headingMmobile sm:text-headingM mb-2">
           Profile Details
         </h1>
@@ -105,10 +107,11 @@ lg:max-w-[728px] lg:w-full relative"
         <p className="text-bodyM text-grey mb-10">
           Add your details to create a personal touch to your profile.
         </p>
-        <div className="sm:flex items-center">
-          <p className="text-bodyM text-grey mb-10 sm:mb-0 sm:w-[240px]">
+        <div className="sm:flex items-center bg-lightGrey rounded-xl p-5">
+          <p className="text-bodyM text-grey mb-10 sm:mb-0 sm:w-[255px]">
             Profile picture.
           </p>
+          {pictureURL.length}
           <input
             type="file"
             // {...register("picture", {})}
@@ -122,7 +125,7 @@ lg:max-w-[728px] lg:w-full relative"
             style={{
               backgroundImage: `url(${pictureURL})`,
             }}
-            className={`text-purple flex flex-col items-center text-headingS bg-cover bg-no-repeat w-min px-10 py-[3.75rem] cursor-pointer relative rounded-xl ${
+            className={`text-purple bg-lightPurple mb-6 sm:mb-0 flex flex-col items-center text-headingS bg-cover bg-no-repeat w-min px-10 py-[3.75rem] cursor-pointer relative rounded-xl sm:w-[193px] ${
               pictureURL && "hover:text-white hover:bg-grey bg-blend-multiply "
             }`}
             onClick={() => selectedFileRef.current?.click()}
@@ -134,8 +137,8 @@ lg:max-w-[728px] lg:w-full relative"
             Image must be below 1024x1024px. Use PNG or JPG format.
           </p>
         </div>
-        <div className="mt-11 sm:flex sm:flex-col sm:gap-3">
-          <div className="relative sm:flex sm:gap-4 sm:items-center">
+        <div className="mt-6 sm:flex sm:flex-col sm:gap-3 bg-lightGrey rounded-xl p-5">
+          <div className="relative sm:flex sm:gap-4 sm:items-center  ">
             <label htmlFor="firstName">
               <p className="text-bodyXS sm:text-bodyM text-grey mb-1 sm:mb-0 sm:w-[240px]">
                 First name*
@@ -191,14 +194,23 @@ lg:max-w-[728px] lg:w-full relative"
               type="text"
               defaultValue={userAccount.email}
               placeholder="e.g. email@example.com"
-              className="px-4 w-full py-3 border-[1px] mb-3 sm:mb-0 border-borders max-w-[668px] text-bodyM rounded-lg text-black hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple"
+              className="px-4 w-full py-3 border-[1px] sm:mb-0 border-borders max-w-[668px] text-bodyM rounded-lg text-black hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple"
             />
           </div>
         </div>
       </div>
-      <span className="w-full h-[1px] mb-4 inline-block bg-borders mx-4"></span>
-      <div className="mx-8 sm:self-end">
-        <Button role="primary" cssClass="sm:w-min sm:px-5">
+      <span className="h-[1px] inline-block bg-borders mx-4 sm:mx-6"></span>
+      {/* <div className="mx-8 sm:self-end bg-red">
+        <Button role="primary" cssClass="sm:w-min sm:px-7 sm:ml-auto">
+          Save
+        </Button>
+      </div> */}
+      <div className="bg-white m-4 sm:m-6 sm:mt-0 mt-0 p-4">
+        <Button
+          role="primary"
+          // disabled={fields.length ? false : true}
+          cssClass="sm:w-min sm:px-7 sm:ml-auto"
+        >
           Save
         </Button>
       </div>
