@@ -20,7 +20,7 @@ const DraggableLink: React.FC<DraggableLinkProps> = ({ id, children }) => {
       ref={setNodeRef}
       style={style}
       {...attributes}
-      className="relative cursor-default"
+      className="relative cursor-default touch-none"
     >
       <MdDragHandle
         {...listeners}
