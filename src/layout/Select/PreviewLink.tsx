@@ -28,6 +28,7 @@ const PreviewLink: React.FC<PreviewLinkProps> = ({ platform, link, id }) => {
   };
   return (
     <Link
+      target="_blank"
       ref={setNodeRef}
       style={style}
       {...attributes}
