@@ -13,7 +13,7 @@ const PreviewUserProfile: React.FC<PreviewUserProfileProps> = () => {
   const userAccount = useRecoilValue(userAccountState);
   return (
     <>
-      <div className="mt-16 sm:mt-28 flex flex-col items-center bg-white w-[349px] mx-auto rounded-3xl px-14 py-12 min-h-[569px] shadow-[0px_0px_32px_0px_rgba(0,_0,_0,_0.10)] z-[5] relative">
+      <div className="sm:mt-28 flex flex-col items-center bg-white sm:w-[349px] mx-auto sm:rounded-3xl px-14 py-12 h-full sm:min-h-[569px] shadow-[0px_0px_32px_0px_rgba(0,_0,_0,_0.10)] sm:z-[5] sm:relative">
         {userAccount.picture ? (
           <Image
             width={96}
