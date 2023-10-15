@@ -22,7 +22,7 @@ const Navbar: React.FC<NavbarProps> = () => {
             <NavigationMenu.Item className="w-full max-w-[159px]">
               <NavigationMenu.Trigger className="w-full">
                 <Link href="/profileDetails">
-                  <Button role="secondary" className="text-purple ">
+                  <Button role="secondary" className="text-purple">
                     Back to Editor
                   </Button>
                 </Link>
@@ -91,11 +91,12 @@ const Navbar: React.FC<NavbarProps> = () => {
             </div>
             <NavigationMenu.Item>
               <NavigationMenu.Trigger className="">
-                <Link href="/previewProfile">
-                  <Button role="secondary" cssClass="px-4 py-3">
-                    <AiOutlineEye className="sm:hidden" />
-                    <p className="hidden sm:block">Preview</p>
-                  </Button>
+                <Link
+                  href="/previewProfile"
+                  className="text-purple border-[1px] px-4 py-3 border-purple bg-white hover:bg-lightPurple w-full text-headingS flex justify-center rounded-lg"
+                >
+                  <AiOutlineEye className="sm:hidden" />
+                  <p className="hidden sm:block">Preview</p>
                 </Link>
               </NavigationMenu.Trigger>
             </NavigationMenu.Item>
