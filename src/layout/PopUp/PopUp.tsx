@@ -58,10 +58,10 @@ const PopUp: React.FC<PopUpProps> = ({ type }) => {
           </Toast.Description>
         </Toast.Root>
         <Toast.Viewport
-          className={`absolute bottom-[15px] flex flex-col w-[406px] m-0 list-none z-[2147483647] outline-none ${
+          className={`absolute hidden lg:flex flex-col w-[406px] list-none z-[2147483647] outline-none ${
             type === "changesSuccessfullySaved"
-              ? "left-[calc(50%_-_290px)]"
-              : "left-[calc(50%_-_203px)]"
+              ? "left-[calc(50%_-_290px)] bottom-[54px]"
+              : "left-[calc(50%_-_203px)] bottom-[-111px]"
           }`}
         />
       </Toast.Provider>
