@@ -98,7 +98,7 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
       onChange={onChange}
       className="flex flex-col mx-auto lg:mx-0 lg:max-w-[808px] lg:w-full"
     >
-      <div className="p-6 m-4 sm:m-6 sm:mb-0 mb-0 flex flex-col bg-white h-[765.33px] relative rounded-md">
+      <div className="p-6 m-4 sm:m-6 sm:mb-0 mb-0 flex flex-col bg-white sm:h-[765.33px] relative rounded-md">
         <h1 className="text-headingMmobile sm:text-headingM mb-2">
           Profile Details
         </h1>
@@ -111,7 +111,6 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
           <p className="text-bodyM text-grey mb-10 sm:mb-0 sm:w-[255px]">
             Profile picture.
           </p>
-          {pictureURL.length}
           <input
             type="file"
             // {...register("picture", {})}
@@ -131,16 +130,16 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
             onClick={() => selectedFileRef.current?.click()}
           >
             <LiaImageSolid className="text-[2.5rem] " />
-            <p className="w-[116px] ">+ Upload Image</p>
+            <p className="w-[116px]">+ Upload Image</p>
           </div>
           <p className="text-bodyXS text-grey sm:max-w-[127px] sm:ml-6">
             Image must be below 1024x1024px. Use PNG or JPG format.
           </p>
         </div>
         <div className="mt-6 sm:flex sm:flex-col sm:gap-3 bg-lightGrey rounded-xl p-5">
-          <div className="relative sm:flex sm:gap-4 sm:items-center  ">
+          <div className="relative sm:flex sm:gap-4 sm:items-center">
             <label htmlFor="firstName">
-              <p className="text-bodyXS sm:text-bodyM text-grey mb-1 sm:mb-0 sm:w-[240px]">
+              <p className="text-bodyXS sm:text-bodyM cursor-pointer text-grey mb-1 sm:mb-0 sm:w-[240px]">
                 First name*
               </p>
             </label>
@@ -162,7 +161,7 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
           </div>
           <div className="relative sm:flex sm:gap-4 sm:items-center">
             <label htmlFor="lastName">
-              <p className="text-bodyXS sm:text-bodyM text-grey mb-1 sm:mb-0 sm:w-[240px]">
+              <p className="text-bodyXS sm:text-bodyM cursor-pointer text-grey mb-1 sm:mb-0 sm:w-[240px]">
                 Last name*
               </p>
             </label>
@@ -184,7 +183,7 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
           </div>
           <div className="relative sm:flex sm:gap-4 sm:items-center">
             <label htmlFor="email">
-              <p className="text-bodyXS sm:text-bodyM text-grey mb-1 sm:mb-0 sm:w-[240px]">
+              <p className="text-bodyXS sm:text-bodyM cursor-pointer text-grey mb-1 sm:mb-0 sm:w-[240px]">
                 Email
               </p>
             </label>
