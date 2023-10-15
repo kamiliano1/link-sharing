@@ -9,7 +9,7 @@ type PreviewProfileProps = {};
 
 const PreviewProfile: React.FC<PreviewProfileProps> = () => {
   return (
-    <main className="relative min-h-[100vh]">
+    <main className="relative h-[100vh] sm:h-auto bg-white sm:bg-lightGrey">
       <Navbar />
       <PreviewUserProfile />
       <PopUp type="copyLinktoClipBoard" />
