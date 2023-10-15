@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Controller,
   SubmitHandler,
@@ -35,6 +35,8 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
   const [previewLink, setPreviewLink] = useRecoilState(previewUserLink);
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
   const [isPopUpOpen, setIsPopUpOpen] = useRecoilState(popUpState);
+  const [isSaveButtonDesactive, setisSaveButtonDesactive] =
+    useState<boolean>(false);
   // const [previewLinks, setPreviewLinks] = useState([]);
   const {
     register,
@@ -52,6 +54,13 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
     name: "userLink",
   });
 
+  useEffect(() => {
+    if (userAccount.userLink.length || fields.length) {
+      setisSaveButtonDesactive(false);
+      return;
+    }
+    setisSaveButtonDesactive(true);
+  }, [userAccount.userLink, fields]);
   const formSubmit: SubmitHandler<UserAccountState> = (data) => {
     // setGeneratedLinks(data);
     // setPreviewLink(data);
@@ -165,7 +174,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
         >
           + Add new link
         </Button>
-        <div className="h-[550px] overflow-y-auto scrollbar">
+        <div className="h-[550px]">
           <DndContext
             collisionDetection={closestCenter}
             onDragEnd={handleDragDrop}
@@ -239,7 +248,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
                                     watch(`userLink.${index}.platform`)
                                 )?.placeholder
                               }
-                              className={`pl-9 pr-4 w-full py-3 border-[1px] border-borders max-w-[668px] text-bodyM rounded-lg text-black hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple ${
+                              className={`pl-9 pr-4 w-full py-3 border-[1px] border-borders text-bodyM rounded-lg text-black hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple ${
                                 errors.userLink?.[index]?.link &&
                                 "text-red border-red"
                               }`}
@@ -285,7 +294,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
       <div className="bg-white m-4 sm:m-6 sm:mt-0 mt-0 p-4">
         <Button
           role="primary"
-          disabled={fields.length ? false : true}
+          disabled={isSaveButtonDesactive}
           cssClass="sm:w-min sm:px-7 sm:ml-auto"
         >
           Save
