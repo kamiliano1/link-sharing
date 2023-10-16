@@ -6,7 +6,6 @@ import {
   useForm,
 } from "react-hook-form";
 
-import { previewUserLink } from "@/atoms/previewUserLinkAtom";
 import { popUpState } from "@/atoms/togglePopUpAtom";
 import { UserAccountState, userAccountState } from "@/atoms/userAccountAtom";
 import {
@@ -32,12 +31,10 @@ import DraggableLink from "./DraggableLink";
 type CustomizeUserLinksProps = {};
 
 const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
-  const [previewLink, setPreviewLink] = useRecoilState(previewUserLink);
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
   const [isPopUpOpen, setIsPopUpOpen] = useRecoilState(popUpState);
   const [isSaveButtonDesactive, setisSaveButtonDesactive] =
     useState<boolean>(false);
-  // const [previewLinks, setPreviewLinks] = useState([]);
   const {
     register,
     handleSubmit,
@@ -62,13 +59,8 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
     setisSaveButtonDesactive(true);
   }, [userAccount.userLink, fields]);
   const formSubmit: SubmitHandler<UserAccountState> = (data) => {
-    // setGeneratedLinks(data);
-    // setPreviewLink(data);
     setUserAccount((prev) => ({ ...prev, userLink: data.userLink }));
 
-    // console.log(data, "data");
-    // console.log(userAccount);
-    // setPreviewLinkss({ userLink: getValues("userLink") });
     setIsPopUpOpen({ togglePopUp: true });
   };
   const validatePlatformLink = async (value: string) => {
@@ -87,58 +79,6 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
   useEffect(() => {
     setIsPopUpOpen({ togglePopUp: false });
   }, [setIsPopUpOpen]);
-  useEffect(() => {
-    setPreviewLink({ userLink: fields });
-  }, [fields, setPreviewLink]);
-  const onChange = () => {
-    // setPreviewLinks(getValues("userLink"));
-    // setPreviewLink({ userLink: getValues("userLink") });
-    // setPreviewLink();
-    // setPreviewLink({
-    //   userLink: [
-    //     {
-    //       platform: "GitHub",
-    //       link: "a",
-    //       id: "Lt-Dg502uKj0FtSMIMBvL",
-    //     },
-    //     {
-    //       platform: "GitHub",
-    //       link: "",
-    //       id: "cvpBc_dL35-NFfN4riZYT",
-    //     },
-    //     {
-    //       platform: "GitHub",
-    //       link: "",
-    //       id: "sZ65S9-AscBLTZ7vEOS2K",
-    //     },
-    //     {
-    //       platform: "GitHub",
-    //       link: "",
-    //       id: "xI79aU-wBJNn1yQuOTgHX",
-    //     },
-    //     {
-    //       platform: "GitHub",
-    //       link: "",
-    //       id: "3yGi3eMnLL79fm-FuKN1D",
-    //     },
-    //     {
-    //       platform: "GitHub",
-    //       link: "",
-    //       id: "H1m1BQnZhZZddaWZ7ACq_",
-    //     },
-    //     {
-    //       platform: "GitHub",
-    //       link: "aasf",
-    //       id: "L7bilWHUJjdSbrawC8Bk6",
-    //     },
-    //     {
-    //       platform: "GitHub",
-    //       link: "",
-    //       id: "j7e8Z-sOiTOzLeUP-ujUY",
-    //     },
-    //   ],
-    // });
-  };
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -156,7 +96,6 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
   return (
     <form
       onSubmit={handleSubmit(formSubmit)}
-      // onChange={onChange}
       className="flex flex-col mx-auto lg:mx-0 lg:max-w-[808px] lg:w-full"
     >
       <div className="p-6 m-4 sm:m-6 sm:mb-0 mb-0 flex flex-col bg-white relative rounded-md">
