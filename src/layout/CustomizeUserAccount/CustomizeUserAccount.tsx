@@ -1,40 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
-import Button from "../Button/Button";
 import { UserAccountState, userAccountState } from "@/atoms/userAccountAtom";
+import React, { useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { LiaImageSolid } from "react-icons/lia";
 import { useRecoilState } from "recoil";
-import Image from "next/image";
-import { previewUserLink } from "@/atoms/previewUserLinkAtom";
-import { IoMdSave } from "react-icons/io";
+import Button from "../Button/Button";
+import { auth, firestore, storage } from "@/app/firebase/clientApp";
 import { popUpState } from "@/atoms/togglePopUpAtom";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import { useAuthState } from "react-firebase-hooks/auth";
 type CustomizeUserAccountProps = {};
 
-// const useSelectFile = () => {
-//   const [selectedFile, setSelectedFile] = useState<string>();
-//   const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     const reader = new FileReader();
-
-//     if (e.target.files?.[0]) {
-//       reader.readAsDataURL(e.target.files[0]);
-//     }
-//     reader.onload = (readerE) => {
-//       if (readerE.target?.result) {
-//         setSelectedFile(readerE.target?.result as string);
-//       }
-//     };
-//   };
-//   return {
-//     selectedFile,
-//     setSelectedFile,
-//     onSelectFile,
-//   };
-// };
-// export default useSelectFile;
-
 const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
-  // const { selectedFile, setSelectedFile, onSelectFile } = useSelectFile();
-  const [previewLink, setPreviewLink] = useRecoilState(previewUserLink);
+  const [user, loading] = useAuthState(auth);
+  const [isLoading, setIsLoading] = useState(false);
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
   const [isPopUpOpen, setIsPopUpOpen] = useRecoilState(popUpState);
   const [isAvatarChanged, setIsAvatarChanged] = useState<boolean>(false);
@@ -51,15 +30,33 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
     formState: { errors },
   } = useForm<UserAccountState>();
   const selectedFileRef = useRef<HTMLInputElement>(null);
-  // const { onChange: onChangePicture, onBlur, name, ref } = register("picture");
-  const formSubmit: SubmitHandler<UserAccountState> = (data) => {
+  const formSubmit: SubmitHandler<UserAccountState> = async (data) => {
+    setIsLoading(true);
+    const userLinkRef = doc(firestore, `users/${user?.uid}`);
+
+    if (data.picture) {
+      const imageRef = ref(storage, `avatars/${user?.uid}/image`);
+      await uploadString(imageRef, data.picture, "data_url");
+      const downloadURL = await getDownloadURL(imageRef);
+      await updateDoc(userLinkRef, {
+        picture: downloadURL,
+      });
+    }
+    await updateDoc(userLinkRef, {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+    });
+    const userData = await getDoc(userLinkRef);
+    const bookmarkData = userData.data();
     setUserAccount((prev) => ({
       ...prev,
       firstName: data.firstName,
       lastName: data.lastName,
       email: data.email,
-      picture: isAvatarChanged ? data.picture : userAccount.picture,
+      picture: isAvatarChanged ? bookmarkData?.picture : userAccount.picture,
     }));
+    setIsLoading(false);
     setIsPopUpOpen({ togglePopUp: true });
   };
   useEffect(() => {
@@ -82,20 +79,9 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
     setIsAvatarChanged(true);
   };
 
-  const onChange = (e: React.ChangeEvent<HTMLFormElement>) => {
-    // const value = e.target.value;
-    // const name = e.target.name;
-    // // console.log(e.target.value, e.target.name);
-    // setPreviewLink((prev) => ({
-    //   ...prev,
-    //   [name]: value,
-    // }));
-  };
-
   return (
     <form
       onSubmit={handleSubmit(formSubmit)}
-      onChange={onChange}
       className="flex flex-col mx-auto lg:mx-0 lg:max-w-[808px] lg:w-full"
     >
       <div className="p-6 m-4 sm:m-6 sm:mb-0 mb-0 flex flex-col bg-white sm:h-[765.33px] relative rounded-md">
@@ -103,7 +89,6 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
           Profile Details
         </h1>
 
-        {/* <Image src={userAccount.picture} alt="" /> */}
         <p className="text-bodyM text-grey mb-10">
           Add your details to create a personal touch to your profile.
         </p>
@@ -113,10 +98,8 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
           </p>
           <input
             type="file"
-            // {...register("picture", {})}
             onChange={onSelectAvatar}
             ref={selectedFileRef}
-            // {...register("picture", {ref:selectedFileRef})}
             hidden
             accept=".png,.jpg"
           />
@@ -199,22 +182,15 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
         </div>
       </div>
       <span className="h-[1px] inline-block bg-borders mx-4 sm:mx-6"></span>
-      {/* <div className="mx-8 sm:self-end bg-red">
-        <Button role="primary" cssClass="sm:w-min sm:px-7 sm:ml-auto">
-          Save
-        </Button>
-      </div> */}
       <div className="bg-white m-4 sm:m-6 sm:mt-0 mt-0 p-4">
         <Button
           role="primary"
-          // disabled={fields.length ? false : true}
           cssClass="sm:w-min sm:px-7 sm:ml-auto"
+          loading={isLoading}
         >
           Save
         </Button>
       </div>
-      {/* <Image src={pictureURL} width={100} height={100} alt="" />
-      <Image src={userAccount.picture} width={100} height={100} alt="" /> */}
     </form>
   );
 };
