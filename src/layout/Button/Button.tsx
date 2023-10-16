@@ -1,10 +1,12 @@
 import React, { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
+import { ClipLoader } from "react-spinners";
 
 type ButtonProps<T extends ElementType> = {
   renderAs?: T;
   children: ReactNode;
   role: "primary" | "secondary";
   cssClass?: string;
+  loading?: boolean;
 } & ComponentPropsWithoutRef<T>;
 
 const Button = <T extends ElementType = "button">({
@@ -12,6 +14,7 @@ const Button = <T extends ElementType = "button">({
   children,
   role,
   cssClass,
+  loading,
   ...rest
 }: ButtonProps<T>): JSX.Element => {
   const cssClasses =
@@ -23,7 +26,7 @@ const Button = <T extends ElementType = "button">({
       {...rest}
       className={`${cssClass} w-full text-headingS flex justify-center py-[0.6875rem] rounded-lg ${cssClasses} `}
     >
-      {children}
+      {loading ? <ClipLoader size={23} color="hsl(0, 0%, 100%)" /> : children}
     </button>
   );
 };
