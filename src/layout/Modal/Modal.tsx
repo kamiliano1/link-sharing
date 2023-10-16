@@ -5,15 +5,13 @@ import { UserCredType } from "./userCredType";
 import RegisterModal from "./RegisterModal";
 import logoBig from "../../../public/icons/logo-devlinks-large.svg";
 import Image from "next/image";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/app/firebase/clientApp";
 type ModalProps = {};
 
-// type UserCredType = {
-//   email: string;
-//   password: string;
-//   repeatPassword: string;
-// };
 export type ModalStatusType = "login" | "register";
 const Modal: React.FC<ModalProps> = () => {
+  const [user] = useAuthState(auth);
   const [modalOpen, setIsModalOpen] = useState<boolean>(true);
   const [modalStatus, setModalStatus] = useState<ModalStatusType>("login");
   const [userCred, setUserCred] = useState<UserCredType>({
@@ -23,20 +21,7 @@ const Modal: React.FC<ModalProps> = () => {
   });
   return (
     <>
-      <button
-        className="z-[300] bg-purple"
-        onClick={() => {
-          setIsModalOpen((prev) => !prev);
-        }}
-      >
-        OPENNN
-      </button>
-      <Dialog.Root
-        open={modalOpen}
-        // onOpenChange={() => {
-        //   setIsModalOpen((prev) => !prev);
-        // }}
-      >
+      <Dialog.Root open={user ? false : true}>
         <Dialog.Portal>
           <Dialog.Overlay className="bg-white sm:bg-lightGrey fixed inset-0 z-[150]" />
           <Dialog.Content
@@ -66,14 +51,6 @@ const Modal: React.FC<ModalProps> = () => {
                 />
               )}
             </div>
-            {/* <button
-              className="z-[300] bg-purple"
-              onClick={() => {
-                setIsModalOpen((prev) => !prev);
-              }}
-            >
-              OPENNN
-            </button> */}
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
