@@ -1,21 +1,19 @@
-import React, { useEffect, useState } from "react";
-import logoBig from "../../../public/icons/logo-devlinks-large.svg";
-import Image from "next/image";
-import { useForm, SubmitHandler } from "react-hook-form";
 import Button from "@/layout/Button/Button";
-import { useRecoilState } from "recoil";
+import React, { useEffect, useState } from "react";
 import {
   useAuthState,
   useSignInWithEmailAndPassword,
 } from "react-firebase-hooks/auth";
-// import { userCredState } from "../atoms/userCredAtom";
-// import EmailIcon from "@/public/icons/icon-email.svg";
-// import PasswordIcon from "@/public/icons/icon-password.svg";
-import { auth } from "@/app/firebase/clientApp";
-import { UserCredType } from "./userCredType";
-import { ModalStatusType } from "./Modal";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useRecoilState } from "recoil";
+
+import { auth, firestore } from "@/app/firebase/clientApp";
+import { userAccountState } from "@/atoms/userAccountAtom";
+import { doc, getDoc } from "firebase/firestore";
 import { AiFillMail } from "react-icons/ai";
 import { BiSolidLock } from "react-icons/bi";
+import { ModalStatusType } from "./Modal";
+import { UserCredType } from "./userCredType";
 type LoginModalProps = {
   open: boolean;
   userCred: UserCredType;
@@ -23,26 +21,24 @@ type LoginModalProps = {
   setModalStatus: React.Dispatch<React.SetStateAction<ModalStatusType>>;
 };
 
-// type ModalStatusType = "login" | "register";
 const LoginModal: React.FC<LoginModalProps> = ({
   open,
   userCred,
   setUserCred,
   setModalStatus,
 }) => {
-  // const [userCred, setUserCred] = useRecoilState(userCredState);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<UserCredType>();
-  // const [modalStatus, setModalStatus] = useState<ModalStatusType>("login");
   const [signInWithEmailAndPassword, userName, loading, firebaseError] =
     useSignInWithEmailAndPassword(auth);
   const [error, setError] = useState(false);
+  const [userAccount, setUserAccount] = useRecoilState(userAccountState);
+  const [user] = useAuthState(auth);
   const onSubmit: SubmitHandler<UserCredType> = (data) =>
     signInWithEmailAndPassword(data.email, data.currentPassword);
-  // console.log(firebaseError?.message);
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUserCred((prevData) => {
@@ -57,9 +53,36 @@ const LoginModal: React.FC<LoginModalProps> = ({
     if (firebaseError?.message) setError(true);
   }, [firebaseError?.message]);
 
-  // useEffect(() => {
-  //   setError(false);
-  // }, [userCred.email, userCred.password]);
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const userDataRef = doc(firestore, "users", user!.uid);
+        const userData = await getDoc(userDataRef);
+        const bookmarkData = userData.data();
+        if (bookmarkData) {
+          setUserAccount({
+            firstName: bookmarkData.firstName,
+            lastName: bookmarkData.lastName,
+            email: bookmarkData.email,
+            picture: bookmarkData.picture,
+            userLink: bookmarkData.userLink,
+          });
+        }
+      } catch (error: any) {
+        console.log("getBookmarkError", error.message);
+      }
+    };
+    if (userName) {
+      getUserData();
+    }
+  }, [setUserAccount, user, userName]);
+
+  const login = () => {
+    signInWithEmailAndPassword(
+      "aaa@wp.plllllllllllllllllll",
+      "aaa@wp.plllllllllllllllllll"
+    );
+  };
   return (
     <div>
       <h2 className="text-headingMmobile sm:text-headingM mb-2">Login</h2>
@@ -142,14 +165,15 @@ const LoginModal: React.FC<LoginModalProps> = ({
         <p className="text-red text-bodyS mb-2">
           {error && "Invalid e-mail or password"}
         </p>
-        <Button role="primary" cssClass="mb-6">
+        <Button role="primary" cssClass="mb-6" loading={loading}>
           Login
         </Button>
       </form>
+      <button onClick={login}>Login z danymi</button>
       <p className="text-center text-grey">
-        Don`t have an account?{" "}
+        Don`t have an account?
         <span
-          className="text-purple block sm:inline-block w-[150px] sm:w-auto mx-auto hover:text-purpleHover"
+          className="text-purple block sm:inline-block w-[150px] sm:w-auto mx-auto hover:text-purpleHover cursor-pointer"
           onClick={() => setModalStatus("register")}
         >
           Create account
