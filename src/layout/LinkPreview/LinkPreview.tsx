@@ -1,54 +1,12 @@
-import React from "react";
-import PhoneMockup from "../../../public/icons/illustration-phone-mockup.svg";
-import Image from "next/image";
-import PreviewLink from "../Select/PreviewLink";
-import { useRecoilValue } from "recoil";
-import { previewUserLink } from "@/atoms/previewUserLinkAtom";
 import { userAccountState } from "@/atoms/userAccountAtom";
-import {
-  DndContext,
-  DragEndEvent,
-  PointerSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  horizontalListSortingStrategy,
-  SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+import Image from "next/image";
+import React from "react";
+import { useRecoilValue } from "recoil";
+import PhoneMockup from "../../../public/icons/illustration-phone-mockup.svg";
+import PreviewLink from "../Select/PreviewLink";
 type LinkPreviewProps = {};
-
 const LinkPreview: React.FC<LinkPreviewProps> = () => {
-  const previewLink = useRecoilValue(previewUserLink);
   const userAccount = useRecoilValue(userAccountState);
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
-    })
-  );
-  const handleDragDrop = async (e: DragEndEvent) => {
-    console.log(e);
-    // if (e.active.id === e.over?.id) return;
-    // const activeBoard = boardState.findIndex(
-    //   (board) => board.name === e.active.id
-    // );
-    // const targetBoard = boardState.findIndex(
-    //   (board) => board.name === e.over?.id
-    // );
-    // const updatedBoard = arrayMove(boardState, activeBoard, targetBoard);
-    // setBoardState(updatedBoard);
-    // if (user) {
-    //   const boardRef = doc(firestore, `users/${user?.uid}`);
-    //   await updateDoc(boardRef, {
-    //     board: updatedBoard,
-    //   });
-    // }
-  };
   return (
     <div className="hidden lg:flex lg:justify-center lg:items-center bg-white w-[560px] m-6 mr-0">
       <div className="relative">
@@ -80,25 +38,14 @@ const LinkPreview: React.FC<LinkPreviewProps> = () => {
             {userAccount.email}
           </p>
           <div className="max-h-[305px] overflow-y-auto scrollbar">
-            <DndContext
-              collisionDetection={closestCenter}
-              onDragEnd={handleDragDrop}
-              sensors={sensors}
-            >
-              <SortableContext
-                items={userAccount?.userLink}
-                strategy={horizontalListSortingStrategy}
-              >
-                {userAccount?.userLink.map((item) => (
-                  <PreviewLink
-                    key={item.id}
-                    platform={item.platform}
-                    link={item.link}
-                    id={item.id}
-                  />
-                ))}
-              </SortableContext>
-            </DndContext>
+            {userAccount?.userLink.map((item) => (
+              <PreviewLink
+                key={item.id}
+                platform={item.platform}
+                link={item.link}
+                id={item.id}
+              />
+            ))}
           </div>
         </div>
       </div>
