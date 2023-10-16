@@ -1,22 +1,14 @@
-import React, { useEffect, useState } from "react";
-import logoBig from "../../../public/icons/logo-devlinks-large.svg";
-import Image from "next/image";
-import { useForm, SubmitHandler } from "react-hook-form";
 import Button from "@/layout/Button/Button";
-import { useRecoilState } from "recoil";
-import {
-  useAuthState,
-  useSignInWithEmailAndPassword,
-} from "react-firebase-hooks/auth";
-// import { userCredState } from "../atoms/userCredAtom";
-// import EmailIcon from "@/public/icons/icon-email.svg";
-// import PasswordIcon from "@/public/icons/icon-password.svg";
-import { auth } from "@/app/firebase/clientApp";
-import { UserCredType } from "./userCredType";
-import { ModalStatusType } from "./Modal";
+import React, { useEffect, useState } from "react";
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { auth, firestore } from "@/app/firebase/clientApp";
+import { User } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import { AiFillMail } from "react-icons/ai";
 import { BiSolidLock } from "react-icons/bi";
-import { ClipLoader } from "react-spinners";
+import { ModalStatusType } from "./Modal";
+import { UserCredType } from "./userCredType";
 
 type RegisterModalProps = {
   open: boolean;
@@ -31,7 +23,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
   setUserCred,
   setModalStatus,
 }) => {
-  // const [userCred, setUserCred] = useRecoilState(userCredState);
   const {
     register,
     handleSubmit,
@@ -39,10 +30,14 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
     setFocus,
     formState: { errors },
   } = useForm<UserCredType>();
-  // const [modalStatus, setModalStatus] = useState<ModalStatusType>("login");
-  const [signInWithEmailAndPassword, userName, loading, firebaseError] =
-    useSignInWithEmailAndPassword(auth);
+  const [
+    createUserWithEmailAndPassword,
+    userCredentials,
+    loading,
+    firebaseError,
+  ] = useCreateUserWithEmailAndPassword(auth);
   const [error, setError] = useState(false);
+  const [userEmail, setUserEmail] = useState<string>("");
   const onSubmit: SubmitHandler<UserCredType> = (data) => {
     if (userCred.currentPassword.length < 8)
       setUseFormError("currentPassword", {
@@ -56,7 +51,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
       setFocus("repeatPassword");
       return;
     }
-    // signInWithEmailAndPassword(data.email, data.currentPassword);
     if (userCred.currentPassword !== userCred.repeatPassword) {
       setUseFormError("currentPassword", {
         message: "Passwords does not match",
@@ -67,10 +61,11 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
       });
       return;
     }
+    setUserEmail(data.currentPassword);
+    createUserWithEmailAndPassword(data.email, data.currentPassword);
   };
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
     setUserCred((prevData) => {
       return {
         ...prevData,
@@ -81,10 +76,27 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
   useEffect(() => {
     if (firebaseError?.message) setError(true);
   }, [firebaseError?.message]);
-
-  // useEffect(() => {
-  //   setError(false);
-  // }, [userCred.email, userCred.password]);
+  useEffect(() => {
+    const createUserDocument = async (user: User) => {
+      const userDocRef = doc(firestore, "users", user.uid);
+      await setDoc(
+        userDocRef,
+        JSON.parse(
+          JSON.stringify({
+            ...user,
+            firstName: "",
+            lastName: "",
+            email: userEmail,
+            picture: "",
+            userLink: [],
+          })
+        )
+      );
+    };
+    if (userCredentials) {
+      createUserDocument(userCredentials.user);
+    }
+  }, [userCredentials, userEmail]);
   return (
     <div>
       <h2 className="text-headingMmobile sm:text-headingM mb-2">
@@ -209,13 +221,11 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
         <p className="text-bodyXS text-grey my-6">
           Password must contain at least 8 characters
         </p>
-        <p className="text-red text-bodyS mt-2">{error}</p>
-        <Button role="primary">
-          {loading ? (
-            <ClipLoader size={23} color="hsl(0, 0%, 100%)" />
-          ) : (
-            "Create new account"
-          )}
+        <p className="text-red text-bodyS mb-2">
+          {error && "Invalid e-mail or password"}
+        </p>
+        <Button role="primary" loading={loading}>
+          Create new account
         </Button>
       </form>
 
