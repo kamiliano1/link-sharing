@@ -1,19 +1,19 @@
-import NextLink from "next/link";
-import React from "react";
-import Button from "../Button/Button";
-import Image from "next/image";
-import logoSmall from "../../../public/icons/logo-devlinks-small.svg";
-import logoBig from "../../../public/icons/logo-devlinks-large.svg";
-import { AiOutlineLink, AiOutlineEye } from "react-icons/ai";
-import { RxAvatar } from "react-icons/rx";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
-import { usePathname, useRouter } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React from "react";
+import {} from "react-firebase-hooks/auth";
+import { AiOutlineEye, AiOutlineLink } from "react-icons/ai";
+import { RxAvatar } from "react-icons/rx";
+import logoBig from "../../../public/icons/logo-devlinks-large.svg";
+import logoSmall from "../../../public/icons/logo-devlinks-small.svg";
+import Button from "../Button/Button";
+
 type NavbarProps = {};
 
 const Navbar: React.FC<NavbarProps> = () => {
   const pathname = usePathname();
-
   return (
     <NavigationMenu.Root>
       <NavigationMenu.List>
