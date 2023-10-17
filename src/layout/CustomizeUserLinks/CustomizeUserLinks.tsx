@@ -7,7 +7,11 @@ import {
 } from "react-hook-form";
 
 import { popUpState } from "@/atoms/togglePopUpAtom";
-import { UserAccountState, userAccountState } from "@/atoms/userAccountAtom";
+import {
+  UserAccountState,
+  UserLink,
+  userAccountState,
+} from "@/atoms/userAccountAtom";
 import {
   DndContext,
   DragEndEvent,
@@ -28,11 +32,15 @@ import Button from "../Button/Button";
 import { SelectInput } from "../Select/SelectInput";
 import { linksList } from "../Select/linkList";
 import DraggableLink from "./DraggableLink";
+import { auth, firestore } from "@/app/firebase/clientApp";
+import { doc, runTransaction } from "firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
 type CustomizeUserLinksProps = {};
 
 const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
   const [isPopUpOpen, setIsPopUpOpen] = useRecoilState(popUpState);
+  const [user, loading] = useAuthState(auth);
   const [isSaveButtonDesactive, setisSaveButtonDesactive] =
     useState<boolean>(false);
   const {
@@ -51,6 +59,29 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
     name: "userLink",
   });
 
+  const handleLink = async (userLink: UserLink) => {
+    const { platform, link, id } = userLink;
+    try {
+      const communityDocRef = doc(firestore, "links", platform);
+
+      await runTransaction(firestore, async (transaction) => {
+        const communityDoc = await transaction.get(communityDocRef);
+
+        //create userLinks
+        transaction.set(
+          doc(firestore, `users/${user?.uid}/userLinks`, `${platform}_${id}`),
+          {
+            platformName: platform,
+            link: link,
+            id: id,
+          }
+        ); // gdy ktoras z tych transakcji nie bedzie udana to zadna nie bedzie
+      });
+    } catch (error: any) {
+      console.log("handleCreateLink error", error);
+    }
+  };
+
   useEffect(() => {
     if (userAccount.userLink.length || fields.length) {
       setisSaveButtonDesactive(false);
@@ -60,7 +91,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
   }, [userAccount.userLink, fields]);
   const formSubmit: SubmitHandler<UserAccountState> = (data) => {
     setUserAccount((prev) => ({ ...prev, userLink: data.userLink }));
-
+    data.userLink.map((item) => handleLink(item));
     setIsPopUpOpen({ togglePopUp: true });
   };
   const validatePlatformLink = async (value: string) => {
@@ -113,7 +144,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
         >
           + Add new link
         </Button>
-        <div className="h-[550px]">
+        <div className="h-[550px] overflow-y-auto scrollbar">
           <DndContext
             collisionDetection={closestCenter}
             onDragEnd={handleDragDrop}
