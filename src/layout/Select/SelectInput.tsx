@@ -40,7 +40,7 @@ export const SelectInput = forwardRef<HTMLButtonElement, SelectInputProps>(
         <Select.Portal>
           <Select.Content
             position="popper"
-            className="overflow-hidden bg-white rounded-md mt-8 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] SelectContent"
+            className="overflow-hidden bg-white rounded-md mt-8 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] SelectContent z-[9999]"
           >
             <Select.Group>
               {linksList.map((item) => {
