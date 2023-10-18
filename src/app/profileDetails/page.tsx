@@ -3,9 +3,12 @@ import CustomizeUserAccount from "@/layout/CustomizeUserAccount/CustomizeUserAcc
 import LinkPreview from "@/layout/LinkPreview/LinkPreview";
 import Navbar from "@/layout/Navbar/Navbar";
 import PopUp from "@/layout/PopUp/PopUp";
+import useDataFromFirebase from "@/utility/useDataFromFirebase";
 import React from "react";
 
 const ProfileDetails: React.FC = () => {
+  const { getUserData } = useDataFromFirebase();
+  getUserData();
   return (
     <main className="min-h-[100vh]">
       <Navbar />
