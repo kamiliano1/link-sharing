@@ -5,6 +5,7 @@ export type UserLink = {
   platform: PlatfromsType;
   link: string;
   id: string;
+  order: number;
 };
 
 export type UserAccountState = {
@@ -13,6 +14,7 @@ export type UserAccountState = {
   email?: string;
   picture?: string;
   userLink: UserLink[];
+  isLoaded: boolean;
 };
 
 const defaultUserAccountState: UserAccountState = {
@@ -21,6 +23,7 @@ const defaultUserAccountState: UserAccountState = {
   email: "",
   picture: "",
   userLink: [],
+  isLoaded: false,
 };
 
 export const userAccountState = atom<UserAccountState>({
