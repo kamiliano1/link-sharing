@@ -2,14 +2,12 @@ import React from "react";
 import Image from "next/image";
 import PreviewLink from "../Select/PreviewLink";
 import { useRecoilValue } from "recoil";
-import { previewUserLink } from "@/atoms/previewUserLinkAtom";
 import { userAccountState } from "@/atoms/userAccountAtom";
 import { PlatfromsType } from "../Select/ActiveLinksType";
 
 type PreviewUserProfileProps = {};
 
 const PreviewUserProfile: React.FC<PreviewUserProfileProps> = () => {
-  const previewLink = useRecoilValue(previewUserLink);
   const userAccount = useRecoilValue(userAccountState);
   return (
     <>
