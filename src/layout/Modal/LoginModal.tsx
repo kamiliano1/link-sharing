@@ -14,6 +14,7 @@ import { AiFillMail } from "react-icons/ai";
 import { BiSolidLock } from "react-icons/bi";
 import { ModalStatusType } from "./Modal";
 import { UserCredType } from "./userCredType";
+import useDataFromFirebase from "@/utility/useDataFromFirebase";
 type LoginModalProps = {
   open: boolean;
   userCred: UserCredType;
@@ -35,6 +36,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
   const [signInWithEmailAndPassword, userName, loading, firebaseError] =
     useSignInWithEmailAndPassword(auth);
   const [error, setError] = useState(false);
+  const { getUserData } = useDataFromFirebase();
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
   const [user] = useAuthState(auth);
   const onSubmit: SubmitHandler<UserCredType> = (data) =>
@@ -54,28 +56,10 @@ const LoginModal: React.FC<LoginModalProps> = ({
   }, [firebaseError?.message]);
 
   useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const userDataRef = doc(firestore, "users", user!.uid);
-        const userData = await getDoc(userDataRef);
-        const bookmarkData = userData.data();
-        if (bookmarkData) {
-          setUserAccount({
-            firstName: bookmarkData.firstName,
-            lastName: bookmarkData.lastName,
-            email: bookmarkData.email,
-            picture: bookmarkData.picture,
-            userLink: bookmarkData.userLink,
-          });
-        }
-      } catch (error: any) {
-        console.log("getBookmarkError", error.message);
-      }
-    };
     if (userName) {
       getUserData();
     }
-  }, [setUserAccount, user, userName]);
+  }, [getUserData, setUserAccount, user, userName]);
 
   const login = () => {
     signInWithEmailAndPassword(
