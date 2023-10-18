@@ -60,7 +60,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
   });
 
   const handleLink = async (userLink: UserLink) => {
-    const { platform, link, id } = userLink;
+    const { platform, link, id, order } = userLink;
     try {
       const communityDocRef = doc(firestore, "links", platform);
 
@@ -72,8 +72,9 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
           doc(firestore, `users/${user?.uid}/userLinks`, `${platform}_${id}`),
           {
             platformName: platform,
-            link: link,
-            id: id,
+            link,
+            id,
+            order,
           }
         ); // gdy ktoras z tych transakcji nie bedzie udana to zadna nie bedzie
       });
@@ -90,7 +91,13 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
     setisSaveButtonDesactive(true);
   }, [userAccount.userLink, fields]);
   const formSubmit: SubmitHandler<UserAccountState> = (data) => {
-    setUserAccount((prev) => ({ ...prev, userLink: data.userLink }));
+    let orderedUserLink = data.userLink;
+    orderedUserLink = orderedUserLink.map((item, order) => ({
+      ...item,
+      order: order,
+    }));
+    setUserAccount((prev) => ({ ...prev, userLink: orderedUserLink }));
+    // setUserAccount((prev) => ({ ...prev, userLink: data.userLink }));
     data.userLink.map((item) => handleLink(item));
     setIsPopUpOpen({ togglePopUp: true });
   };
@@ -117,7 +124,10 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
       },
     })
   );
-
+  const sprawdz = () => {
+    console.log(fields, "fields");
+    console.log(userAccount, "userAccount");
+  };
   const handleDragDrop = async (e: DragEndEvent) => {
     if (e.active.id === e.over?.id) return;
     const startLinkIndex = fields.findIndex((item) => item.id === e.active.id);
@@ -140,10 +150,20 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
         <Button
           role="secondary"
           type="button"
-          onClick={() => append({ platform: "GitHub", link: "", id: nanoid() })}
+          onClick={() =>
+            append({
+              platform: "GitHub",
+              link: "",
+              id: nanoid(),
+              order: fields.length,
+            })
+          }
         >
           + Add new link
         </Button>
+        <button type="button" onClick={sprawdz}>
+          fields lenght
+        </button>
         <div className="h-[550px] overflow-y-auto scrollbar">
           <DndContext
             collisionDetection={closestCenter}
