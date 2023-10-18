@@ -4,8 +4,11 @@ import LinkPreview from "@/layout/LinkPreview/LinkPreview";
 import Modal from "@/layout/Modal/Modal";
 import Navbar from "@/layout/Navbar/Navbar";
 import PopUp from "@/layout/PopUp/PopUp";
+import useDataFromFirebase from "@/utility/useDataFromFirebase";
 
 export default function Home() {
+  const { getUserData } = useDataFromFirebase();
+  getUserData();
   return (
     <main className="min-h-[100vh]">
       <Modal />
