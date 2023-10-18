@@ -8,7 +8,6 @@ import { AiOutlineEye, AiOutlineLink } from "react-icons/ai";
 import { RxAvatar } from "react-icons/rx";
 import logoBig from "../../../public/icons/logo-devlinks-large.svg";
 import logoSmall from "../../../public/icons/logo-devlinks-small.svg";
-import Button from "../Button/Button";
 
 type NavbarProps = {};
 
@@ -20,21 +19,15 @@ const Navbar: React.FC<NavbarProps> = () => {
         {pathname === "/previewProfile" ? (
           <div className="bg-white sm:m-6 px-6 py-4 sm:rounded-xl flex justify-between gap-4 items-center self-stretch relative z-[5]">
             <NavigationMenu.Item className="w-full max-w-[159px]">
-              <NavigationMenu.Trigger className="w-full">
-                <Link href="/profileDetails">
-                  <Button role="secondary" className="text-purple">
-                    Back to Editor
-                  </Button>
+              <NavigationMenu.Trigger className="w-full border-[1px] text-purple border-purple bg-white enabled:hover:bg-lightPurple disabled:opacity-25 text-headingS flex justify-center py-[0.6875rem] rounded-lg">
+                <Link href="/profileDetails" className="">
+                  Back to Editor
                 </Link>
               </NavigationMenu.Trigger>
             </NavigationMenu.Item>
             <NavigationMenu.Item className="w-full max-w-[159px]">
-              <NavigationMenu.Trigger className="w-full">
-                <div className="w-full max-w-[159px]">
-                  <Button role="primary" className="">
-                    Share Link
-                  </Button>
-                </div>
+              <NavigationMenu.Trigger className="bg-purple text-white enabled:hover:bg-purpleHover disabled:opacity-25 shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] w-full text-headingS flex justify-center py-[0.6875rem] rounded-lg">
+                Share Link
               </NavigationMenu.Trigger>
             </NavigationMenu.Item>
           </div>
@@ -43,11 +36,7 @@ const Navbar: React.FC<NavbarProps> = () => {
             <NavigationMenu.Item>
               <NavigationMenu.Trigger>
                 <Link href="/">
-                  <Image
-                    src={logoSmall}
-                    className="sm:hidden "
-                    alt="web logo"
-                  />
+                  <Image src={logoSmall} className="sm:hidden" alt="web logo" />
                   <Image
                     src={logoBig}
                     className="hidden sm:block sm:mt-2"
