@@ -9,6 +9,7 @@ import { popUpState } from "@/atoms/togglePopUpAtom";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { useAuthState } from "react-firebase-hooks/auth";
+import useDataFromFirebase from "../../utility/useDataFromFirebase";
 type CustomizeUserAccountProps = {};
 
 const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
@@ -88,7 +89,6 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
         <h1 className="text-headingMmobile sm:text-headingM mb-2">
           Profile Details
         </h1>
-
         <p className="text-bodyM text-grey mb-10">
           Add your details to create a personal touch to your profile.
         </p>
