@@ -4,8 +4,7 @@ import {
   collection,
   doc,
   getDoc,
-  limit,
-  onSnapshot,
+  getDocs,
   orderBy,
   query,
 } from "firebase/firestore";
@@ -15,6 +14,7 @@ import { useRecoilState } from "recoil";
 const useDataFromFirebase = () => {
   const [user] = useAuthState(auth);
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
+
   const getUserData = async () => {
     if (userAccount.isLoaded) return;
     try {
@@ -32,23 +32,31 @@ const useDataFromFirebase = () => {
             isLoaded: true,
           });
         }
+        getSnippets();
       }
     } catch (error: any) {
       console.log("getBookmarkError", error.message);
     }
-    const userLinksRef = collection(firestore, `users/${user?.uid}/userLinks`);
-    const q = query(userLinksRef, orderBy("order"));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      // let userData: UserLink[];
-      snapshot.forEach((userSnapshot) => {
-        console.log(userSnapshot.data());
-        // userData = [...userData, userSnapshot.data()];
-      });
-      //   console.log(userData);
-      //   setUserAccount((prev) => ({ ...prev, userLink: userData }));
-    });
   };
-
+  const getMySnippets = async (userId: string) => {
+    const snippetQuery = query(
+      collection(firestore, `users/${userId}/userLinks`),
+      orderBy("order", "asc")
+    );
+    const snippetDocs = await getDocs(snippetQuery);
+    return snippetDocs.docs.map((doc) => ({ ...doc.data() }));
+  };
+  const getSnippets = async () => {
+    try {
+      const userLink = await getMySnippets(user?.uid!);
+      setUserAccount((prev) => ({
+        ...prev,
+        userLink: userLink as UserLink[],
+      }));
+    } catch (error: any) {
+      console.log("Error getting user snippets", error);
+    }
+  };
   return { getUserData };
 };
 
