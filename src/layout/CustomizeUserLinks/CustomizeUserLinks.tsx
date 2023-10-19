@@ -58,7 +58,9 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
     control,
     name: "userLink",
   });
-
+  useEffect(() => {
+    setValue("userLink", userAccount.userLink);
+  }, [setValue, loading, userAccount.userLink]);
   const handleLink = async (userLink: UserLink) => {
     const { platform, link, id, order } = userLink;
     try {
@@ -69,9 +71,9 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
 
         //create userLinks
         transaction.set(
-          doc(firestore, `users/${user?.uid}/userLinks`, `${platform}_${id}`),
+          doc(firestore, `users/${user?.uid}/userLinks`, `${id}`),
           {
-            platformName: platform,
+            platform,
             link,
             id,
             order,
@@ -97,8 +99,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
       order: order,
     }));
     setUserAccount((prev) => ({ ...prev, userLink: orderedUserLink }));
-    // setUserAccount((prev) => ({ ...prev, userLink: data.userLink }));
-    data.userLink.map((item) => handleLink(item));
+    orderedUserLink.map((item) => handleLink(item));
     setIsPopUpOpen({ togglePopUp: true });
   };
   const validatePlatformLink = async (value: string) => {
