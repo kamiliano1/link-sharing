@@ -1,5 +1,9 @@
 import { auth, firestore } from "@/app/firebase/clientApp";
-import { UserLink, userAccountState } from "@/atoms/userAccountAtom";
+import {
+  UserAccountState,
+  UserLink,
+  userAccountState,
+} from "@/atoms/userAccountAtom";
 import {
   collection,
   doc,
@@ -31,8 +35,8 @@ const useDataFromFirebase = () => {
             userLink: bookmarkData.userLink,
             isLoaded: true,
           });
+          getSnippets(user.uid, setUserAccount);
         }
-        getSnippets();
       }
     } catch (error: any) {
       console.log("getBookmarkError", error.message);
@@ -46,10 +50,17 @@ const useDataFromFirebase = () => {
     const snippetDocs = await getDocs(snippetQuery);
     return snippetDocs.docs.map((doc) => ({ ...doc.data() }));
   };
-  const getSnippets = async () => {
+  const getSnippets = async (
+    userId: string,
+    setUserState: (
+      valOrUpdater:
+        | UserAccountState
+        | ((currVal: UserAccountState) => UserAccountState)
+    ) => void
+  ) => {
     try {
-      const userLink = await getMySnippets(user?.uid!);
-      setUserAccount((prev) => ({
+      const userLink = await getMySnippets(userId);
+      setUserState((prev) => ({
         ...prev,
         userLink: userLink as UserLink[],
       }));
@@ -57,7 +68,7 @@ const useDataFromFirebase = () => {
       console.log("Error getting user snippets", error);
     }
   };
-  return { getUserData };
+  return { getUserData, getMySnippets, getSnippets };
 };
 
 export default useDataFromFirebase;
