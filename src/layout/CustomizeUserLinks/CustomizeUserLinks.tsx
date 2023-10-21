@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Controller,
   SubmitHandler,
@@ -33,15 +33,18 @@ import { SelectInput } from "../Select/SelectInput";
 import { linksList } from "../Select/linkList";
 import DraggableLink from "./DraggableLink";
 import { auth, firestore } from "@/app/firebase/clientApp";
-import { doc, runTransaction } from "firebase/firestore";
+import { deleteDoc, doc, runTransaction } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
+import useDataFromFirebase from "@/utility/useDataFromFirebase";
 type CustomizeUserLinksProps = {};
 
 const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
+  const { getMySnippets } = useDataFromFirebase();
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isPopUpOpen, setIsPopUpOpen] = useRecoilState(popUpState);
   const [user, loading] = useAuthState(auth);
-  const [isSaveButtonDesactive, setisSaveButtonDesactive] =
+  const [isSaveButtonDesactive, setIsSaveButtonDesactive] =
     useState<boolean>(false);
   const {
     register,
@@ -61,15 +64,13 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
   useEffect(() => {
     setValue("userLink", userAccount.userLink);
   }, [setValue, loading, userAccount.userLink]);
-  const handleLink = async (userLink: UserLink) => {
+  const deleteUserSnippets = async (id: string) => {
+    await deleteDoc(doc(firestore, `users/${user?.uid}/userLinks`, id));
+  };
+  const updateSnippet = async (userLink: UserLink) => {
     const { platform, link, id, order } = userLink;
     try {
-      const communityDocRef = doc(firestore, "links", platform);
-
       await runTransaction(firestore, async (transaction) => {
-        const communityDoc = await transaction.get(communityDocRef);
-
-        //create userLinks
         transaction.set(
           doc(firestore, `users/${user?.uid}/userLinks`, `${id}`),
           {
@@ -78,29 +79,37 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
             id,
             order,
           }
-        ); // gdy ktoras z tych transakcji nie bedzie udana to zadna nie bedzie
+        );
       });
     } catch (error: any) {
       console.log("handleCreateLink error", error);
     }
   };
-
   useEffect(() => {
     if (userAccount.userLink.length || fields.length) {
-      setisSaveButtonDesactive(false);
+      setIsSaveButtonDesactive(false);
       return;
     }
-    setisSaveButtonDesactive(true);
+    setIsSaveButtonDesactive(true);
   }, [userAccount.userLink, fields]);
-  const formSubmit: SubmitHandler<UserAccountState> = (data) => {
+  const formSubmit: SubmitHandler<UserAccountState> = async (data) => {
+    setIsLoading(true);
     let orderedUserLink = data.userLink;
     orderedUserLink = orderedUserLink.map((item, order) => ({
       ...item,
       order: order,
     }));
     setUserAccount((prev) => ({ ...prev, userLink: orderedUserLink }));
-    orderedUserLink.map((item) => handleLink(item));
+    orderedUserLink.map((item) => updateSnippet(item));
     setIsPopUpOpen({ togglePopUp: true });
+    const userLink = await getMySnippets(user?.uid!);
+    const snippetsToDelete = userLink.filter((item) => {
+      return data.userLink.find((element) => element.id === item.id)
+        ? false
+        : true;
+    });
+    snippetsToDelete.map((item) => deleteUserSnippets(item.id));
+    setIsLoading(false);
   };
   const validatePlatformLink = async (value: string) => {
     let isValidateLink = false;
@@ -125,10 +134,6 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
       },
     })
   );
-  const sprawdz = () => {
-    console.log(fields, "fields");
-    console.log(userAccount, "userAccount");
-  };
   const handleDragDrop = async (e: DragEndEvent) => {
     if (e.active.id === e.over?.id) return;
     const startLinkIndex = fields.findIndex((item) => item.id === e.active.id);
@@ -162,9 +167,6 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
         >
           + Add new link
         </Button>
-        <button type="button" onClick={sprawdz}>
-          fields lenght
-        </button>
         <div className="h-[550px] overflow-y-auto scrollbar">
           <DndContext
             collisionDetection={closestCenter}
@@ -285,7 +287,8 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
       <div className="bg-white m-4 sm:m-6 sm:mt-0 mt-0 p-4">
         <Button
           role="primary"
-          disabled={isSaveButtonDesactive}
+          // disabled={isLoading ? true : isSaveButtonDesactive}
+          loading={isLoading}
           cssClass="sm:w-min sm:px-7 sm:ml-auto"
         >
           Save
