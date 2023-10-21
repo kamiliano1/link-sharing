@@ -1,22 +1,56 @@
-import React from "react";
+import { firestore } from "@/app/firebase/clientApp";
+import { UserAccountState } from "@/atoms/userAccountAtom";
+import useDataFromFirebase from "@/utility/useDataFromFirebase";
+import { doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
+import React, { useEffect, useState } from "react";
 import PreviewLink from "../Select/PreviewLink";
-import { useRecoilValue } from "recoil";
-import { userAccountState } from "@/atoms/userAccountAtom";
-import { PlatfromsType } from "../Select/ActiveLinksType";
 
-type PreviewUserProfileProps = {};
+type PreviewUserProfileProps = { userId: string };
 
-const PreviewUserProfile: React.FC<PreviewUserProfileProps> = () => {
-  const userAccount = useRecoilValue(userAccountState);
+const PreviewUserProfile: React.FC<PreviewUserProfileProps> = ({ userId }) => {
+  const { getSnippets } = useDataFromFirebase();
+  const [previewAccount, setPreviewAccount] = useState<UserAccountState>({
+    userLink: [],
+    isLoaded: false,
+  });
+  const [isUserExist, setIsUserExist] = useState<boolean>(false);
+  useEffect(() => {
+    const getUserData = async () => {
+      if (previewAccount.isLoaded) return;
+      try {
+        if (userId) {
+          const userDataRef = doc(firestore, "users", userId);
+          const userData = await getDoc(userDataRef);
+          const bookmarkData = userData.data();
+          if (bookmarkData) {
+            setPreviewAccount({
+              firstName: bookmarkData.firstName,
+              lastName: bookmarkData.lastName,
+              email: bookmarkData.email,
+              picture: bookmarkData.picture,
+              userLink: bookmarkData.userLink,
+              isLoaded: true,
+            });
+            getSnippets(userId, setPreviewAccount);
+            setIsUserExist(true);
+            return;
+          }
+        }
+      } catch (error: any) {
+        console.log("getBookmarkError", error.message);
+      }
+    };
+    getUserData();
+  }, [getSnippets, previewAccount.isLoaded, userId]);
   return (
     <>
       <div className="sm:mt-28 flex flex-col items-center bg-white sm:w-[349px] mx-auto sm:rounded-3xl px-14 py-12 h-full sm:min-h-[569px] shadow-[0px_0px_32px_0px_rgba(0,_0,_0,_0.10)] sm:z-[5] sm:relative">
-        {userAccount.picture ? (
+        {previewAccount.picture ? (
           <Image
             width={96}
             height={96}
-            src={userAccount.picture}
+            src={previewAccount.picture}
             alt="user Avatar"
             className="aspect-square rounded-full w-[96px] border-[4px] border-purple mb-[1.35rem]"
           />
@@ -25,20 +59,25 @@ const PreviewUserProfile: React.FC<PreviewUserProfileProps> = () => {
         )}
         <h2
           className={`text-headingM capitalize w-[250px] truncate text-center  ${
-            userAccount.firstName && "bg-white"
+            previewAccount.firstName && "bg-white"
           } `}
         >
-          {userAccount.firstName} {userAccount.lastName}
+          {previewAccount.firstName} {previewAccount.lastName}
         </h2>
+        {!isUserExist && (
+          <p className="text-headingS mb-[50px] w-[250px] truncate text-center">
+            User does not exist
+          </p>
+        )}
         <p
           className={`text-headingS mb-[50px] w-[250px] truncate text-center ${
-            userAccount.email && "bg-white"
+            previewAccount.email && "bg-white"
           }`}
         >
-          {userAccount.email}
+          {previewAccount.email}
         </p>
         <div className="max-h-[305px] overflow-y-auto scrollbar">
-          {userAccount.userLink.map((item) => (
+          {previewAccount.userLink?.map((item) => (
             <PreviewLink
               id={item.id}
               key={item.id}
