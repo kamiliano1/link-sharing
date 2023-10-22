@@ -1,9 +1,10 @@
 import { userAccountState } from "@/atoms/userAccountAtom";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { useRecoilValue } from "recoil";
 import PhoneMockup from "../../../public/icons/illustration-phone-mockup.svg";
 import PreviewLink from "../Select/PreviewLink";
+
 type LinkPreviewProps = {};
 const LinkPreview: React.FC<LinkPreviewProps> = () => {
   const userAccount = useRecoilValue(userAccountState);
@@ -30,6 +31,7 @@ const LinkPreview: React.FC<LinkPreviewProps> = () => {
           >
             {userAccount.firstName} {userAccount.lastName}
           </h2>
+
           <p
             className={`text-bodyS mb-[50px] w-[160px] truncate text-center h-5 ${
               userAccount.email && "bg-white"
