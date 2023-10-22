@@ -7,8 +7,8 @@ import PopUp from "@/layout/PopUp/PopUp";
 import useDataFromFirebase from "@/utility/useDataFromFirebase";
 
 export default function Home() {
-  const { getUserData } = useDataFromFirebase();
-  getUserData();
+  const { getCurrentUserData } = useDataFromFirebase();
+  getCurrentUserData();
   return (
     <main className="min-h-[100vh]">
       <Modal />
