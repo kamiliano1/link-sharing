@@ -19,7 +19,7 @@ const useDataFromFirebase = () => {
   const [user] = useAuthState(auth);
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
 
-  const getUserData = async () => {
+  const getCurrentUserData = async () => {
     if (userAccount.isLoaded) return;
     try {
       if (user) {
@@ -68,7 +68,7 @@ const useDataFromFirebase = () => {
       console.log("Error getting user snippets", error);
     }
   };
-  return { getUserData, getMySnippets, getSnippets };
+  return { getCurrentUserData, getMySnippets, getSnippets };
 };
 
 export default useDataFromFirebase;
