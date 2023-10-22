@@ -7,8 +7,8 @@ import useDataFromFirebase from "@/utility/useDataFromFirebase";
 import React from "react";
 
 const ProfileDetails: React.FC = () => {
-  const { getUserData } = useDataFromFirebase();
-  getUserData();
+  const { getCurrentUserData } = useDataFromFirebase();
+  getCurrentUserData();
   return (
     <main className="min-h-[100vh]">
       <Navbar />
