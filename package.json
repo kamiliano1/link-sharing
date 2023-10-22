@@ -29,6 +29,7 @@
     "react-firebase-hooks": "^5.1.1",
     "react-hook-form": "^7.46.2",
     "react-icons": "^4.11.0",
+    "react-loading-skeleton": "^3.3.1",
     "react-spinners": "^0.13.8",
     "recoil": "^0.7.7",
     "tailwindcss": "3.3.3",
