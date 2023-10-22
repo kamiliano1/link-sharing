@@ -36,7 +36,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
   const [signInWithEmailAndPassword, userName, loading, firebaseError] =
     useSignInWithEmailAndPassword(auth);
   const [error, setError] = useState(false);
-  const { getUserData } = useDataFromFirebase();
+  const { getCurrentUserData } = useDataFromFirebase();
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
   const [user] = useAuthState(auth);
   const onSubmit: SubmitHandler<UserCredType> = (data) =>
@@ -57,9 +57,9 @@ const LoginModal: React.FC<LoginModalProps> = ({
 
   useEffect(() => {
     if (userName) {
-      getUserData();
+      getCurrentUserData();
     }
-  }, [getUserData, setUserAccount, user, userName]);
+  }, [getCurrentUserData, setUserAccount, user, userName]);
 
   const login = () => {
     signInWithEmailAndPassword(
