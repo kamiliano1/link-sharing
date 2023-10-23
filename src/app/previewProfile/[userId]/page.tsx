@@ -6,9 +6,7 @@ import PreviewUserProfile from "@/layout/PreviewUserProfile/PreviewUserProfile";
 import { useParams } from "next/navigation";
 import React from "react";
 
-type PreviewProfileProps = {};
-
-const PreviewProfile: React.FC<PreviewProfileProps> = () => {
+export default function PreviewProfile() {
   const params = useParams();
   const userId = params.userId as string;
   return (
@@ -18,5 +16,4 @@ const PreviewProfile: React.FC<PreviewProfileProps> = () => {
       <PopUp type="copyLinktoClipBoard" />
     </main>
   );
-};
-export default PreviewProfile;
+}

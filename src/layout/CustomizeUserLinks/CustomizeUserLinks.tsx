@@ -21,10 +21,11 @@ import {
 import { deleteDoc, doc, runTransaction } from "firebase/firestore";
 import { nanoid } from "nanoid";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { FormEventHandler, useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
   Controller,
+  FieldArrayWithId,
   SubmitHandler,
   useFieldArray,
   useForm,
@@ -32,18 +33,31 @@ import {
 import { useRecoilState } from "recoil";
 import LinkIcon from "../../../public/icons/icon-link.svg";
 import Button from "../Button/Button";
-import { SelectInput } from "../Select/SelectInput";
 import { linksList } from "../Select/linkList";
 import CustomizeUserLinkSkeleton from "../Skeletons/CustomizeUserLinkSkeleton";
 import DraggableLink from "./DraggableLink";
-type CustomizeUserLinksProps = {};
+import { User } from "firebase/auth";
+import { previewUserAccountState } from "@/atoms/previewUserAccountAtom";
+import { SelectPlatformInput } from "../Select/SelectPlatformInput";
+type CustomizeUserLinksProps = {
+  user: User | null | undefined;
+  loading: boolean;
+};
 
-const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
+const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
+  user,
+  loading,
+}) => {
   const { getMySnippets } = useDataFromFirebase();
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
+  const [previewUserAccount, setPreviewUserAccount] = useRecoilState(
+    previewUserAccountState
+  );
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [sprawdzenie, setSprawdzenie] = useState<UserLink[]>([]);
   const [isPopUpOpen, setIsPopUpOpen] = useRecoilState(popUpState);
-  const [user, loading] = useAuthState(auth);
+  // const [user, loading] = useAuthState(auth);
   const [isSaveButtonDesactive, setIsSaveButtonDesactive] =
     useState<boolean>(false);
   const {
@@ -61,6 +75,13 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
     control,
     name: "userLink",
   });
+  useEffect(() => {
+    console.log("robi fieldsy");
+    // setPreviewUserAccount((prev) => ({ ...prev, userLink: watch("userLink") }));
+  }, [fields]);
+  useEffect(() => {
+    setPreviewUserAccount(userAccount);
+  }, [userAccount, setPreviewUserAccount]);
   useEffect(() => {
     setValue("userLink", userAccount.userLink);
   }, [setValue, loading, userAccount.userLink]);
@@ -134,17 +155,94 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
       },
     })
   );
+  // const zmianaFormy = (e: FormEventHandler<HTMLFormElement>) => {
+  //   const { name, value } = e.target;
+  //   console.log(name, value);
+  // };
+
+  // const zmianaFormy: React.FormEventHandler<HTMLFormElement> = (e: React.SyntheticEvent) => {
+  const handleFormChange = (e: React.ChangeEvent<HTMLFormElement>) => {
+    const { name, value } = e.target;
+    let number = parseInt(
+      name
+        .replace("userLink.", "")
+        .replace(".platform", "")
+        .replace(".link", "")
+    );
+    setPreviewUserAccount((prev) => {
+      let userLink = prev.userLink;
+      userLink = userLink.map((item, id) => {
+        if (id === number) {
+          return {
+            ...item,
+            link: name.includes("link") ? value : item.link,
+            platform: name.includes("platform") ? value : item.platform,
+          };
+        }
+        return item;
+      });
+      return { ...prev, userLink: userLink };
+    });
+    // setPreviewUserLink(getValues("userLink"));
+    // setSprawdzenie(updatedLinkArray);
+  };
   const handleDragDrop = async (e: DragEndEvent) => {
     if (e.active.id === e.over?.id) return;
     const startLinkIndex = fields.findIndex((item) => item.id === e.active.id);
     const dropLinkIndex = fields.findIndex((item) => item.id === e.over?.id);
     swap(startLinkIndex, dropLinkIndex);
+    setPreviewUserAccount((prev) => {
+      let userPlatforms = prev.userLink;
+      const platformToMove = prev.userLink[startLinkIndex];
+      const platformTarget = prev.userLink[dropLinkIndex];
+      userPlatforms = userPlatforms.map((item, id) => {
+        if (id === startLinkIndex) return platformTarget;
+        if (id === dropLinkIndex) return platformToMove;
+        return item;
+      });
+      return { ...prev, userLink: userPlatforms };
+    });
   };
+  const addLink = () => {
+    append({
+      platform: "GitHub",
+      link: "",
+      id: nanoid(),
+      order: fields.length,
+    });
+    const actualLinksLength = getValues("userLink").length;
+    // console.log(getValues("userLink").length)
+    setPreviewUserAccount((prev) => {
+      const userLinks = [
+        ...prev.userLink,
+        getValues("userLink")[actualLinksLength - 1],
+      ];
+      console.log(userLinks, "userLinks");
+      console.log(prev.userLink, "prev.userLink");
+      console.log(getValues("userLink")[actualLinksLength - 1], "getValues");
+      return prev;
+      return { ...prev, userLink: userLinks };
+    });
+  };
+  const removeLink = (index: number) => {
+    remove(index);
+    setPreviewUserAccount((prev) => {
+      let userLinks = prev.userLink.filter((item, id) => id !== index);
+      return { ...prev, userLink: userLinks };
+    });
+  };
+  // const zamien = () => {
+  //   setPreviewUserAccount((prev) => ({ ...prev, userLink: sprawdzenie }));
+  // };
   return (
     <form
       onSubmit={handleSubmit(formSubmit)}
+      onChange={handleFormChange}
       className="flex flex-col mx-auto lg:mx-0 lg:max-w-[808px] lg:w-full"
     >
+      {/* <button type="button" onClick={zamien}>
+        Zamien
+      </button> */}
       <div className="p-6 m-4 sm:m-6 sm:mb-0 mb-0 flex flex-col bg-white relative rounded-md">
         <h1 className="text-headingMmobile sm:text-headingM mb-2">
           Customize your links
@@ -153,18 +251,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
           Add/edit/remove links below and then share all your profiles with the
           world!
         </p>
-        <Button
-          role="secondary"
-          type="button"
-          onClick={() =>
-            append({
-              platform: "GitHub",
-              link: "",
-              id: nanoid(),
-              order: fields.length,
-            })
-          }
-        >
+        <Button role="secondary" type="button" onClick={addLink}>
           + Add new link
         </Button>
         <div className="h-[550px] overflow-y-auto scrollbar">
@@ -197,7 +284,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
                                 <button
                                   type="button"
                                   className="hover:text-black"
-                                  onClick={() => remove(index)}
+                                  onClick={() => removeLink(index)}
                                 >
                                   Remove
                                 </button>
@@ -205,7 +292,8 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = () => {
                               <p className="text-bodyXS mb-1 mt-3 text-darkGrey">
                                 Platform
                               </p>
-                              <SelectInput
+                              <SelectPlatformInput
+                                name={`userLink.${index}.platform`}
                                 onChange={onChange}
                                 value={value}
                                 ref={ref}

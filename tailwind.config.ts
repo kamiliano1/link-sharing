@@ -66,20 +66,6 @@ const config: Config = {
       ],
     },
     extend: {
-      // keyframes: {
-      //   popUpOpen: {
-      //     from: { transform: "translateY(2000px)" },
-      //     to: { transform: "translateY(0)" },
-      //   },
-      //   popUpClose: {
-      //     from: { transform: "translateY(0)" },
-      //     to: { transform: "translateY(2000px)" },
-      //   },
-      // },
-      // animation: {
-      //   popUpOpen: "popUpOpen 1000ms cubic-bezier(0.16, 1, 0.3, 1)",
-      //   popUpClose: "popUpClose 1000ms cubic-bezier(0.16, 1, 0.3, 1)",
-      // },
       keyframes: {
         hide: {
           from: { opacity: "1" },
@@ -113,6 +99,9 @@ const config: Config = {
         swipeOut: "swipeOut 100ms ease-out",
         overlayShow: "overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1)",
         contentShow: "contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1)",
+      },
+      screens: {
+        sm: "690px",
       },
     },
   },

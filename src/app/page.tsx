@@ -5,17 +5,20 @@ import Modal from "@/layout/Modal/Modal";
 import Navbar from "@/layout/Navbar/Navbar";
 import PopUp from "@/layout/PopUp/PopUp";
 import useDataFromFirebase from "@/utility/useDataFromFirebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "./firebase/clientApp";
 
 export default function Home() {
   const { getCurrentUserData } = useDataFromFirebase();
   getCurrentUserData();
+  const [user, loading] = useAuthState(auth);
   return (
     <main className="min-h-[100vh]">
-      <Modal />
+      {!loading && <Modal />}
       <Navbar />
       <div className="lg:flex relative pb-5 lg:justify-center">
-        <LinkPreview />
-        <CustomizeUserLinks />
+        <LinkPreview loading={loading} />
+        <CustomizeUserLinks user={user} loading={loading} />
         <PopUp type="changesSuccessfullySaved" />
       </div>
     </main>

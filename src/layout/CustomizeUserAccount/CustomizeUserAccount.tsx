@@ -1,21 +1,30 @@
+import { firestore, storage } from "@/app/firebase/clientApp";
+import { popUpState } from "@/atoms/togglePopUpAtom";
 import { UserAccountState, userAccountState } from "@/atoms/userAccountAtom";
+import { User } from "firebase/auth";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import React, { useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { LiaImageSolid } from "react-icons/lia";
 import { useRecoilState } from "recoil";
 import Button from "../Button/Button";
-import { auth, firestore, storage } from "@/app/firebase/clientApp";
-import { popUpState } from "@/atoms/togglePopUpAtom";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { getDownloadURL, ref, uploadString } from "firebase/storage";
-import { useAuthState } from "react-firebase-hooks/auth";
 import CustomizeUserAccountSkeleton from "../Skeletons/CustomizeUserAccountSkeleton";
-type CustomizeUserAccountProps = {};
+import { previewUserAccountState } from "@/atoms/previewUserAccountAtom";
+type CustomizeUserAccountProps = {
+  user: User | null | undefined;
+  loading: boolean;
+};
 
-const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
-  const [user, loading] = useAuthState(auth);
+const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
+  user,
+  loading,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
+  const [previewUserAccount, setPreviewUserAccount] = useRecoilState(
+    previewUserAccountState
+  );
   const [isPopUpOpen, setIsPopUpOpen] = useRecoilState(popUpState);
   const [isAvatarChanged, setIsAvatarChanged] = useState<boolean>(false);
   const [pictureURL, setPictureURL] = useState<string>(
@@ -35,6 +44,9 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
   useEffect(() => {
     reset();
   }, [reset, userAccount]);
+  useEffect(() => {
+    setPreviewUserAccount(userAccount);
+  }, [userAccount, setPreviewUserAccount]);
   const formSubmit: SubmitHandler<UserAccountState> = async (data) => {
     setIsLoading(true);
     const userLinkRef = doc(firestore, `users/${user?.uid}`);
@@ -82,11 +94,19 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
       if (readerEvent.target?.result) {
         setPictureURL(readerEvent.target.result as string);
         setValue("picture", readerEvent.target.result as string);
+        setPreviewUserAccount((prev) => ({
+          ...prev,
+          picture: readerEvent.target?.result as string,
+        }));
       }
     };
     setIsAvatarChanged(true);
   };
+  const onHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
 
+    setPreviewUserAccount((prev) => ({ ...prev, [name]: value }));
+  };
   return (
     <form
       onSubmit={handleSubmit(formSubmit)}
@@ -105,9 +125,11 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
         ) : (
           <>
             <div className="sm:flex items-center bg-lightGrey rounded-xl p-5">
-              <p className="text-bodyM text-grey mb-4 sm:mb-0 sm:w-[255px]">
-                Profile picture.
-              </p>
+              <div className="sm:w-[255px]">
+                <p className="text-bodyM text-grey mb-4 sm:mb-0 sm:w-[255px]">
+                  Profile picture.
+                </p>
+              </div>
               <input
                 type="file"
                 onChange={onSelectAvatar}
@@ -142,6 +164,9 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
                 <input
                   {...register("firstName", {
                     required: "Can`t be empty",
+                    onChange(e) {
+                      onHandleChange(e);
+                    },
                   })}
                   id="firstName"
                   type="text"
@@ -164,6 +189,9 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
                 <input
                   {...register("lastName", {
                     required: "Can`t be empty",
+                    onChange(e) {
+                      onHandleChange(e);
+                    },
                   })}
                   id="lastName"
                   type="text"
@@ -184,7 +212,11 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = () => {
                   </p>
                 </label>
                 <input
-                  {...register("email", {})}
+                  {...register("email", {
+                    onChange(e) {
+                      onHandleChange(e);
+                    },
+                  })}
                   id="email"
                   type="text"
                   defaultValue={userAccount.email}

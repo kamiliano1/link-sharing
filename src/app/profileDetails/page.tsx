@@ -4,20 +4,26 @@ import LinkPreview from "@/layout/LinkPreview/LinkPreview";
 import Navbar from "@/layout/Navbar/Navbar";
 import PopUp from "@/layout/PopUp/PopUp";
 import useDataFromFirebase from "@/utility/useDataFromFirebase";
-import React from "react";
+import React, { useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../firebase/clientApp";
+import Modal from "@/layout/Modal/Modal";
 
-const ProfileDetails: React.FC = () => {
+export default function ProfileDetails() {
   const { getCurrentUserData } = useDataFromFirebase();
   getCurrentUserData();
+  const [user, loading] = useAuthState(auth);
+  const [load, setLoad] = useState(false);
   return (
     <main className="min-h-[100vh]">
+      <button onClick={() => setLoad((prev) => !prev)}>Zmiana</button>
+      {!loading && <Modal />}
       <Navbar />
       <div className="lg:flex relative pb-5 lg:justify-center">
-        <LinkPreview />
-        <CustomizeUserAccount />
+        <LinkPreview loading={load} />
+        <CustomizeUserAccount user={user} loading={load} />
         <PopUp type="changesSuccessfullySaved" />
       </div>
     </main>
   );
-};
-export default ProfileDetails;
+}
