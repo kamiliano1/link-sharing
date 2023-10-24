@@ -5,12 +5,10 @@ import { useRecoilValue } from "recoil";
 import PhoneMockup from "../../../public/icons/illustration-phone-mockup.svg";
 import PreviewLink from "../Select/PreviewLink";
 import LinkPreviewSkeleton from "../Skeletons/LinkPreviewSkeleton";
-import { previewUserAccountState } from "@/atoms/previewUserAccountAtom";
 
 type LinkPreviewProps = { loading: boolean };
 const LinkPreview: React.FC<LinkPreviewProps> = ({ loading }) => {
   const userAccount = useRecoilValue(userAccountState);
-  const previewUserAccount = useRecoilValue(previewUserAccountState);
   return (
     <div className="hidden lg:flex lg:justify-center lg:items-center bg-white w-[560px] m-6 mr-0">
       <div className="relative">
@@ -19,13 +17,11 @@ const LinkPreview: React.FC<LinkPreviewProps> = ({ loading }) => {
           <LinkPreviewSkeleton />
         ) : (
           <div className="absolute mt-16 w-full top-0 flex flex-col items-center">
-            {previewUserAccount.picture ? (
-              // {userAccount.picture ? (
+            {userAccount.picture ? (
               <Image
                 width={96}
                 height={96}
-                src={previewUserAccount.picture}
-                // src={userAccount.picture}
+                src={userAccount.picture}
                 alt="user Avatar"
                 className="aspect-square rounded-full w-[96px] border-[4px] border-purple mb-[1.35rem]"
               />
@@ -38,7 +34,6 @@ const LinkPreview: React.FC<LinkPreviewProps> = ({ loading }) => {
               } `}
             >
               {userAccount.firstName} {userAccount.lastName}
-              {previewUserAccount.firstName} {previewUserAccount.lastName}
             </h2>
 
             <p
@@ -47,10 +42,9 @@ const LinkPreview: React.FC<LinkPreviewProps> = ({ loading }) => {
               }`}
             >
               {userAccount.email}
-              {previewUserAccount.email}
             </p>
             <div className="max-h-[305px] overflow-y-auto scrollbar">
-              {previewUserAccount?.userLink.map((item) => (
+              {userAccount?.userLink.map((item) => (
                 <PreviewLink
                   key={item.id}
                   platform={item.platform}
