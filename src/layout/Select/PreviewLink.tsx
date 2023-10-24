@@ -26,6 +26,7 @@ const PreviewLink: React.FC<PreviewLinkProps> = ({ platform, link, id }) => {
     transform: CSS.Transform.toString(transform),
     transition,
   };
+  const wholeLink = link.includes("https://") ? link : `https://${link}`;
   return (
     <Link
       target="_blank"
@@ -33,7 +34,7 @@ const PreviewLink: React.FC<PreviewLinkProps> = ({ platform, link, id }) => {
       style={style}
       {...attributes}
       {...listeners}
-      href={link}
+      href={wholeLink}
       className={`mx-auto w-[237px] px-4 py-3 flex text-bodyM items-center rounded-lg mb-4 mr-[.3rem] border-[1px] hover:bg-opacity-60 ${linkStyle.style}`}
     >
       <linkStyle.icon />
