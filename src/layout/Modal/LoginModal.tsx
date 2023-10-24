@@ -6,15 +6,13 @@ import {
 } from "react-firebase-hooks/auth";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useRecoilState } from "recoil";
-
-import { auth, firestore } from "@/app/firebase/clientApp";
+import { auth } from "@/app/firebase/clientApp";
 import { userAccountState } from "@/atoms/userAccountAtom";
-import { doc, getDoc } from "firebase/firestore";
+import useDataFromFirebase from "@/utility/useDataFromFirebase";
 import { AiFillMail } from "react-icons/ai";
 import { BiSolidLock } from "react-icons/bi";
 import { ModalStatusType } from "./Modal";
 import { UserCredType } from "./userCredType";
-import useDataFromFirebase from "@/utility/useDataFromFirebase";
 type LoginModalProps = {
   open: boolean;
   userCred: UserCredType;
@@ -61,12 +59,6 @@ const LoginModal: React.FC<LoginModalProps> = ({
     }
   }, [getCurrentUserData, setUserAccount, user, userName]);
 
-  const login = () => {
-    signInWithEmailAndPassword(
-      "aaa@wp.plllllllllllllllllll",
-      "aaa@wp.plllllllllllllllllll"
-    );
-  };
   return (
     <div>
       <h2 className="text-headingMmobile sm:text-headingM mb-2">Login</h2>
@@ -153,7 +145,6 @@ const LoginModal: React.FC<LoginModalProps> = ({
           Login
         </Button>
       </form>
-      <button onClick={login}>Login z danymi</button>
       <p className="text-center text-grey">
         Don`t have an account?
         <span
