@@ -50,12 +50,12 @@ export const linksList: ActiveLinksType[] = [
     name: "LinkedIn",
     icon: BsLinkedin,
     style: "bg-[#2D68FF] text-white",
-    placeholder: "e.g. https://www.linkedin.com/in/johnappleseed",
+    placeholder: "e.g. https://www.linkedIn.com/in/johnappleseed",
     validatePattern: [
-      "https://www.linkedin.com/in/",
-      "https://linkedin.com/in/",
-      "www.linkedin.com/in/",
-      "linkedin.com/in/",
+      "https://www.linkedIn.com/in/",
+      "https://linkedIn.com/in/",
+      "www.linkedIn.com/in/",
+      "linkedIn.com/in/",
     ],
   },
   {
