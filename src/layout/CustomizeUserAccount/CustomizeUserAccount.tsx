@@ -10,7 +10,6 @@ import { LiaImageSolid } from "react-icons/lia";
 import { useRecoilState } from "recoil";
 import Button from "../Button/Button";
 import CustomizeUserAccountSkeleton from "../Skeletons/CustomizeUserAccountSkeleton";
-import { previewUserAccountState } from "@/atoms/previewUserAccountAtom";
 type CustomizeUserAccountProps = {
   user: User | null | undefined;
   loading: boolean;
@@ -22,9 +21,6 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
-  const [previewUserAccount, setPreviewUserAccount] = useRecoilState(
-    previewUserAccountState
-  );
   const [isPopUpOpen, setIsPopUpOpen] = useRecoilState(popUpState);
   const [isAvatarChanged, setIsAvatarChanged] = useState<boolean>(false);
   const [pictureURL, setPictureURL] = useState<string>(
@@ -39,18 +35,18 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
     reset,
     control,
     formState: { errors },
-  } = useForm<UserAccountState>();
+  } = useForm<UserAccountState>({ defaultValues: { picture: "" } });
   const selectedFileRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     reset();
   }, [reset, userAccount]);
-  useEffect(() => {
-    setPreviewUserAccount(userAccount);
-  }, [userAccount, setPreviewUserAccount]);
+  // useEffect(() => {
+  //   setUserAccount(userAccount);
+  // }, [userAccount, setUserAccount]);
   const formSubmit: SubmitHandler<UserAccountState> = async (data) => {
     setIsLoading(true);
+    console.log(data);
     const userLinkRef = doc(firestore, `users/${user?.uid}`);
-
     if (data.picture) {
       const imageRef = ref(storage, `avatars/${user?.uid}/image`);
       await uploadString(imageRef, data.picture, "data_url");
@@ -71,7 +67,7 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
       firstName: data.firstName,
       lastName: data.lastName,
       email: data.email,
-      picture: isAvatarChanged ? bookmarkData?.picture : userAccount.picture,
+      picture: !isAvatarChanged ? bookmarkData?.picture : userAccount.picture,
     }));
     setIsLoading(false);
     setIsPopUpOpen({ togglePopUp: true });
@@ -85,7 +81,6 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
   const onSelectAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsAvatarChanged(false);
     const reader = new FileReader();
-
     if (e.target.files?.[0]) {
       if (e.target.files[0].size / 1024 > 1024) return;
       reader.readAsDataURL(e.target.files[0]);
@@ -94,7 +89,7 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
       if (readerEvent.target?.result) {
         setPictureURL(readerEvent.target.result as string);
         setValue("picture", readerEvent.target.result as string);
-        setPreviewUserAccount((prev) => ({
+        setUserAccount((prev) => ({
           ...prev,
           picture: readerEvent.target?.result as string,
         }));
@@ -104,8 +99,8 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
   };
   const onHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
-    setPreviewUserAccount((prev) => ({ ...prev, [name]: value }));
+    console.log(name, value);
+    setUserAccount((prev) => ({ ...prev, [name]: value }));
   };
   return (
     <form
