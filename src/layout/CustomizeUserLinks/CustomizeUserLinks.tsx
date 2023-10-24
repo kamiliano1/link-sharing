@@ -1,4 +1,4 @@
-import { auth, firestore } from "@/app/firebase/clientApp";
+import { firestore } from "@/app/firebase/clientApp";
 import { popUpState } from "@/atoms/togglePopUpAtom";
 import {
   UserAccountState,
@@ -18,14 +18,13 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { User } from "firebase/auth";
 import { deleteDoc, doc, runTransaction } from "firebase/firestore";
 import { nanoid } from "nanoid";
 import Image from "next/image";
-import React, { FormEventHandler, useEffect, useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
+import React, { useEffect, useState } from "react";
 import {
   Controller,
-  FieldArrayWithId,
   SubmitHandler,
   useFieldArray,
   useForm,
@@ -33,12 +32,10 @@ import {
 import { useRecoilState } from "recoil";
 import LinkIcon from "../../../public/icons/icon-link.svg";
 import Button from "../Button/Button";
+import { SelectPlatformInput } from "../Select/SelectPlatformInput";
 import { linksList } from "../Select/linkList";
 import CustomizeUserLinkSkeleton from "../Skeletons/CustomizeUserLinkSkeleton";
 import DraggableLink from "./DraggableLink";
-import { User } from "firebase/auth";
-import { previewUserAccountState } from "@/atoms/previewUserAccountAtom";
-import { SelectPlatformInput } from "../Select/SelectPlatformInput";
 type CustomizeUserLinksProps = {
   user: User | null | undefined;
   loading: boolean;
@@ -50,12 +47,9 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
 }) => {
   const { getMySnippets } = useDataFromFirebase();
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
-  const [previewUserAccount, setPreviewUserAccount] = useRecoilState(
-    previewUserAccountState
-  );
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [sprawdzenie, setSprawdzenie] = useState<UserLink[]>([]);
+  const [isLinksLoaded, setIsLinksLoaded] = useState<boolean>(false);
   const [isPopUpOpen, setIsPopUpOpen] = useRecoilState(popUpState);
   // const [user, loading] = useAuthState(auth);
   const [isSaveButtonDesactive, setIsSaveButtonDesactive] =
@@ -76,15 +70,15 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
     name: "userLink",
   });
   useEffect(() => {
-    console.log("robi fieldsy");
-    // setPreviewUserAccount((prev) => ({ ...prev, userLink: watch("userLink") }));
-  }, [fields]);
+    setUserAccount((prev) => ({ ...prev, userLink: fields }));
+  }, [fields, setUserAccount]);
+
   useEffect(() => {
-    setPreviewUserAccount(userAccount);
-  }, [userAccount, setPreviewUserAccount]);
-  useEffect(() => {
-    setValue("userLink", userAccount.userLink);
-  }, [setValue, loading, userAccount.userLink]);
+    if (!isLinksLoaded && userAccount.userLink.length) {
+      setValue("userLink", userAccount.userLink);
+      setIsLinksLoaded(true);
+    }
+  }, [setValue, loading, userAccount.userLink, isLinksLoaded]);
   const deleteUserSnippets = async (id: string) => {
     await deleteDoc(doc(firestore, `users/${user?.uid}/userLinks`, id));
   };
@@ -132,10 +126,10 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
     snippetsToDelete.map((item) => deleteUserSnippets(item.id));
     setIsLoading(false);
   };
-  const validatePlatformLink = async (value: string) => {
+  const validatePlatformLink = async (value: string, index: number) => {
     let isValidateLink = false;
     const activePlatformPattern = linksList.find(
-      (item) => item.name === watch(`userLink.${0}.platform`)
+      (item) => item.name === watch(`userLink.${index}.platform`)
     )?.validatePattern;
     activePlatformPattern?.map((item) => {
       if (value.startsWith(item)) return (isValidateLink = true);
@@ -155,12 +149,6 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
       },
     })
   );
-  // const zmianaFormy = (e: FormEventHandler<HTMLFormElement>) => {
-  //   const { name, value } = e.target;
-  //   console.log(name, value);
-  // };
-
-  // const zmianaFormy: React.FormEventHandler<HTMLFormElement> = (e: React.SyntheticEvent) => {
   const handleFormChange = (e: React.ChangeEvent<HTMLFormElement>) => {
     const { name, value } = e.target;
     let number = parseInt(
@@ -169,7 +157,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
         .replace(".platform", "")
         .replace(".link", "")
     );
-    setPreviewUserAccount((prev) => {
+    setUserAccount((prev) => {
       let userLink = prev.userLink;
       userLink = userLink.map((item, id) => {
         if (id === number) {
@@ -183,66 +171,20 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
       });
       return { ...prev, userLink: userLink };
     });
-    // setPreviewUserLink(getValues("userLink"));
-    // setSprawdzenie(updatedLinkArray);
   };
   const handleDragDrop = async (e: DragEndEvent) => {
     if (e.active.id === e.over?.id) return;
     const startLinkIndex = fields.findIndex((item) => item.id === e.active.id);
     const dropLinkIndex = fields.findIndex((item) => item.id === e.over?.id);
     swap(startLinkIndex, dropLinkIndex);
-    setPreviewUserAccount((prev) => {
-      let userPlatforms = prev.userLink;
-      const platformToMove = prev.userLink[startLinkIndex];
-      const platformTarget = prev.userLink[dropLinkIndex];
-      userPlatforms = userPlatforms.map((item, id) => {
-        if (id === startLinkIndex) return platformTarget;
-        if (id === dropLinkIndex) return platformToMove;
-        return item;
-      });
-      return { ...prev, userLink: userPlatforms };
-    });
   };
-  const addLink = () => {
-    append({
-      platform: "GitHub",
-      link: "",
-      id: nanoid(),
-      order: fields.length,
-    });
-    const actualLinksLength = getValues("userLink").length;
-    // console.log(getValues("userLink").length)
-    setPreviewUserAccount((prev) => {
-      const userLinks = [
-        ...prev.userLink,
-        getValues("userLink")[actualLinksLength - 1],
-      ];
-      console.log(userLinks, "userLinks");
-      console.log(prev.userLink, "prev.userLink");
-      console.log(getValues("userLink")[actualLinksLength - 1], "getValues");
-      return prev;
-      return { ...prev, userLink: userLinks };
-    });
-  };
-  const removeLink = (index: number) => {
-    remove(index);
-    setPreviewUserAccount((prev) => {
-      let userLinks = prev.userLink.filter((item, id) => id !== index);
-      return { ...prev, userLink: userLinks };
-    });
-  };
-  // const zamien = () => {
-  //   setPreviewUserAccount((prev) => ({ ...prev, userLink: sprawdzenie }));
-  // };
+
   return (
     <form
       onSubmit={handleSubmit(formSubmit)}
       onChange={handleFormChange}
       className="flex flex-col mx-auto lg:mx-0 lg:max-w-[808px] lg:w-full"
     >
-      {/* <button type="button" onClick={zamien}>
-        Zamien
-      </button> */}
       <div className="p-6 m-4 sm:m-6 sm:mb-0 mb-0 flex flex-col bg-white relative rounded-md">
         <h1 className="text-headingMmobile sm:text-headingM mb-2">
           Customize your links
@@ -251,7 +193,18 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
           Add/edit/remove links below and then share all your profiles with the
           world!
         </p>
-        <Button role="secondary" type="button" onClick={addLink}>
+        <Button
+          role="secondary"
+          type="button"
+          onClick={() => {
+            append({
+              platform: "GitHub",
+              link: "",
+              id: nanoid(),
+              order: fields.length,
+            });
+          }}
+        >
           + Add new link
         </Button>
         <div className="h-[550px] overflow-y-auto scrollbar">
@@ -284,7 +237,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
                                 <button
                                   type="button"
                                   className="hover:text-black"
-                                  onClick={() => removeLink(index)}
+                                  onClick={() => remove(index)}
                                 >
                                   Remove
                                 </button>
@@ -307,7 +260,10 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
                           defaultValue={""}
                           rules={{
                             required: "Can`t be empty",
-                            // validate: validatePlatformLink,
+                            validate: {
+                              platformLink: (value) =>
+                                validatePlatformLink(value, index),
+                            },
                           }}
                           render={({ field }) => (
                             <>
@@ -333,7 +289,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
                                         watch(`userLink.${index}.platform`)
                                     )?.placeholder
                                   }
-                                  className={`pl-9 pr-4 w-full py-3 border-[1px] border-borders text-bodyM rounded-lg text-black hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple ${
+                                  className={`pl-[42px] pr-4 w-full py-3 border-[1px] border-borders text-bodyM rounded-lg text-black hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple ${
                                     errors.userLink?.[index]?.link &&
                                     "text-red border-red"
                                   }`}
@@ -377,37 +333,12 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
             </>
           )}
         </div>
-        {/* <SkeletonTheme
-          baseColor="hsl(252, 100%, 62%)"
-          highlightColor="hsl(252, 100%, 84%)"
-        >
-          <div className="flex flex-col z-[5000] relative p-5 bg-lightGrey rounded-xl mb-5">
-            <div className="flex justify-between mb-1">
-              <Skeleton width={100} height={24} />
-              <Skeleton width={100} height={24} />
-            </div>
-            <Skeleton width={100} height={18} />
-            <Skeleton height={40} containerClassName="w-full mb-2" />
-            <Skeleton width={100} height={18} />
-            <Skeleton height={40} containerClassName="w-full" />
-          </div>
-          <div className="flex flex-col z-[5000] relative p-5 bg-lightGrey rounded-xl mb-5">
-            <div className="flex justify-between mb-1">
-              <Skeleton width={100} height={24} />
-              <Skeleton width={100} height={24} />
-            </div>
-            <Skeleton width={100} height={18} />
-            <Skeleton height={40} containerClassName="w-full mb-2" />
-            <Skeleton width={100} height={18} />
-            <Skeleton height={40} containerClassName="w-full" />
-          </div>
-        </SkeletonTheme> */}
       </div>
       <span className="h-[1px] inline-block bg-borders mx-4 sm:mx-6"></span>
       <div className="bg-white m-4 sm:m-6 sm:mt-0 mt-0 p-4">
         <Button
           role="primary"
-          // disabled={isLoading ? true : isSaveButtonDesactive}
+          disabled={isLoading ? true : isSaveButtonDesactive}
           loading={isLoading}
           cssClass="sm:w-min sm:px-7 sm:ml-auto"
         >
