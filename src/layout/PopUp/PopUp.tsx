@@ -8,7 +8,7 @@ import { useRecoilState } from "recoil";
 import { popUpState } from "@/atoms/togglePopUpAtom";
 
 type PopUpProps = {
-  type: "copyLinktoClipBoard" | "changesSuccessfullySaved";
+  type: "copyLinkToClipBoard" | "changesSuccessfullySaved";
 };
 
 type PopUpDescriptionType = {

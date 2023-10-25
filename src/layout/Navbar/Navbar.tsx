@@ -28,7 +28,7 @@ const Navbar: React.FC<NavbarProps> = () => {
   const urlToCopy = location.href;
   return (
     <>
-      <button onClick={logout}> LOGOUT</button>
+      {/* <button onClick={logout}> LOGOUT</button> */}
       <NavigationMenu.Root>
         <NavigationMenu.List>
           {pathname === `/previewProfile/${user?.uid}` ? (

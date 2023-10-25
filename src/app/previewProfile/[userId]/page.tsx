@@ -1,19 +1,25 @@
 "use client";
-import LinkPreview from "@/layout/LinkPreview/LinkPreview";
+import { auth } from "@/app/firebase/clientApp";
 import Navbar from "@/layout/Navbar/Navbar";
 import PopUp from "@/layout/PopUp/PopUp";
 import PreviewUserProfile from "@/layout/PreviewUserProfile/PreviewUserProfile";
 import { useParams } from "next/navigation";
-import React from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function PreviewProfile() {
+  const [user] = useAuthState(auth);
   const params = useParams();
   const userId = params.userId as string;
+
+  const isActivatedUserPreview = user?.uid === userId;
   return (
     <main className="relative h-[100vh] sm:h-auto bg-white sm:bg-lightGrey">
-      <Navbar />
-      <PreviewUserProfile userId={userId} />
-      <PopUp type="copyLinktoClipBoard" />
+      {isActivatedUserPreview && <Navbar />}
+      <PreviewUserProfile
+        userId={userId}
+        isActivatedUserPreview={isActivatedUserPreview}
+      />
+      <PopUp type="copyLinkToClipBoard" />
     </main>
   );
 }

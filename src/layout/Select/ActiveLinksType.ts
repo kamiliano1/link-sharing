@@ -1,5 +1,5 @@
 import { IconType } from "react-icons";
-export type PlatfromsType =
+export type PlatformsType =
   | "GitHub"
   | "Frontend Mentor"
   | "Twitter"
@@ -15,7 +15,7 @@ export type PlatfromsType =
   | "Hashnode"
   | "Stack Overflow";
 export type ActiveLinksType = {
-  name: PlatfromsType;
+  name: PlatformsType;
   icon: IconType;
   style?: string;
   placeholder?: string;

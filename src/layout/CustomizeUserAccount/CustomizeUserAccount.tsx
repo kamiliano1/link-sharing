@@ -46,30 +46,28 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
   const formSubmit: SubmitHandler<UserAccountState> = async (data) => {
     setIsLoading(true);
     console.log(data);
-    const userLinkRef = doc(firestore, `users/${user?.uid}`);
-    if (data.picture) {
-      const imageRef = ref(storage, `avatars/${user?.uid}/image`);
-      await uploadString(imageRef, data.picture, "data_url");
-      const downloadURL = await getDownloadURL(imageRef);
-      await updateDoc(userLinkRef, {
-        picture: downloadURL,
-      });
+    try {
+      const userLinkRef = doc(firestore, `users/${user?.uid}`);
+      if (userAccount.picture) {
+        const imageRef = ref(storage, `avatars/${user?.uid}/image`);
+        await uploadString(imageRef, userAccount.picture, "data_url");
+        const downloadURL = await getDownloadURL(imageRef);
+        await updateDoc(userLinkRef, {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+        });
+        if (isAvatarChanged)
+          await updateDoc(userLinkRef, {
+            picture: downloadURL,
+          });
+      }
+    } catch (error: any) {
+      console.log("handleSendingAvatarError", error.message);
     }
-    await updateDoc(userLinkRef, {
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-    });
-    const userData = await getDoc(userLinkRef);
-    const bookmarkData = userData.data();
-    setUserAccount((prev) => ({
-      ...prev,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      picture: !isAvatarChanged ? bookmarkData?.picture : userAccount.picture,
-    }));
+
     setIsLoading(false);
+    setIsAvatarChanged(false);
     setIsPopUpOpen({ togglePopUp: true });
   };
   useEffect(() => {
@@ -79,7 +77,6 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
     setIsPopUpOpen({ togglePopUp: false });
   }, [setIsPopUpOpen]);
   const onSelectAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsAvatarChanged(false);
     const reader = new FileReader();
     if (e.target.files?.[0]) {
       if (e.target.files[0].size / 1024 > 1024) return;
@@ -94,8 +91,8 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
           picture: readerEvent.target?.result as string,
         }));
       }
+      setIsAvatarChanged(true);
     };
-    setIsAvatarChanged(true);
   };
   const onHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

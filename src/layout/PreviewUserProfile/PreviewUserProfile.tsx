@@ -10,9 +10,15 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { useRecoilState } from "recoil";
 import { popUpState } from "@/atoms/togglePopUpAtom";
 import PreviewUserProfileSkeleton from "../Skeletons/PreviewUserProfileSkeleton";
-type PreviewUserProfileProps = { userId: string };
+type PreviewUserProfileProps = {
+  userId: string;
+  isActivatedUserPreview: boolean;
+};
 
-const PreviewUserProfile: React.FC<PreviewUserProfileProps> = ({ userId }) => {
+const PreviewUserProfile: React.FC<PreviewUserProfileProps> = ({
+  userId,
+  isActivatedUserPreview,
+}) => {
   const { getSnippets } = useDataFromFirebase();
 
   const [previewAccount, setPreviewAccount] = useState<UserAccountState>({
@@ -50,8 +56,10 @@ const PreviewUserProfile: React.FC<PreviewUserProfileProps> = ({ userId }) => {
     getPreviewUserData();
   }, [getSnippets, previewAccount.isLoaded, userId]);
   return (
-    <>
-      <div className="sm:mt-28 flex flex-col items-center bg-white sm:w-[349px] mx-auto sm:rounded-3xl px-14 py-12 h-full sm:min-h-[569px] shadow-[0px_0px_32px_0px_rgba(0,_0,_0,_0.10)] sm:z-[5] sm:relative">
+    <div className={`${isActivatedUserPreview ? "sm:pt-28" : "sm:pt-14"}`}>
+      <div
+        className={`flex flex-col items-center bg-white sm:w-[349px] mx-auto sm:rounded-3xl px-14 py-12 min-h-[100vh] sm:min-h-[569px] shadow-[0px_0px_32px_0px_rgba(0,_0,_0,_0.10)] sm:z-[5] sm:relative`}
+      >
         {previewAccount.isLoaded ? (
           <>
             {previewAccount.picture ? (
@@ -99,8 +107,12 @@ const PreviewUserProfile: React.FC<PreviewUserProfileProps> = ({ userId }) => {
           <PreviewUserProfileSkeleton />
         )}
       </div>
-      <div className="hidden sm:block absolute bg-purple rounded-b-[2rem] -top-6 left-0 w-full h-[357px]"></div>
-    </>
+      <div
+        className={`hidden sm:block absolute bg-purple rounded-b-[2rem] -top-6 left-0 w-full ${
+          isActivatedUserPreview ? "h-[357px]" : "h-[400px]"
+        } `}
+      ></div>
+    </div>
   );
 };
 export default PreviewUserProfile;

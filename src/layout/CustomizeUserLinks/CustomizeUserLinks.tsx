@@ -52,7 +52,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
   const [isLinksLoaded, setIsLinksLoaded] = useState<boolean>(false);
   const [isPopUpOpen, setIsPopUpOpen] = useRecoilState(popUpState);
   // const [user, loading] = useAuthState(auth);
-  const [isSaveButtonDesactive, setIsSaveButtonDesactive] =
+  const [isSaveButtonNotActive, setIsSaveButtonNotActive] =
     useState<boolean>(false);
   const {
     register,
@@ -102,10 +102,10 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
   };
   useEffect(() => {
     if (userAccount.userLink.length || fields.length) {
-      setIsSaveButtonDesactive(false);
+      setIsSaveButtonNotActive(false);
       return;
     }
-    setIsSaveButtonDesactive(true);
+    setIsSaveButtonNotActive(true);
   }, [userAccount.userLink, fields]);
   const formSubmit: SubmitHandler<UserAccountState> = async (data) => {
     setIsLoading(true);
@@ -338,7 +338,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
       <div className="bg-white m-4 sm:m-6 sm:mt-0 mt-0 p-4">
         <Button
           role="primary"
-          disabled={isLoading ? true : isSaveButtonDesactive}
+          disabled={isLoading ? true : isSaveButtonNotActive}
           loading={isLoading}
           cssClass="sm:w-min sm:px-7 sm:ml-auto"
         >

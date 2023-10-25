@@ -1,8 +1,8 @@
-import { PlatfromsType } from "@/layout/Select/ActiveLinksType";
+import { PlatformsType } from "@/layout/Select/ActiveLinksType";
 import { atom } from "recoil";
 
 export type UserLink = {
-  platform: PlatfromsType;
+  platform: PlatformsType;
   link: string;
   id: string;
   order: number;
