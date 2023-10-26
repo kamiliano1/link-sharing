@@ -1,12 +1,12 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { AiOutlineArrowRight } from "react-icons/ai";
-import { ActiveLinksType, PlatfromsType } from "./ActiveLinksType";
+import { ActiveLinksType, PlatformsType } from "./ActiveLinksType";
 import { linksList } from "./linkList";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 type PreviewLinkProps = {
-  platform: PlatfromsType;
+  platform: PlatformsType;
   link: string;
   id: string;
 };
