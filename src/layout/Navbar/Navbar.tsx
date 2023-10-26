@@ -1,3 +1,5 @@
+import { auth } from "@/app/firebase/clientApp";
+import { popUpState } from "@/atoms/togglePopUpAtom";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import Image from "next/image";
 import Link from "next/link";
@@ -6,12 +8,9 @@ import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { AiOutlineEye, AiOutlineLink } from "react-icons/ai";
 import { RxAvatar } from "react-icons/rx";
+import { useRecoilState } from "recoil";
 import logoBig from "../../../public/icons/logo-devlinks-large.svg";
 import logoSmall from "../../../public/icons/logo-devlinks-small.svg";
-import { auth } from "@/app/firebase/clientApp";
-import { signOut } from "firebase/auth";
-import { popUpState } from "@/atoms/togglePopUpAtom";
-import { useRecoilState } from "recoil";
 
 type NavbarProps = {};
 const Navbar: React.FC<NavbarProps> = () => {
@@ -19,13 +18,13 @@ const Navbar: React.FC<NavbarProps> = () => {
   const [user] = useAuthState(auth);
   const pathname = usePathname();
   const copyLinkToClipBoard = () => {
-    navigator.clipboard.writeText(urlToCopy);
+    navigator.clipboard.writeText("urlToCopy");
     setIsPopUpOpen({ togglePopUp: true });
   };
-  const logout = () => {
-    signOut(auth);
-  };
-  const urlToCopy = location.href;
+  // const { asPath } = useRouter();
+
+  // const urlToCopy = window.location.href;
+
   return (
     <>
       {/* <button onClick={logout}> LOGOUT</button> */}
