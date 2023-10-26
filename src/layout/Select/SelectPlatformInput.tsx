@@ -1,15 +1,13 @@
+import * as Select from "@radix-ui/react-select";
 import React, {
   ComponentPropsWithoutRef,
   ElementType,
   ReactNode,
   forwardRef,
-  useEffect,
   useState,
 } from "react";
-import * as Select from "@radix-ui/react-select";
-import { linksList } from "./linkList";
 import { BsChevronDown } from "react-icons/bs";
-import { PlatfromsType } from "./ActiveLinksType";
+import { linksList } from "./linkList";
 
 type SelectPlatformInputProps = {
   onChange: () => void;
