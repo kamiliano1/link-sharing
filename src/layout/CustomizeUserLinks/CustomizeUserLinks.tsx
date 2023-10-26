@@ -196,14 +196,14 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
         <Button
           role="secondary"
           type="button"
-          onClick={() => {
-            append({
-              platform: "GitHub",
-              link: "",
-              id: nanoid(),
-              order: fields.length,
-            });
-          }}
+          // onClick={() => {
+          //   append({
+          //     platform: "GitHub",
+          //     link: "",
+          //     id: nanoid(),
+          //     order: fields.length,
+          //   });
+          // }}
         >
           + Add new link
         </Button>
