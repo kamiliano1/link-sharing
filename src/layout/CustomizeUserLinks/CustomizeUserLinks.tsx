@@ -240,7 +240,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
         >
           + Add new link
         </Button>
-        <div className="h-[550px] overflow-y-auto scrollbar mt-6">
+        <div className="h-[505px] sm:mb-[10.5px] overflow-y-auto scrollbar mt-6">
           {loading ? (
             <CustomizeUserLinkSkeleton />
           ) : (
@@ -256,7 +256,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
                 >
                   {fields.map((item, index) => (
                     <DraggableLink key={item.id} id={item.id}>
-                      <li className="list-none mb-5 relative bg-lightGrey p-5 rounded-xl">
+                      <li className="list-none m-5 relative bg-lightGrey p-5 rounded-xl">
                         <Controller
                           control={control}
                           name={`userLink.${index}.platform`}

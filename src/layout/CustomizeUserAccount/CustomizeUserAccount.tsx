@@ -104,7 +104,7 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
       onSubmit={handleSubmit(formSubmit)}
       className="flex flex-col mx-auto lg:mx-0 lg:max-w-[808px] lg:w-full"
     >
-      <div className="p-6 m-4 sm:m-6 sm:mb-0 mb-0 flex flex-col bg-white sm:h-[765.33px] relative rounded-md">
+      <div className="p-6 m-4 sm:m-6 sm:mb-0 mb-0 flex flex-col bg-white sm:h-[754.5px] relative rounded-md">
         <h1 className="text-headingMmobile sm:text-headingM mb-2">
           Profile Details
         </h1>

@@ -46,7 +46,7 @@ const Navbar: React.FC<NavbarProps> = () => {
             </NavigationMenu.Item>
           </div>
         ) : (
-          <div className="py-4 pl-6 pr-4 sm:m-6 sm:rounded-xl bg-white flex items-center justify-between">
+          <div className="py-4 pl-6 pr-4 sm:m-6 sm:mb-0 sm:rounded-xl bg-white flex items-center justify-between">
             <NavigationMenu.Item>
               <NavigationMenu.Trigger>
                 <Link href="/">
