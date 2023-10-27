@@ -41,6 +41,34 @@ type CustomizeUserLinksProps = {
   loading: boolean;
 };
 
+const daneDoWygladu: UserAccountState = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  picture: "",
+  userLink: [
+    {
+      id: "9f554586-f68e-42ab-8758-6d3799d53362",
+      platform: "GitHub",
+      order: 0,
+      link: "https://www.github.com/benwright",
+    },
+    {
+      platform: "YouTube",
+      link: "https://www.youtube.com/@benwright",
+      id: "88fa0e4f-3f1e-4d3f-91a0-5a53a5c5e7bb",
+      order: 1,
+    },
+    {
+      platform: "LinkedIn",
+      link: "https://www.linkedIn.com/in/benwright",
+      id: "9086527b-12ac-4088-bdd8-ac2515f4e3dc",
+      order: 2,
+    },
+  ],
+  isLoaded: true,
+};
+
 const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
   user,
   loading,
@@ -73,6 +101,9 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
     setUserAccount((prev) => ({ ...prev, userLink: fields }));
   }, [fields, setUserAccount]);
 
+  useEffect(() => {
+    setUserAccount(daneDoWygladu);
+  }, [setUserAccount]);
   useEffect(() => {
     if (!isLinksLoaded && userAccount.userLink.length) {
       setValue("userLink", userAccount.userLink);
@@ -116,7 +147,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
     }));
     setUserAccount((prev) => ({ ...prev, userLink: orderedUserLink }));
     orderedUserLink.map((item) => updateSnippet(item));
-    setIsPopUpOpen({ togglePopUp: true });
+
     const userLink = await getMySnippets(user?.uid!);
     const snippetsToDelete = userLink.filter((item) => {
       return data.userLink.find((element) => element.id === item.id)
@@ -125,6 +156,8 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
     });
     snippetsToDelete.map((item) => deleteUserSnippets(item.id));
     setIsLoading(false);
+    setIsPopUpOpen({ togglePopUp: true });
+    console.log(userAccount);
   };
   const validatePlatformLink = async (value: string, index: number) => {
     let isValidateLink = false;
@@ -207,7 +240,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
         >
           + Add new link
         </Button>
-        <div className="h-[550px] overflow-y-auto scrollbar">
+        <div className="h-[550px] overflow-y-auto scrollbar mt-6">
           {loading ? (
             <CustomizeUserLinkSkeleton />
           ) : (
@@ -223,7 +256,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
                 >
                   {fields.map((item, index) => (
                     <DraggableLink key={item.id} id={item.id}>
-                      <li className="list-none my-5 relative bg-lightGrey p-5 rounded-xl">
+                      <li className="list-none mb-5 relative bg-lightGrey p-5 rounded-xl">
                         <Controller
                           control={control}
                           name={`userLink.${index}.platform`}

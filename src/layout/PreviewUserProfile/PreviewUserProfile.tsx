@@ -4,11 +4,8 @@ import useDataFromFirebase from "@/utility/useDataFromFirebase";
 import { doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import PreviewLink from "../Select/PreviewLink";
-import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { useRecoilState } from "recoil";
-import { popUpState } from "@/atoms/togglePopUpAtom";
+import PreviewLink from "../Select/PreviewLink";
 import PreviewUserProfileSkeleton from "../Skeletons/PreviewUserProfileSkeleton";
 type PreviewUserProfileProps = {
   userId: string;
@@ -20,7 +17,6 @@ const PreviewUserProfile: React.FC<PreviewUserProfileProps> = ({
   isActivatedUserPreview,
 }) => {
   const { getSnippets } = useDataFromFirebase();
-
   const [previewAccount, setPreviewAccount] = useState<UserAccountState>({
     userLink: [],
     isLoaded: false,
