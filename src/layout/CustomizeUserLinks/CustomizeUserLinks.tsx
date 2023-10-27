@@ -240,7 +240,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
         >
           + Add new link
         </Button>
-        <div className="h-[505px] sm:mb-[10.5px] overflow-y-auto scrollbar mt-6">
+        <div className="h-[505px] relative sm:mb-[10.5px] overflow-y-auto scrollbar mt-6">
           {loading ? (
             <CustomizeUserLinkSkeleton />
           ) : (
@@ -264,7 +264,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
                           render={({ field: { onChange, value, ref } }) => (
                             <>
                               <div className="flex justify-between text-grey mb-3">
-                                <h2 className="text-headingS inline-block ml-7">
+                                <h2 className="text-headingS inline-block ml-8">
                                   Link #{index + 1}
                                 </h2>
                                 <button
@@ -301,7 +301,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
                           render={({ field }) => (
                             <>
                               <label htmlFor={`userLink.${index}.platform`}>
-                                <p className="text-bodyXS mb-1 mt-3 text-darkGrey">
+                                <p className="text-bodyXS mb-1 mt-3 text-darkGrey cursor-pointer">
                                   Link
                                 </p>
                               </label>

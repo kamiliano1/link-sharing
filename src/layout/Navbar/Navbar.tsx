@@ -71,8 +71,8 @@ const Navbar: React.FC<NavbarProps> = () => {
                         : "text-grey"
                     } `}
                   >
-                    <AiOutlineLink />
-                    <p className="ml-2 hidden sm:block">Links</p>
+                    <AiOutlineLink className="text-[1.2rem]" />
+                    <p className="ml-2 font-[600] hidden sm:block">Links</p>
                   </Link>
                 </NavigationMenu.Trigger>
               </NavigationMenu.Item>{" "}
@@ -86,8 +86,10 @@ const Navbar: React.FC<NavbarProps> = () => {
                         : "text-grey"
                     } `}
                   >
-                    <RxAvatar />
-                    <p className="ml-2 hidden sm:block">Profile Details</p>
+                    <RxAvatar className="text-[1.2rem]" />
+                    <p className="ml-2 font-[600] hidden sm:block">
+                      Profile Details
+                    </p>
                   </Link>{" "}
                 </NavigationMenu.Trigger>
               </NavigationMenu.Item>
