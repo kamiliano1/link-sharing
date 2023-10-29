@@ -18,6 +18,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { AiOutlineLink } from "react-icons/ai";
 import { User } from "firebase/auth";
 import { deleteDoc, doc, runTransaction } from "firebase/firestore";
 import { nanoid } from "nanoid";
@@ -306,11 +307,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
                                 </p>
                               </label>
                               <div className="flex relative">
-                                <Image
-                                  src={LinkIcon}
-                                  alt="link icon"
-                                  className="absolute top-4 left-4"
-                                />
+                                <AiOutlineLink className="absolute top-4 left-4 text-grey" />
                                 <input
                                   {...field}
                                   type="text"
@@ -322,7 +319,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
                                         watch(`userLink.${index}.platform`)
                                     )?.placeholder
                                   }
-                                  className={`pl-[42px] pr-4 w-full py-3 border-[1px] border-borders text-bodyM rounded-lg text-black hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple ${
+                                  className={`pl-[42px] pr-4 w-full py-3 border-[1px] border-borders text-bodyM rounded-lg text-darkGrey hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple ${
                                     errors.userLink?.[index]?.link &&
                                     "text-red border-red"
                                   }`}
