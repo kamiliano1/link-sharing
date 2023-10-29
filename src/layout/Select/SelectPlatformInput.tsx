@@ -42,12 +42,17 @@ export const SelectPlatformInput = forwardRef<
       <Select.Portal>
         <Select.Content
           position="popper"
-          className="overflow-hidden bg-white rounded-md mt-8 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] SelectContent z-[9999]"
+          className="overflow-hidden bg-white rounded-md mt-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] SelectContent z-[9999]"
         >
           <Select.Group>
             {linksList.map((item) => {
               return (
-                <SelectItem key={item.name} value={item.name}>
+                <SelectItem
+                  key={item.name}
+                  value={item.name}
+                  activatedValue={value}
+                  selectedValue={item.name}
+                >
                   <div className="flex items-center">
                     <item.icon />
                     <p className="ml-3">{item.name}</p>
@@ -66,21 +71,27 @@ export const SelectPlatformInput = forwardRef<
 type SelectItemType<T extends ElementType> = {
   children: ReactNode;
   value: string;
+  activatedValue: string;
+  selectedValue: string;
 } & ComponentPropsWithoutRef<T>;
 
 const SelectItem = React.forwardRef<
   HTMLDivElement,
   SelectItemType<ElementType>
->(({ children, ...rest }, forwardedRef) => {
+>(({ children, activatedValue, selectedValue, ...rest }, forwardedRef) => {
   return (
     <Select.Item
-      className="text-[13px] text-grey leading-none text-bodyXS border-[1px] rounded-lg border-[#D9D9D9] 
-      px-4 py-3 relative select-none data-[disabled]:pointer-events-none data-[highlighted]:outline-none 
-      flex items-center cursor-pointer hover:text-purple --radix-select-trigger-width"
+      className="text-bodyM text-grey leading-none border-[1px] rounded-lg border-[#D9D9D9] px-4 py-3 relative select-none data-[disabled]:pointer-events-none data-[highlighted]:outline-none flex items-center cursor-pointer hover:text-purpleHover --radix-select-trigger-width"
       {...rest}
       ref={forwardedRef}
     >
-      <Select.ItemText>{children}</Select.ItemText>
+      {selectedValue === activatedValue ? (
+        <Select.ItemIndicator className="text-purple">
+          <Select.ItemText>{children}</Select.ItemText>
+        </Select.ItemIndicator>
+      ) : (
+        <Select.ItemText>{children}</Select.ItemText>
+      )}
     </Select.Item>
   );
 });
