@@ -24,7 +24,7 @@ const DraggableLink: React.FC<DraggableLinkProps> = ({ id, children }) => {
     >
       <MdDragHandle
         {...listeners}
-        className="inline-block cursor-pointer text-grey hover:text-black top-[20px] left-[2.5rem] text-[1.5rem] mr-2 absolute z-[50]"
+        className="inline-block cursor-pointer text-grey hover:text-black top-[20px] left-[1.2rem] text-[1.5rem] mr-2 absolute z-[50]"
       />
       {children}
     </div>

@@ -241,7 +241,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
         >
           + Add new link
         </Button>
-        <div className="h-[505px] relative sm:mb-[10.5px] overflow-y-auto scrollbar mt-6">
+        <div className="max-h-[505px] sm:h-[505px] relative sm:mb-[10.5px] overflow-y-auto scrollbar mt-6">
           {loading ? (
             <CustomizeUserLinkSkeleton />
           ) : (
@@ -257,7 +257,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
                 >
                   {fields.map((item, index) => (
                     <DraggableLink key={item.id} id={item.id}>
-                      <li className="list-none m-5 relative bg-lightGrey p-5 rounded-xl">
+                      <li className="list-none mb-5 relative bg-lightGrey p-5 rounded-xl">
                         <Controller
                           control={control}
                           name={`userLink.${index}.platform`}
@@ -342,7 +342,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
               </DndContext>
 
               {!fields.length && (
-                <div className="p-5 mt-6 rounded-xl bg-lightGrey">
+                <div className="p-5  rounded-xl bg-lightGrey">
                   <Image
                     className="mx-auto mt-10 mb-6"
                     src="/icons/illustration-empty.svg"
