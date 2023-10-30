@@ -257,7 +257,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
                 >
                   {fields.map((item, index) => (
                     <DraggableLink key={item.id} id={item.id}>
-                      <li className="relative p-5 mb-5 list-none bg-lightGrey rounded-xl">
+                      <div className="relative p-5 mb-5 list-none bg-lightGrey rounded-xl">
                         <Controller
                           control={control}
                           name={`userLink.${index}.platform`}
@@ -335,7 +335,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
                             </>
                           )}
                         />
-                      </li>
+                      </div>
                     </DraggableLink>
                   ))}
                 </SortableContext>
