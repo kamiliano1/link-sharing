@@ -219,11 +219,11 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
       onChange={handleFormChange}
       className="flex flex-col mx-auto lg:mx-0 lg:max-w-[808px] lg:w-full"
     >
-      <div className="p-6 m-4 sm:m-6 sm:mb-0 mb-0 flex flex-col bg-white relative rounded-md">
-        <h1 className="text-headingMmobile sm:text-headingM mb-2">
+      <div className="relative flex flex-col p-6 m-4 mb-0 bg-white rounded-md sm:m-6 sm:mb-0">
+        <h1 className="mb-2 text-headingMmobile sm:text-headingM">
           Customize your links
         </h1>
-        <p className="text-bodyM text-grey mb-10">
+        <p className="mb-10 text-bodyM text-grey">
           Add/edit/remove links below and then share all your profiles with the
           world!
         </p>
@@ -241,7 +241,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
         >
           + Add new link
         </Button>
-        <div className="max-h-[505px] sm:h-[505px] relative sm:mb-[10.5px] overflow-y-auto scrollbar mt-6">
+        <div className="max-h-[505px] sm:h-[480px] relative sm:mb-[10.5px] overflow-y-auto scrollbar mt-6">
           {loading ? (
             <CustomizeUserLinkSkeleton />
           ) : (
@@ -257,15 +257,15 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
                 >
                   {fields.map((item, index) => (
                     <DraggableLink key={item.id} id={item.id}>
-                      <li className="list-none mb-5 relative bg-lightGrey p-5 rounded-xl">
+                      <li className="relative p-5 mb-5 list-none bg-lightGrey rounded-xl">
                         <Controller
                           control={control}
                           name={`userLink.${index}.platform`}
                           defaultValue={"GitHub"}
                           render={({ field: { onChange, value, ref } }) => (
                             <>
-                              <div className="flex justify-between text-grey mb-3">
-                                <h2 className="text-headingS inline-block ml-8">
+                              <div className="flex justify-between mb-3 text-grey">
+                                <h2 className="inline-block ml-8 text-headingS">
                                   Link #{index + 1}
                                 </h2>
                                 <button
@@ -276,7 +276,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
                                   Remove
                                 </button>
                               </div>
-                              <p className="text-bodyXS mb-1 mt-3 text-darkGrey">
+                              <p className="mt-3 mb-1 text-bodyXS text-darkGrey">
                                 Platform
                               </p>
                               <SelectPlatformInput
@@ -302,11 +302,11 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
                           render={({ field }) => (
                             <>
                               <label htmlFor={`userLink.${index}.platform`}>
-                                <p className="text-bodyXS mb-1 mt-3 text-darkGrey cursor-pointer">
+                                <p className="mt-3 mb-1 cursor-pointer text-bodyXS text-darkGrey">
                                   Link
                                 </p>
                               </label>
-                              <div className="flex relative">
+                              <div className="relative flex">
                                 <AiOutlineLink className="absolute top-4 left-4 text-grey" />
                                 <input
                                   {...field}
@@ -326,7 +326,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
                                 />
                                 {errors.userLink?.[index] && (
                                   <>
-                                    <p className="text-red text-bodyXS absolute top-4 right-4">
+                                    <p className="absolute text-red text-bodyXS top-4 right-4">
                                       {errors.userLink?.[index]?.link?.message}
                                     </p>
                                   </>
@@ -342,7 +342,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
               </DndContext>
 
               {!fields.length && (
-                <div className="p-5  rounded-xl bg-lightGrey">
+                <div className="p-5 rounded-xl bg-lightGrey">
                   <Image
                     className="mx-auto mt-10 mb-6"
                     src="/icons/illustration-empty.svg"
@@ -350,10 +350,10 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
                     height={80}
                     alt="/"
                   />
-                  <h2 className="text-headingMmobile text-center">
+                  <h2 className="text-center text-headingMmobile">
                     Let`s get you started
                   </h2>
-                  <p className="text-grey mt-6 mb-7">
+                  <p className="mt-6 text-grey mb-7">
                     Use the “Add new link” button to get started. Once you have
                     more than one link, you can reorder and edit them. We`re
                     here to help you share your profiles with everyone!
@@ -365,7 +365,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
         </div>
       </div>
       <span className="h-[1px] inline-block bg-borders mx-4 sm:mx-6"></span>
-      <div className="bg-white m-4 sm:m-6 sm:mt-0 mt-0 p-4">
+      <div className="p-4 m-4 mt-0 bg-white sm:m-6 sm:mt-0">
         <Button
           role="primary"
           disabled={isLoading ? true : isSaveButtonNotActive}

@@ -10,13 +10,13 @@ type LinkPreviewProps = { loading: boolean };
 const LinkPreview: React.FC<LinkPreviewProps> = ({ loading }) => {
   const userAccount = useRecoilValue(userAccountState);
   return (
-    <div className="hidden lg:flex lg:justify-center lg:items-center bg-white w-[560px] h-[834px] m-6 mr-0 rounded-xl">
+    <div className="hidden lg:flex lg:justify-center lg:items-center bg-white w-[560px] h-[809px] m-6 mr-0 rounded-xl">
       <div className="relative">
         <Image src={PhoneMockup} alt="Phone Mockup" />
         {loading ? (
           <LinkPreviewSkeleton />
         ) : (
-          <div className="absolute mt-16 w-full top-0 flex flex-col items-center">
+          <div className="absolute top-0 flex flex-col items-center w-full mt-16">
             {userAccount.picture ? (
               <Image
                 width={96}

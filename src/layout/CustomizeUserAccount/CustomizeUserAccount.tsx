@@ -104,19 +104,19 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
       onSubmit={handleSubmit(formSubmit)}
       className="flex flex-col mx-auto lg:mx-0 lg:max-w-[808px] lg:w-full"
     >
-      <div className="p-6 m-4 sm:m-6 sm:mb-0 mb-0 flex flex-col bg-white sm:h-[754.5px] relative rounded-md">
-        <h1 className="text-headingMmobile sm:text-headingM mb-2">
+      <div className="p-6 m-4 sm:m-6 sm:mb-0 mb-0 flex flex-col bg-white sm:h-[729.5px] relative rounded-md">
+        <h1 className="mb-2 text-headingMmobile sm:text-headingM">
           Profile Details
         </h1>
 
-        <p className="text-bodyM text-grey mb-10">
+        <p className="mb-10 text-bodyM text-grey">
           Add your details to create a personal touch to your profile.
         </p>
         {loading ? (
           <CustomizeUserAccountSkeleton />
         ) : (
           <>
-            <div className="sm:flex items-center bg-lightGrey rounded-xl p-5">
+            <div className="items-center p-5 sm:flex bg-lightGrey rounded-xl">
               <div className="sm:w-[255px]">
                 <p className="text-bodyM text-grey mb-4 sm:mb-0 sm:w-[255px]">
                   Profile picture.
@@ -146,7 +146,7 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
                 Image must be below 1024x1024px. Use PNG or JPG format.
               </p>
             </div>
-            <div className="mt-6 sm:flex sm:flex-col sm:gap-3 bg-lightGrey rounded-xl p-5">
+            <div className="p-5 mt-6 sm:flex sm:flex-col sm:gap-3 bg-lightGrey rounded-xl">
               <div className="relative sm:flex sm:gap-4 sm:items-center">
                 <label htmlFor="firstName">
                   <p className="text-bodyXS sm:text-bodyM cursor-pointer text-grey mb-1 sm:mb-0 sm:w-[240px]">
@@ -221,7 +221,7 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
         )}
       </div>
       <span className="h-[1px] inline-block bg-borders mx-4 sm:mx-6"></span>
-      <div className="bg-white m-4 sm:m-6 sm:mt-0 mt-0 p-4">
+      <div className="p-4 m-4 mt-0 bg-white sm:m-6 sm:mt-0">
         <Button
           role="primary"
           cssClass="sm:w-min sm:px-7 sm:ml-auto"
