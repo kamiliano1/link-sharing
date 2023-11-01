@@ -37,6 +37,7 @@ import { SelectPlatformInput } from "../Select/SelectPlatformInput";
 import { linksList } from "../Select/linkList";
 import CustomizeUserLinkSkeleton from "../Skeletons/CustomizeUserLinkSkeleton";
 import DraggableLink from "./DraggableLink";
+import { notUsePlatforms } from "@/utility/notUserPlatforms";
 type CustomizeUserLinksProps = {
   user: User | null | undefined;
   loading: boolean;
@@ -88,6 +89,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
     handleSubmit,
     watch,
     setValue,
+    setFocus,
     getValues,
     control,
     formState: { errors },
@@ -206,13 +208,27 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
       return { ...prev, userLink: userLink };
     });
   };
+
+  const addLink = () => {
+    append({
+      platform: notUsePlatforms(userAccount)[0],
+      link: "",
+      id: nanoid(),
+      order: fields.length,
+    });
+    setTimeout(() => {
+      setFocus(`userLink.${fields.length}.link`);
+    }, 2);
+  };
   const handleDragDrop = async (e: DragEndEvent) => {
     if (e.active.id === e.over?.id) return;
     const startLinkIndex = fields.findIndex((item) => item.id === e.active.id);
     const dropLinkIndex = fields.findIndex((item) => item.id === e.over?.id);
     swap(startLinkIndex, dropLinkIndex);
   };
-
+  // notUsePlatforms(daneDoWygladu);
+  // console.log(notUsePlatforms(daneDoWygladu));
+  // console.log(notUsePlatforms(userAccount));
   return (
     <form
       onSubmit={handleSubmit(formSubmit)}
@@ -227,18 +243,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
           Add/edit/remove links below and then share all your profiles with the
           world!
         </p>
-        <Button
-          role="secondary"
-          type="button"
-          onClick={() => {
-            append({
-              platform: "GitHub",
-              link: "",
-              id: nanoid(),
-              order: fields.length,
-            });
-          }}
-        >
+        <Button role="secondary" type="button" onClick={addLink}>
           + Add new link
         </Button>
         <div className="max-h-[505px] sm:h-[480px] relative sm:mb-[10.5px] overflow-y-auto scrollbar mt-6">
