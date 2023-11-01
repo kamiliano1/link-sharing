@@ -15,8 +15,8 @@ const CustomizeUserNavbar: React.FC<CustomizeUserNavbarProps> = ({ user }) => {
   const pathname = usePathname();
   return (
     <NavigationMenu.Root className="py-4 pl-6 pr-4 sm:m-6 sm:mb-0 sm:rounded-xl bg-white items-center justify-between">
-      <NavigationMenu.List className="flex items-center justify-between">
-        <NavigationMenu.Item>
+      <NavigationMenu.List className="flex items-center">
+        <NavigationMenu.Item className="mr-auto">
           <Link href="/" passHref legacyBehavior>
             <NavigationMenu.Link>
               <Image src={logoSmall} className="sm:hidden" alt="web logo" />
@@ -46,7 +46,7 @@ const CustomizeUserNavbar: React.FC<CustomizeUserNavbarProps> = ({ user }) => {
           <Link href="/profileDetails" passHref legacyBehavior>
             <NavigationMenu.Link
               className={`flex items-center hover:text-purple py-3 px-7 rounded-lg ${
-                pathname === "profileDetails"
+                pathname === "/profileDetails"
                   ? "flex items-center bg-lightPurple text-purple "
                   : "text-grey"
               } `}
@@ -56,7 +56,7 @@ const CustomizeUserNavbar: React.FC<CustomizeUserNavbarProps> = ({ user }) => {
             </NavigationMenu.Link>
           </Link>
         </NavigationMenu.Item>
-        <NavigationMenu.Item>
+        <NavigationMenu.Item className="ml-auto">
           <Link href={`/previewProfile/${user?.uid}`} passHref legacyBehavior>
             <NavigationMenu.Link className="text-purple border-[1px] px-4 py-3 border-purple bg-white hover:bg-lightPurple w-full text-headingS flex justify-center rounded-lg">
               <AiOutlineEye className="sm:hidden" />
