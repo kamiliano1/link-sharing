@@ -29,7 +29,7 @@ export const SelectPlatformInput = forwardRef<
     >
       <Select.Trigger
         ref={ref}
-        className="inline-flex items-center border-[1px] border-borders text-darkGrey justify-center rounded py-3 px-4 w-full leading-none bg-white bodyXS-bodyS hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple outline-none"
+        className="inline-flex items-center border-[1px] border-borders text-grey justify-center rounded py-3 px-4 w-full leading-none bg-white bodyXS-bodyS hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple outline-none"
         aria-label="platform"
       >
         <Select.Value aria-label={value} />
