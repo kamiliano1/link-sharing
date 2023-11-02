@@ -10,11 +10,11 @@ import { auth } from "./firebase/clientApp";
 
 export default function Home() {
   const { getCurrentUserData } = useDataFromFirebase();
-  // getCurrentUserData();
+  getCurrentUserData();
   const [user, loading] = useAuthState(auth);
   return (
     <main className="min-h-[100vh]">
-      {/* {!loading && <Modal />} */}
+      {!loading && <Modal />}
       <Navbar />
       <div className="lg:flex relative pb-5 lg:justify-center">
         <LinkPreview loading={loading} />

@@ -43,34 +43,6 @@ type CustomizeUserLinksProps = {
   loading: boolean;
 };
 
-const daneDoWygladu: UserAccountState = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  picture: "",
-  userLink: [
-    {
-      id: "9f554586-f68e-42ab-8758-6d3799d53362",
-      platform: "GitHub",
-      order: 0,
-      link: "https://www.github.com/benwright",
-    },
-    {
-      platform: "YouTube",
-      link: "https://www.youtube.com/@benwright",
-      id: "88fa0e4f-3f1e-4d3f-91a0-5a53a5c5e7bb",
-      order: 1,
-    },
-    {
-      platform: "LinkedIn",
-      link: "https://www.linkedIn.com/in/benwright",
-      id: "9086527b-12ac-4088-bdd8-ac2515f4e3dc",
-      order: 2,
-    },
-  ],
-  isLoaded: true,
-};
-
 const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
   user,
   loading,
@@ -104,9 +76,6 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
     setUserAccount((prev) => ({ ...prev, userLink: fields }));
   }, [fields, setUserAccount]);
 
-  useEffect(() => {
-    setUserAccount(daneDoWygladu);
-  }, [setUserAccount]);
   useEffect(() => {
     if (!isLinksLoaded && userAccount.userLink.length) {
       setValue("userLink", userAccount.userLink);
@@ -226,9 +195,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
     const dropLinkIndex = fields.findIndex((item) => item.id === e.over?.id);
     swap(startLinkIndex, dropLinkIndex);
   };
-  // notUsePlatforms(daneDoWygladu);
-  // console.log(notUsePlatforms(daneDoWygladu));
-  // console.log(notUsePlatforms(userAccount));
+
   return (
     <form
       onSubmit={handleSubmit(formSubmit)}

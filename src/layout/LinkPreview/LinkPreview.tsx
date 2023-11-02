@@ -43,7 +43,7 @@ const LinkPreview: React.FC<LinkPreviewProps> = ({ loading }) => {
             >
               {userAccount.email}
             </p>
-            <div className="max-h-[305px] overflow-y-auto scrollbar">
+            <div className="max-h-[305px] overflow-y-auto scrollbar bg-white">
               {userAccount?.userLink.map((item) => (
                 <PreviewLink
                   key={item.id}
