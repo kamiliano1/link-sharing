@@ -61,31 +61,27 @@ const LoginModal: React.FC<LoginModalProps> = ({
 
   return (
     <div>
-      <h2 className="text-headingMmobile sm:text-headingM mb-2">Login</h2>
+      <h2 className="text-headingMMobile sm:text-headingM mb-2">Login</h2>
       <p className="text-grey mb-10">
         Add your details below to get back into the app
       </p>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <label htmlFor="email">
-          <p
-            className={` ${
-              errors?.email ? "text-red" : "text-darkGrey"
-            } text-bodyS pt-6 pb-1`}
-          >
-            Email address
-          </p>
+        <label
+          htmlFor="email"
+          className={` ${
+            errors?.email ? "text-red" : "text-darkGrey"
+          } text-bodyS pt-6 pb-1`}
+        >
+          Email address
         </label>
         <div className="relative">
-          <AiFillMail
-            className="absolute top-4 left-4 text-grey"
-            alt="link icon"
-          />
+          <AiFillMail className="absolute top-4 left-4 text-grey" />
           <input
             defaultValue={userCred.email}
             type="text"
             id="email"
             placeholder="e.g. alex@email.com"
-            className={`pl-11 pr-4 py-3 border-[1px] text-bodyM rounded-lg w-full hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple 
+            className={`pl-11 mb-6 pr-4 py-3 border-[1px] text-bodyM rounded-lg w-full hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple 
      ${errors?.email ? "text-red border-red" : "text-black border-borders"}`}
             {...register("email", {
               required: "Can't be empty",
@@ -100,20 +96,16 @@ const LoginModal: React.FC<LoginModalProps> = ({
             </p>
           )}
         </div>
-        <label htmlFor="currentPassword">
-          <p
-            className={` ${
-              errors?.currentPassword ? "text-red" : "text-darkGrey"
-            } text-bodyS pt-6 pb-1`}
-          >
-            Password
-          </p>
+        <label
+          htmlFor="currentPassword"
+          className={` ${
+            errors?.currentPassword ? "text-red" : "text-darkGrey"
+          } text-bodyS pt-6 pb-1`}
+        >
+          Password
         </label>
         <div className="relative">
-          <BiSolidLock
-            className="absolute top-4 left-4 text-grey"
-            alt="link icon"
-          />
+          <BiSolidLock className="absolute top-4 left-4 text-grey" />
           <input
             autoComplete="on"
             defaultValue={userCred.currentPassword}

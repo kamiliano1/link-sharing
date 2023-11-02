@@ -99,7 +99,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
   }, [userCredentials, userEmail]);
   return (
     <div>
-      <h2 className="text-headingMmobile sm:text-headingM mb-2">
+      <h2 className="text-headingMMobile sm:text-headingM mb-2">
         Create account
       </h2>
       <p className="text-grey mb-10">
@@ -107,26 +107,22 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
       </p>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <label htmlFor="email">
-          <p
-            className={` ${
-              errors?.email ? "text-red" : "text-darkGrey"
-            } text-bodyS  pb-1`}
-          >
-            Email address
-          </p>
+        <label
+          htmlFor="email"
+          className={`text-bodyS ${
+            errors?.email ? "text-red" : "text-darkGrey"
+          }`}
+        >
+          Email address
         </label>
         <div className="relative">
-          <AiFillMail
-            className="absolute top-4 left-4 text-grey"
-            alt="link icon"
-          />
+          <AiFillMail className="absolute top-5 left-4 text-grey" />
           <input
             defaultValue={userCred.email}
             type="text"
             id="email"
             placeholder="e.g. alex@email.com"
-            className={`pl-11 pr-4 py-3 border-[1px] text-bodyM rounded-lg w-full hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple 
+            className={`mt-1 mb-6 pl-11 pr-4 py-3 border-[1px] text-bodyM rounded-lg w-full hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple 
      ${errors?.email ? "text-red border-red" : "text-black border-borders"}`}
             {...register("email", {
               required: "Can't be empty",
@@ -141,27 +137,23 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
             </p>
           )}
         </div>
-        <label htmlFor="currentPassword">
-          <p
-            className={` ${
-              errors?.currentPassword ? "text-red" : "text-darkGrey"
-            } text-bodyS pt-6 pb-1`}
-          >
-            Create Password
-          </p>
+        <label
+          htmlFor="currentPassword"
+          className={`${
+            errors?.currentPassword ? "text-red" : "text-darkGrey"
+          } text-bodyS pt-6 pb-1`}
+        >
+          Create Password
         </label>
         <div className="relative">
-          <BiSolidLock
-            className="absolute top-4 left-4 text-grey"
-            alt="link icon"
-          />
+          <BiSolidLock className="absolute top-5 left-4 text-grey" />
           <input
             autoComplete="on"
             defaultValue={userCred.currentPassword}
             type="password"
             id="currentPassword"
             placeholder="Enter your password"
-            className={`pl-11 pr-4 py-3 border-[1px] text-bodyM rounded-lg w-full hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple ${
+            className={`mt-1 mb-6 pl-11 pr-4 py-3 border-[1px] text-bodyM rounded-lg w-full hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple ${
               errors?.currentPassword
                 ? "text-red border-red"
                 : "text-black border-borders"
@@ -179,26 +171,22 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
             </p>
           )}
         </div>
-        <label htmlFor="repeatPassword">
-          <p
-            className={` ${
-              errors?.repeatPassword ? "text-red" : "text-darkGrey"
-            } text-bodyS pt-6 pb-1`}
-          >
-            Confirm Password
-          </p>
+        <label
+          htmlFor="repeatPassword"
+          className={` ${
+            errors?.repeatPassword ? "text-red" : "text-darkGrey"
+          } text-bodyS pt-6 pb-1`}
+        >
+          Confirm Password
         </label>
         <div className="relative">
-          <BiSolidLock
-            className="absolute top-4 left-4 text-grey"
-            alt="link icon"
-          />
+          <BiSolidLock className="absolute top-4 left-4 text-grey" />
           <input
             autoComplete="on"
             type="password"
             id="repeatPassword"
             placeholder="At least .8 characters"
-            className={`pl-9 pr-4 py-3 border-[1px]  text-bodyM rounded-lg w-full hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple 
+            className={`pl-11 pr-4 py-3 border-[1px] text-bodyM rounded-lg w-full hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple 
          ${
            errors?.repeatPassword
              ? "text-red border-red"

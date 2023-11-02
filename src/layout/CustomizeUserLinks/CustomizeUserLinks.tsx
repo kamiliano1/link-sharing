@@ -129,7 +129,6 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
     snippetsToDelete.map((item) => deleteUserSnippets(item.id));
     setIsLoading(false);
     setIsPopUpOpen({ togglePopUp: true });
-    console.log(userAccount);
   };
   const validatePlatformLink = async (value: string, index: number) => {
     let isValidateLink = false;
@@ -203,7 +202,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
       className="flex flex-col mx-auto lg:mx-0 lg:max-w-[808px] lg:w-full"
     >
       <div className="relative flex flex-col p-6 m-4 mb-0 bg-white rounded-md sm:m-6 sm:mb-0">
-        <h1 className="mb-2 text-headingMmobile sm:text-headingM">
+        <h1 className="mb-2 text-headingMMobile sm:text-headingM">
           Customize your links
         </h1>
         <p className="mb-10 text-bodyM text-grey">
@@ -322,7 +321,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
                     height={80}
                     alt="/"
                   />
-                  <h2 className="text-center text-headingMmobile">
+                  <h2 className="text-center text-headingMMobile">
                     Let`s get you started
                   </h2>
                   <p className="mt-6 text-grey mb-7">

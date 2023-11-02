@@ -29,7 +29,7 @@ const config: Config = {
           fontWeight: "700",
         },
       ],
-      headingMmobile: [
+      headingMMobile: [
         "1.5rem",
         {
           lineHeight: "150%",

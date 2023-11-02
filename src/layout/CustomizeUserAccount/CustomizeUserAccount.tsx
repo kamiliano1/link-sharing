@@ -45,7 +45,6 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
   // }, [userAccount, setUserAccount]);
   const formSubmit: SubmitHandler<UserAccountState> = async (data) => {
     setIsLoading(true);
-    console.log(data);
     try {
       const userLinkRef = doc(firestore, `users/${user?.uid}`);
       if (userAccount.picture) {
@@ -96,7 +95,6 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
   };
   const onHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    console.log(name, value);
     setUserAccount((prev) => ({ ...prev, [name]: value }));
   };
   return (
@@ -105,7 +103,7 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
       className="flex flex-col mx-auto lg:mx-0 lg:max-w-[808px] lg:w-full"
     >
       <div className="p-6 m-4 sm:m-6 sm:mb-0 mb-0 flex flex-col bg-white sm:h-[729.5px] relative rounded-md">
-        <h1 className="mb-2 text-headingMmobile sm:text-headingM">
+        <h1 className="mb-2 text-headingMMobile sm:text-headingM">
           Profile Details
         </h1>
 

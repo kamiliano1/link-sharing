@@ -25,6 +25,7 @@ const Modal: React.FC<ModalProps> = () => {
         <Dialog.Portal>
           <Dialog.Overlay className="bg-white sm:bg-lightGrey fixed inset-0 z-[150]" />
           <Dialog.Content
+            aria-label="login-modal"
             className={`data-[state=open]:animate-overlayShow fixed top-0 sm:top-[50%] left-[50%] max-w-[476px] w-[100vw] translate-x-[-50%] sm:translate-y-[-50%] rounded-md focus:outline-none bg-white z-[500]`}
           >
             <div className="bg-white mt-8 ml-8 sm:mt-0 sm:ml-0 sm:bg-lightGrey w-full ">
