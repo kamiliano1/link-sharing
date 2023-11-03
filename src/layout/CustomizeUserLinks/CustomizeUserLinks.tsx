@@ -5,7 +5,7 @@ import {
   UserLink,
   userAccountState,
 } from "@/atoms/userAccountAtom";
-import useDataFromFirebase from "@/utility/useDataFromFirebase";
+import useDataFromFirebase from "@/hooks/useDataFromFirebase";
 import {
   DndContext,
   DragEndEvent,
@@ -31,7 +31,6 @@ import {
   useForm,
 } from "react-hook-form";
 import { useRecoilState } from "recoil";
-import LinkIcon from "../../../public/icons/icon-link.svg";
 import Button from "../Button/Button";
 import { SelectPlatformInput } from "../Select/SelectPlatformInput";
 import { linksList } from "../Select/linkList";
@@ -49,20 +48,17 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
 }) => {
   const { getMySnippets } = useDataFromFirebase();
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
-
+  const [isChangesSaved, setIsChangesSaved] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLinksLoaded, setIsLinksLoaded] = useState<boolean>(false);
   const [isPopUpOpen, setIsPopUpOpen] = useRecoilState(popUpState);
-  // const [user, loading] = useAuthState(auth);
   const [isSaveButtonNotActive, setIsSaveButtonNotActive] =
     useState<boolean>(false);
   const {
-    register,
     handleSubmit,
     watch,
     setValue,
     setFocus,
-    getValues,
     control,
     formState: { errors },
   } = useForm<UserAccountState>({
@@ -104,12 +100,15 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
     }
   };
   useEffect(() => {
-    if (userAccount.userLink.length || fields.length) {
-      setIsSaveButtonNotActive(false);
+    if (!userAccount.userLink.length && isChangesSaved) {
+      setIsSaveButtonNotActive(true);
       return;
     }
-    setIsSaveButtonNotActive(true);
-  }, [userAccount.userLink, fields]);
+    setIsSaveButtonNotActive(false);
+  }, [isChangesSaved, userAccount.userLink.length]);
+  useEffect(() => {
+    setIsChangesSaved(false);
+  }, [userAccount]);
   const formSubmit: SubmitHandler<UserAccountState> = async (data) => {
     setIsLoading(true);
     let orderedUserLink = data.userLink;
@@ -129,6 +128,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
     snippetsToDelete.map((item) => deleteUserSnippets(item.id));
     setIsLoading(false);
     setIsPopUpOpen({ togglePopUp: true });
+    setIsChangesSaved(true);
   };
   const validatePlatformLink = async (value: string, index: number) => {
     let isValidateLink = false;
@@ -259,6 +259,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
                             </>
                           )}
                         />
+
                         <Controller
                           control={control}
                           name={`userLink.${index}.link`}
@@ -272,17 +273,24 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
                           }}
                           render={({ field }) => (
                             <>
-                              <label htmlFor={`userLink.${index}.platform`}>
-                                <p className="mt-3 mb-1 cursor-pointer text-bodyXS text-darkGrey">
+                              <div className="mt-3 mb-1">
+                                <label
+                                  htmlFor={`userLink.${index}.link`}
+                                  className={`mt-3 mb-1 cursor-pointer text-bodyXS text-darkGrey ${
+                                    errors.userLink?.[index]?.link &&
+                                    "text-red border-red"
+                                  }`}
+                                >
                                   Link
-                                </p>
-                              </label>
+                                </label>
+                              </div>
                               <div className="relative flex">
                                 <AiOutlineLink className="absolute top-4 left-4 text-grey" />
+
                                 <input
                                   {...field}
                                   type="text"
-                                  id={`userLink.${index}.platform`}
+                                  id={`userLink.${index}.link`}
                                   placeholder={
                                     linksList.find(
                                       (item) =>
@@ -297,7 +305,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
                                 />
                                 {errors.userLink?.[index] && (
                                   <>
-                                    <p className="absolute text-red text-bodyXS top-4 right-4">
+                                    <p className="absolute text-red text-bodyXS  top-[-1.5rem] sm:top-4 right-4">
                                       {errors.userLink?.[index]?.link?.message}
                                     </p>
                                   </>

@@ -11,14 +11,12 @@ import { ModalStatusType } from "./Modal";
 import { UserCredType } from "./userCredType";
 
 type RegisterModalProps = {
-  open: boolean;
   userCred: UserCredType;
   setUserCred: React.Dispatch<React.SetStateAction<UserCredType>>;
   setModalStatus: React.Dispatch<React.SetStateAction<ModalStatusType>>;
 };
 
 const RegisterModal: React.FC<RegisterModalProps> = ({
-  open,
   userCred,
   setUserCred,
   setModalStatus,
@@ -132,7 +130,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
             })}
           />
           {errors?.email && (
-            <p className="text-red text-bodyS absolute top-4 right-4">
+            <p className="text-red text-bodyS absolute sm:top-4 right-4 top-[-1.5rem]">
               {errors.email.message}
             </p>
           )}
@@ -141,7 +139,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
           htmlFor="currentPassword"
           className={`${
             errors?.currentPassword ? "text-red" : "text-darkGrey"
-          } text-bodyS pt-6 pb-1`}
+          } text-bodyS`}
         >
           Create Password
         </label>
@@ -166,7 +164,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
             })}
           />
           {errors?.currentPassword && (
-            <p className="text-red text-bodyS absolute top-4 right-4">
+            <p className="text-red text-bodyS absolute sm:top-5 right-4 top-[-1.5rem]">
               {errors.currentPassword.message}
             </p>
           )}
@@ -175,7 +173,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
           htmlFor="repeatPassword"
           className={` ${
             errors?.repeatPassword ? "text-red" : "text-darkGrey"
-          } text-bodyS pt-6 pb-1`}
+          } text-bodyS`}
         >
           Confirm Password
         </label>
@@ -201,7 +199,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
             })}
           />
           {errors?.repeatPassword && (
-            <p className="text-red text-bodyS absolute top-4 right-4">
+            <p className="text-red text-bodyS absolute sm:top-4 right-4 top-[-1.5rem]">
               {errors.repeatPassword.message}
             </p>
           )}

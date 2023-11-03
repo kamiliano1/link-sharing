@@ -4,7 +4,7 @@ import LinkPreview from "@/layout/LinkPreview/LinkPreview";
 import Modal from "@/layout/Modal/Modal";
 import Navbar from "@/layout/Navbar/Navbar";
 import PopUp from "@/layout/PopUp/PopUp";
-import useDataFromFirebase from "@/utility/useDataFromFirebase";
+import useDataFromFirebase from "@/hooks/useDataFromFirebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/clientApp";
 

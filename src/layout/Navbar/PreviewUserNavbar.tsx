@@ -1,6 +1,5 @@
 import React from "react";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
-import Link from "next/link";
 import { User } from "firebase/auth";
 import { popUpState } from "@/atoms/togglePopUpAtom";
 import { useRecoilState } from "recoil";

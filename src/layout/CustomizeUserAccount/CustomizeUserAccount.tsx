@@ -2,7 +2,7 @@ import { firestore, storage } from "@/app/firebase/clientApp";
 import { popUpState } from "@/atoms/togglePopUpAtom";
 import { UserAccountState, userAccountState } from "@/atoms/userAccountAtom";
 import { User } from "firebase/auth";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import React, { useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -40,9 +40,6 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
   useEffect(() => {
     reset();
   }, [reset, userAccount]);
-  // useEffect(() => {
-  //   setUserAccount(userAccount);
-  // }, [userAccount, setUserAccount]);
   const formSubmit: SubmitHandler<UserAccountState> = async (data) => {
     setIsLoading(true);
     try {
@@ -97,6 +94,7 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
     const { name, value } = e.target;
     setUserAccount((prev) => ({ ...prev, [name]: value }));
   };
+
   return (
     <form
       onSubmit={handleSubmit(formSubmit)}
@@ -115,11 +113,9 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
         ) : (
           <>
             <div className="items-center p-5 sm:flex bg-lightGrey rounded-xl">
-              <div className="sm:w-[255px]">
-                <p className="text-bodyM text-grey mb-4 sm:mb-0 sm:w-[255px]">
-                  Profile picture.
-                </p>
-              </div>
+              <p className="text-bodyM text-grey mb-4 sm:mb-0 sm:w-[37%] sm:min-w-[188.87px]">
+                Profile picture.
+              </p>
               <input
                 type="file"
                 onChange={onSelectAvatar}
@@ -133,7 +129,7 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
                 }}
                 className={`text-purple bg-lightPurple mb-6 sm:mb-0 flex flex-col items-center text-headingS bg-cover bg-no-repeat w-min px-10 py-[3.75rem] cursor-pointer relative rounded-xl sm:w-[193px] ${
                   pictureURL &&
-                  "hover:text-white hover:bg-grey bg-blend-multiply "
+                  "hover:text-white hover:bg-grey bg-blend-multiply"
                 }`}
                 onClick={() => selectedFileRef.current?.click()}
               >
@@ -145,12 +141,15 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
               </p>
             </div>
             <div className="p-5 mt-6 sm:flex sm:flex-col sm:gap-3 bg-lightGrey rounded-xl">
-              <div className="relative sm:flex sm:gap-4 sm:items-center">
-                <label htmlFor="firstName">
-                  <p className="text-bodyXS sm:text-bodyM cursor-pointer text-grey mb-1 sm:mb-0 sm:w-[240px]">
+              <div className="relative sm:flex sm:items-center">
+                <div className="mb-1 sm:mb-0 sm:w-[37%]">
+                  <label
+                    htmlFor="firstName"
+                    className="text-bodyXS sm:text-bodyM cursor-pointer text-grey"
+                  >
                     First name*
-                  </p>
-                </label>
+                  </label>
+                </div>
                 <input
                   {...register("firstName", {
                     required: "Can`t be empty",
@@ -162,20 +161,24 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
                   type="text"
                   defaultValue={userAccount.firstName}
                   placeholder="e.g. John"
-                  className={`px-4 w-full py-3 border-[1px] mb-3 sm:mb-0 border-borders max-w-[668px] text-bodyM rounded-lg text-black hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple ${
+                  className={`px-4 w-full sm:w-[63%] py-3 border-[1px] mb-3 sm:mb-0 border-borders max-w-[668px] text-bodyM rounded-lg text-black hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple ${
                     errors.firstName && "text-red border-red"
                   }`}
                 />
-                <p className="text-red text-bodyXS absolute top-[2.4rem] sm:top-4 right-4">
+                <p className="text-red text-bodyXS absolute top-[2.7rem] sm:top-4 right-4">
                   {errors.firstName?.message}
                 </p>
               </div>
-              <div className="relative sm:flex sm:gap-4 sm:items-center">
-                <label htmlFor="lastName">
-                  <p className="text-bodyXS sm:text-bodyM cursor-pointer text-grey mb-1 sm:mb-0 sm:w-[240px]">
+              <div className="relative sm:flex sm:items-center">
+                <div className="mb-1 sm:mb-0 sm:w-[37%]">
+                  <label
+                    htmlFor="lastName"
+                    className="ext-bodyXS sm:text-bodyM cursor-pointer text-grey"
+                  >
                     Last name*
-                  </p>
-                </label>
+                  </label>
+                </div>
+
                 <input
                   {...register("lastName", {
                     required: "Can`t be empty",
@@ -187,20 +190,24 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
                   type="text"
                   defaultValue={userAccount.lastName}
                   placeholder="e.g. Appleseed"
-                  className={`px-4 w-full py-3 border-[1px] mb-3 sm:mb-0 border-borders max-w-[668px] text-bodyM rounded-lg text-black hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple ${
+                  className={`px-4 w-full sm:w-[63%] py-3 border-[1px] mb-3 sm:mb-0 border-borders max-w-[668px] text-bodyM rounded-lg text-black hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple ${
                     errors.lastName && "text-red border-red"
                   }`}
                 />
-                <p className="text-red text-bodyXS absolute top-[2.4rem] sm:top-4 right-4">
+                <p className="text-red text-bodyXS absolute top-[2.7rem] sm:top-4 right-4">
                   {errors.lastName?.message}
                 </p>
               </div>
-              <div className="relative sm:flex sm:gap-4 sm:items-center">
-                <label htmlFor="email">
-                  <p className="text-bodyXS sm:text-bodyM cursor-pointer text-grey mb-1 sm:mb-0 sm:w-[240px]">
+              <div className="relative sm:flex sm:items-center">
+                <div className="mb-1 sm:mb-0 sm:w-[37%]">
+                  <label
+                    htmlFor="email"
+                    className="text-bodyXS sm:text-bodyM cursor-pointer text-grey"
+                  >
                     Email
-                  </p>
-                </label>
+                  </label>
+                </div>
+
                 <input
                   {...register("email", {
                     onChange(e) {
@@ -211,7 +218,7 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
                   type="text"
                   defaultValue={userAccount.email}
                   placeholder="e.g. email@example.com"
-                  className="px-4 w-full py-3 border-[1px] sm:mb-0 border-borders max-w-[668px] text-bodyM rounded-lg text-black hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple"
+                  className="px-4 w-full sm:w-[63%] py-3 border-[1px] sm:mb-0 border-borders max-w-[668px] text-bodyM rounded-lg text-black hover:shadow-[0px_0px_32px_0px_rgba(99,_60,_255,_0.25)] hover:border-purple"
                 />
               </div>
             </div>

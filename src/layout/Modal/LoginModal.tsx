@@ -8,20 +8,18 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useRecoilState } from "recoil";
 import { auth } from "@/app/firebase/clientApp";
 import { userAccountState } from "@/atoms/userAccountAtom";
-import useDataFromFirebase from "@/utility/useDataFromFirebase";
+import useDataFromFirebase from "@/hooks/useDataFromFirebase";
 import { AiFillMail } from "react-icons/ai";
 import { BiSolidLock } from "react-icons/bi";
 import { ModalStatusType } from "./Modal";
 import { UserCredType } from "./userCredType";
 type LoginModalProps = {
-  open: boolean;
   userCred: UserCredType;
   setUserCred: React.Dispatch<React.SetStateAction<UserCredType>>;
   setModalStatus: React.Dispatch<React.SetStateAction<ModalStatusType>>;
 };
 
 const LoginModal: React.FC<LoginModalProps> = ({
-  open,
   userCred,
   setUserCred,
   setModalStatus,
@@ -91,7 +89,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
             })}
           />
           {errors?.email && (
-            <p className="text-red text-bodyS absolute top-4 right-4">
+            <p className="text-red text-bodyS absolute sm:top-4 right-4 top-[-1.5rem]">
               {errors.email.message}
             </p>
           )}
@@ -125,7 +123,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
             })}
           />
           {errors?.currentPassword && (
-            <p className="text-red text-bodyS absolute top-4 right-4">
+            <p className="text-red text-bodyS absolute sm:top-4 right-4 top-[-1.5rem]">
               {errors.currentPassword.message}
             </p>
           )}

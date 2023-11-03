@@ -38,14 +38,12 @@ const Modal: React.FC<ModalProps> = () => {
             <div className="p-8 sm:p-10 sm:pt-0">
               {modalStatus === "login" ? (
                 <LoginModal
-                  open={modalOpen}
                   userCred={userCred}
                   setUserCred={setUserCred}
                   setModalStatus={setModalStatus}
                 />
               ) : (
                 <RegisterModal
-                  open={modalOpen}
                   userCred={userCred}
                   setUserCred={setUserCred}
                   setModalStatus={setModalStatus}
