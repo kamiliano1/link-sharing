@@ -1,10 +1,15 @@
 import { firestore, storage } from "@/app/firebase/clientApp";
-import { popUpState } from "@/atoms/togglePopUpAtom";
 import { UserAccountState, userAccountState } from "@/atoms/userAccountAtom";
 import { User } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { LiaImageSolid } from "react-icons/lia";
 import { useRecoilState } from "recoil";
@@ -13,15 +18,16 @@ import CustomizeUserAccountSkeleton from "../Skeletons/CustomizeUserAccountSkele
 type CustomizeUserAccountProps = {
   user: User | null | undefined;
   loading: boolean;
+  setIsPopUpOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
   user,
   loading,
+  setIsPopUpOpen,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
-  const [isPopUpOpen, setIsPopUpOpen] = useRecoilState(popUpState);
   const [isAvatarChanged, setIsAvatarChanged] = useState<boolean>(false);
   const [pictureURL, setPictureURL] = useState<string>(
     userAccount.picture || ""
@@ -44,15 +50,15 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
     setIsLoading(true);
     try {
       const userLinkRef = doc(firestore, `users/${user?.uid}`);
+      await updateDoc(userLinkRef, {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+      });
       if (userAccount.picture) {
         const imageRef = ref(storage, `avatars/${user?.uid}/image`);
         await uploadString(imageRef, userAccount.picture, "data_url");
         const downloadURL = await getDownloadURL(imageRef);
-        await updateDoc(userLinkRef, {
-          firstName: data.firstName,
-          lastName: data.lastName,
-          email: data.email,
-        });
         if (isAvatarChanged)
           await updateDoc(userLinkRef, {
             picture: downloadURL,
@@ -64,14 +70,11 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
 
     setIsLoading(false);
     setIsAvatarChanged(false);
-    setIsPopUpOpen({ togglePopUp: true });
+    setIsPopUpOpen(true);
   };
   useEffect(() => {
     setPictureURL(userAccount.picture || "");
   }, [userAccount.picture]);
-  useEffect(() => {
-    setIsPopUpOpen({ togglePopUp: false });
-  }, [setIsPopUpOpen]);
   const onSelectAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
     const reader = new FileReader();
     if (e.target.files?.[0]) {

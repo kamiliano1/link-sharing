@@ -1,20 +1,21 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
-import { User } from "firebase/auth";
-import { popUpState } from "@/atoms/togglePopUpAtom";
-import { useRecoilState } from "recoil";
-import { usePathname, useRouter } from "next/navigation";
-type PreviewUserNavbarProps = { user: User | null | undefined };
 
-const PreviewUserNavbar: React.FC<PreviewUserNavbarProps> = ({ user }) => {
-  const [isPopUpOpen, setIsPopUpOpen] = useRecoilState(popUpState);
+import { usePathname, useRouter } from "next/navigation";
+type PreviewUserNavbarProps = {
+  setIsPopUpOpen: Dispatch<SetStateAction<boolean>>;
+};
+
+const PreviewUserNavbar: React.FC<PreviewUserNavbarProps> = ({
+  setIsPopUpOpen,
+}) => {
   const pathname = usePathname();
   const router = useRouter();
   const copyLinkToClipBoard = () => {
     navigator.clipboard.writeText(
       `https://link-sharing-iota.vercel.app${pathname}`
     );
-    setIsPopUpOpen({ togglePopUp: true });
+    setIsPopUpOpen(true);
   };
   return (
     <NavigationMenu.Root>

@@ -1,13 +1,13 @@
 import { IoMdSave } from "react-icons/io";
 import { BsLink45Deg } from "react-icons/bs";
 import * as Toast from "@radix-ui/react-toast";
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { IconType } from "react-icons";
-import { useRecoilState } from "recoil";
-import { popUpState } from "@/atoms/togglePopUpAtom";
 
 type PopUpProps = {
   type: "copyLinkToClipBoard" | "changesSuccessfullySaved";
+  isPopUpOpen: boolean;
+  setIsPopUpOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 type PopUpDescriptionType = {
@@ -17,8 +17,7 @@ type PopUpDescriptionType = {
   icon: IconType;
 };
 
-const PopUp: React.FC<PopUpProps> = ({ type }) => {
-  const [isPopUpOpen, setIsPopUpOpen] = useRecoilState(popUpState);
+const PopUp: React.FC<PopUpProps> = ({ type, setIsPopUpOpen, isPopUpOpen }) => {
   const [popUpDescription, setPopUpDescription] =
     useState<PopUpDescriptionType>({
       description: "Your changes have been successfully saved!",
@@ -38,16 +37,16 @@ const PopUp: React.FC<PopUpProps> = ({ type }) => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setIsPopUpOpen({ togglePopUp: false });
+      setIsPopUpOpen(false);
     }, 4500);
     return () => clearTimeout(timer);
-  }, [isPopUpOpen.togglePopUp, setIsPopUpOpen]);
+  }, [setIsPopUpOpen]);
   return (
     <>
       <Toast.Provider swipeDirection="left">
         <Toast.Root
           className="bg-darkGrey flex items-center text-white rounded-xl px-6 py-4 text-headingS w-[406px] data-[state=open]:animate-slideIn data-[state=closed]:animate-hide data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:transition-[transform_200ms_ease-out] data-[swipe=end]:animate-swipeOut"
-          open={isPopUpOpen.togglePopUp}
+          open={isPopUpOpen}
         >
           <Toast.Title>
             <popUpDescription.icon />

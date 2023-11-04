@@ -1,12 +1,13 @@
 import { firestore } from "@/app/firebase/clientApp";
 import { UserAccountState } from "@/atoms/userAccountAtom";
-import useDataFromFirebase from "@/utility/useDataFromFirebase";
+import useDataFromFirebase from "@/hooks/useDataFromFirebase";
 import { doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import "react-loading-skeleton/dist/skeleton.css";
 import PreviewLink from "../Select/PreviewLink";
 import PreviewUserProfileSkeleton from "../Skeletons/PreviewUserProfileSkeleton";
+import { useRecoilState } from "recoil";
 type PreviewUserProfileProps = {
   userId: string;
   isActivatedUserPreview: boolean;
@@ -21,6 +22,7 @@ const PreviewUserProfile: React.FC<PreviewUserProfileProps> = ({
     userLink: [],
     isLoaded: false,
   });
+
   const [isUserExist, setIsUserExist] = useState<boolean>(false);
   useEffect(() => {
     const getPreviewUserData = async () => {

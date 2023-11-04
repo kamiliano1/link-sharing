@@ -1,5 +1,4 @@
 import { firestore } from "@/app/firebase/clientApp";
-import { popUpState } from "@/atoms/togglePopUpAtom";
 import {
   UserAccountState,
   UserLink,
@@ -23,7 +22,7 @@ import { User } from "firebase/auth";
 import { deleteDoc, doc, runTransaction } from "firebase/firestore";
 import { nanoid } from "nanoid";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   Controller,
   SubmitHandler,
@@ -40,18 +39,20 @@ import { notUsePlatforms } from "@/utility/notUserPlatforms";
 type CustomizeUserLinksProps = {
   user: User | null | undefined;
   loading: boolean;
+  setIsPopUpOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
   user,
   loading,
+  setIsPopUpOpen,
 }) => {
   const { getMySnippets } = useDataFromFirebase();
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
   const [isChangesSaved, setIsChangesSaved] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLinksLoaded, setIsLinksLoaded] = useState<boolean>(false);
-  const [isPopUpOpen, setIsPopUpOpen] = useRecoilState(popUpState);
+
   const [isSaveButtonNotActive, setIsSaveButtonNotActive] =
     useState<boolean>(false);
   const {
@@ -127,7 +128,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
     });
     snippetsToDelete.map((item) => deleteUserSnippets(item.id));
     setIsLoading(false);
-    setIsPopUpOpen({ togglePopUp: true });
+    setIsPopUpOpen(true);
     setIsChangesSaved(true);
   };
   const validatePlatformLink = async (value: string, index: number) => {
@@ -143,9 +144,6 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
     return false || "Please check the URL";
   };
 
-  useEffect(() => {
-    setIsPopUpOpen({ togglePopUp: false });
-  }, [setIsPopUpOpen]);
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
