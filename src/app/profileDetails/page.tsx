@@ -15,7 +15,7 @@ export default function ProfileDetails() {
   const [user, loading] = useAuthState(auth);
   const [isPopUpOpen, setIsPopUpOpen] = useState<boolean>(false);
   return (
-    <main className="min-h-[100vh]">
+    <main>
       {!loading && <Modal />}
       <Navbar />
       <div className="lg:flex relative pb-5 lg:justify-center">
