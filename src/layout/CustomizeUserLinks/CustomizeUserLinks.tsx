@@ -36,6 +36,7 @@ import { linksList } from "../Select/linkList";
 import CustomizeUserLinkSkeleton from "../Skeletons/CustomizeUserLinkSkeleton";
 import DraggableLink from "./DraggableLink";
 import { notUsePlatforms } from "@/utility/notUserPlatforms";
+
 type CustomizeUserLinksProps = {
   user: User | null | undefined;
   loading: boolean;

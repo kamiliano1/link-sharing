@@ -103,7 +103,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
       <p className="text-grey mb-10">
         Let`s get you started sharing your links!
       </p>
-
       <form onSubmit={handleSubmit(onSubmit)}>
         <label
           htmlFor="email"
@@ -214,7 +213,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
           Create new account
         </Button>
       </form>
-
       <p className="text-center text-grey mt-6">
         Already have an account?
         <span

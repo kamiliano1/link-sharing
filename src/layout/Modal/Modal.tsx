@@ -7,12 +7,10 @@ import logoBig from "../../../public/icons/logo-devlinks-large.svg";
 import Image from "next/image";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/app/firebase/clientApp";
-type ModalProps = {};
 
 export type ModalStatusType = "login" | "register";
-const Modal: React.FC<ModalProps> = () => {
+const Modal: React.FC = () => {
   const [user] = useAuthState(auth);
-  const [modalOpen, setIsModalOpen] = useState<boolean>(true);
   const [modalStatus, setModalStatus] = useState<ModalStatusType>("login");
   const [userCred, setUserCred] = useState<UserCredType>({
     email: "",

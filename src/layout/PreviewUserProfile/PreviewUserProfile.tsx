@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 import "react-loading-skeleton/dist/skeleton.css";
 import PreviewLink from "../Select/PreviewLink";
 import PreviewUserProfileSkeleton from "../Skeletons/PreviewUserProfileSkeleton";
-import { useRecoilState } from "recoil";
+
 type PreviewUserProfileProps = {
   userId: string;
   isActivatedUserPreview: boolean;

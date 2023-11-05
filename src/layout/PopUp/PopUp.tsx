@@ -40,7 +40,7 @@ const PopUp: React.FC<PopUpProps> = ({ type, setIsPopUpOpen, isPopUpOpen }) => {
       setIsPopUpOpen(false);
     }, 4500);
     return () => clearTimeout(timer);
-  }, [setIsPopUpOpen]);
+  }, [setIsPopUpOpen, isPopUpOpen]);
   return (
     <>
       <Toast.Provider swipeDirection="left">

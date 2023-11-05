@@ -7,6 +7,7 @@ import PreviewLink from "../Select/PreviewLink";
 import LinkPreviewSkeleton from "../Skeletons/LinkPreviewSkeleton";
 
 type LinkPreviewProps = { loading: boolean };
+
 const LinkPreview: React.FC<LinkPreviewProps> = ({ loading }) => {
   const userAccount = useRecoilValue(userAccountState);
   return (

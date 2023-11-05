@@ -13,6 +13,7 @@ import { AiFillMail } from "react-icons/ai";
 import { BiSolidLock } from "react-icons/bi";
 import { ModalStatusType } from "./Modal";
 import { UserCredType } from "./userCredType";
+
 type LoginModalProps = {
   userCred: UserCredType;
   setUserCred: React.Dispatch<React.SetStateAction<UserCredType>>;

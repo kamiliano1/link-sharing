@@ -1,6 +1,5 @@
 import React, { Dispatch, SetStateAction } from "react";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
-
 import { usePathname, useRouter } from "next/navigation";
 type PreviewUserNavbarProps = {
   setIsPopUpOpen: Dispatch<SetStateAction<boolean>>;

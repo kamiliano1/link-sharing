@@ -15,6 +15,7 @@ import { LiaImageSolid } from "react-icons/lia";
 import { useRecoilState } from "recoil";
 import Button from "../Button/Button";
 import CustomizeUserAccountSkeleton from "../Skeletons/CustomizeUserAccountSkeleton";
+
 type CustomizeUserAccountProps = {
   user: User | null | undefined;
   loading: boolean;
@@ -35,11 +36,8 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
   const {
     register,
     handleSubmit,
-    watch,
     setValue,
-    getValues,
     reset,
-    control,
     formState: { errors },
   } = useForm<UserAccountState>({ defaultValues: { picture: "" } });
   const selectedFileRef = useRef<HTMLInputElement>(null);

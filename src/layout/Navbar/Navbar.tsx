@@ -4,6 +4,7 @@ import React, { Dispatch, SetStateAction } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import CustomizeUserNavbar from "./CustomizeUserNavbar";
 import PreviewUserNavbar from "./PreviewUserNavbar";
+
 type NavbarProps = { setIsPopUpOpen?: Dispatch<SetStateAction<boolean>> };
 
 const Navbar: React.FC<NavbarProps> = ({ setIsPopUpOpen }) => {
