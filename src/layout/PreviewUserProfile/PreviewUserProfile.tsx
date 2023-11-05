@@ -5,9 +5,10 @@ import { doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import "react-loading-skeleton/dist/skeleton.css";
+import { RxAvatar } from "react-icons/rx";
 import PreviewLink from "../Select/PreviewLink";
 import PreviewUserProfileSkeleton from "../Skeletons/PreviewUserProfileSkeleton";
-
+import { useParams } from "next/navigation";
 type PreviewUserProfileProps = {
   userId: string;
   isActivatedUserPreview: boolean;
@@ -22,8 +23,10 @@ const PreviewUserProfile: React.FC<PreviewUserProfileProps> = ({
     userLink: [],
     isLoaded: false,
   });
-
+  const [userAccountLetterCount, setUserAccountLetterCount] =
+    useState<number>(0);
   const [isUserExist, setIsUserExist] = useState<boolean>(false);
+  const params = useParams();
   useEffect(() => {
     const getPreviewUserData = async () => {
       if (previewAccount.isLoaded) return;
@@ -53,6 +56,14 @@ const PreviewUserProfile: React.FC<PreviewUserProfileProps> = ({
     };
     getPreviewUserData();
   }, [getSnippets, previewAccount.isLoaded, userId]);
+
+  useEffect(() => {
+    if (previewAccount.firstName && previewAccount.lastName)
+      setUserAccountLetterCount(
+        previewAccount.firstName?.length + previewAccount.lastName?.length
+      );
+  }, [previewAccount.firstName, previewAccount.lastName]);
+
   return (
     <div className={`${isActivatedUserPreview ? "sm:pt-28" : "sm:pt-14"}`}>
       <div
@@ -73,17 +84,32 @@ const PreviewUserProfile: React.FC<PreviewUserProfileProps> = ({
             ) : (
               <div className="w-[96px] aspect-square mb-[1.35rem]"></div>
             )}
-            <h2
-              className={`text-headingM capitalize w-[250px] truncate text-center  ${
-                previewAccount.firstName && "bg-white"
-              } `}
+            <div
+              className={`${userAccountLetterCount > 12 ? "flex-col" : ""}flex`}
             >
-              {previewAccount.firstName} {previewAccount.lastName}
-            </h2>
+              <h2
+                className={`text-headingM capitalize ${
+                  userAccountLetterCount > 12 ? "w-[250px] truncate" : " mr-2"
+                } text-center ${previewAccount.firstName && "bg-white"} `}
+              >
+                {previewAccount.firstName}
+              </h2>
+              <h2
+                className={`text-headingM capitalize ${
+                  userAccountLetterCount > 12 ? "w-[250px] truncate" : ""
+                } text-center ${previewAccount.firstName && "bg-white"} `}
+              >
+                {previewAccount.lastName}
+              </h2>
+            </div>
             {!isUserExist && (
-              <p className="text-headingS mb-[50px] w-[250px] truncate text-center">
-                User does not exist
-              </p>
+              <>
+                <p className="text-headingS text-grey text-center">
+                  User <span className="text-black block">{params.userId}</span>
+                  does not exist
+                </p>
+                <RxAvatar className="text-grey text-[3rem] mt-3" />
+              </>
             )}
             <p
               className={`text-headingS text-grey mb-[50px] w-[250px] truncate text-center ${

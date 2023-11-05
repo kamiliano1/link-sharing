@@ -1,6 +1,6 @@
 import { userAccountState } from "@/atoms/userAccountAtom";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import PhoneMockup from "../../../public/icons/illustration-phone-mockup.svg";
 import PreviewLink from "../Select/PreviewLink";
@@ -10,6 +10,14 @@ type LinkPreviewProps = { loading: boolean };
 
 const LinkPreview: React.FC<LinkPreviewProps> = ({ loading }) => {
   const userAccount = useRecoilValue(userAccountState);
+  const [userAccountLetterCount, setUserAccountLetterCount] =
+    useState<number>(0);
+  useEffect(() => {
+    if (userAccount.firstName && userAccount.lastName)
+      setUserAccountLetterCount(
+        userAccount.firstName?.length + userAccount.lastName?.length
+      );
+  }, [userAccount.firstName, userAccount.lastName]);
   return (
     <div className="hidden lg:flex lg:justify-center lg:items-center bg-white w-[560px] h-[809px] m-6 mr-0 rounded-xl">
       <div className="relative">
@@ -31,16 +39,34 @@ const LinkPreview: React.FC<LinkPreviewProps> = ({ loading }) => {
             ) : (
               <div className="w-[96px] aspect-square mb-[1.35rem]"></div>
             )}
-            <h2
-              className={`text-headingS capitalize w-[160px] truncate h-6 text-center  ${
-                userAccount.firstName && "bg-white"
-              } `}
+            <div
+              className={`${
+                userAccountLetterCount > 18
+                  ? "flex-col"
+                  : "bg-white w-[160px] justify-center"
+              } flex`}
             >
-              {userAccount.firstName} {userAccount.lastName}
-            </h2>
-
+              <h2
+                className={`text-headingS capitalize h-6  ${
+                  userAccountLetterCount > 18
+                    ? " w-[160px] truncate bg-white"
+                    : " mr-2"
+                } text-center`}
+              >
+                {userAccount.firstName}
+              </h2>
+              <h2
+                className={`text-headingS capitalize h-6  ${
+                  userAccountLetterCount > 18 && " w-[160px] truncate bg-white"
+                } text-center`}
+              >
+                {userAccount.lastName}
+              </h2>
+            </div>
             <p
-              className={`text-bodyS mb-[50px] w-[160px] truncate text-center h-5 ${
+              className={`text-bodyS  ${
+                userAccountLetterCount > 18 ? "mb-[26px]" : "mb-[50px]"
+              } w-[160px] truncate text-center h-5 ${
                 userAccount.email && "bg-white"
               }`}
             >
