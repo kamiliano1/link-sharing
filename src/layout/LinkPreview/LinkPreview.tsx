@@ -12,13 +12,15 @@ const LinkPreview: React.FC<LinkPreviewProps> = ({ loading }) => {
   return (
     <div className="hidden lg:flex lg:justify-center lg:items-center bg-white w-[560px] h-[809px] m-6 mr-0 rounded-xl">
       <div className="relative">
-        <Image src={PhoneMockup} alt="Phone Mockup" />
+        <Image src={PhoneMockup} loading="eager" alt="Phone Mockup" />
         {loading ? (
           <LinkPreviewSkeleton />
         ) : (
           <div className="absolute top-0 flex flex-col items-center w-full mt-16">
             {userAccount.picture ? (
               <Image
+                loading="eager"
+                priority={true}
                 width={96}
                 height={96}
                 src={userAccount.picture}

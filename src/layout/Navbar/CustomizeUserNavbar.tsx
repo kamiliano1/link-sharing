@@ -19,8 +19,14 @@ const CustomizeUserNavbar: React.FC<CustomizeUserNavbarProps> = ({ user }) => {
         <NavigationMenu.Item className="mr-auto">
           <Link href="/" passHref legacyBehavior>
             <NavigationMenu.Link>
-              <Image src={logoSmall} className="sm:hidden" alt="web logo" />
               <Image
+                src={logoSmall}
+                loading="eager"
+                className="sm:hidden"
+                alt="web logo"
+              />
+              <Image
+                loading="eager"
                 src={logoBig}
                 className="hidden sm:block sm:mt-2"
                 alt="web logo"

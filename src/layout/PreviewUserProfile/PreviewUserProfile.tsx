@@ -62,6 +62,8 @@ const PreviewUserProfile: React.FC<PreviewUserProfileProps> = ({
           <>
             {previewAccount.picture ? (
               <Image
+                loading="eager"
+                priority={true}
                 width={96}
                 height={96}
                 src={previewAccount.picture}
