@@ -22,6 +22,7 @@ const PreviewUserProfile: React.FC<PreviewUserProfileProps> = ({
   const [previewAccount, setPreviewAccount] = useState<UserAccountState>({
     userLink: [],
     isLoaded: false,
+    isAvatarChanged: false,
   });
   const [userAccountLetterCount, setUserAccountLetterCount] =
     useState<number>(0);
@@ -43,6 +44,7 @@ const PreviewUserProfile: React.FC<PreviewUserProfileProps> = ({
               picture: bookmarkData.picture,
               userLink: bookmarkData.userLink,
               isLoaded: true,
+              isAvatarChanged: false,
             });
             getSnippets(userId, setPreviewAccount);
             setIsUserExist(true);

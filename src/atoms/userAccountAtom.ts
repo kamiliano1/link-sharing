@@ -15,6 +15,7 @@ export type UserAccountState = {
   picture?: string;
   userLink: UserLink[];
   isLoaded: boolean;
+  isAvatarChanged: boolean;
 };
 
 const defaultUserAccountState: UserAccountState = {
@@ -24,6 +25,7 @@ const defaultUserAccountState: UserAccountState = {
   picture: "",
   userLink: [],
   isLoaded: false,
+  isAvatarChanged: false,
 };
 
 export const userAccountState = atom<UserAccountState>({

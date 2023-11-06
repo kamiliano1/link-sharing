@@ -1,8 +1,6 @@
-import { firestore, storage } from "@/app/firebase/clientApp";
 import { UserAccountState, userAccountState } from "@/atoms/userAccountAtom";
+import useSaveDataToFirebase from "@/hooks/useSaveDataToFirebase";
 import { User } from "firebase/auth";
-import { doc, updateDoc } from "firebase/firestore";
-import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import React, {
   Dispatch,
   SetStateAction,
@@ -14,6 +12,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { LiaImageSolid } from "react-icons/lia";
 import { useRecoilState } from "recoil";
 import Button from "../Button/Button";
+import { PlatformsType } from "../Select/ActiveLinksType";
+import { linksList } from "../Select/linkList";
 import CustomizeUserAccountSkeleton from "../Skeletons/CustomizeUserAccountSkeleton";
 
 type CustomizeUserAccountProps = {
@@ -27,9 +27,12 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
   loading,
   setIsPopUpOpen,
 }) => {
+  const { updateFirebase } = useSaveDataToFirebase();
   const [isLoading, setIsLoading] = useState(false);
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
-  const [isAvatarChanged, setIsAvatarChanged] = useState<boolean>(false);
+  const [isLinksAreCorrect, setIsLinksAreCorrect] = useState<boolean>(true);
+  const [isFormConfirmed, setIsFormConfirmed] = useState<boolean>(false);
+  const [isChangesSaved, setIsChangesSaved] = useState<boolean>(false);
   const [pictureURL, setPictureURL] = useState<string>(
     userAccount.picture || ""
   );
@@ -39,36 +42,47 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
     setValue,
     reset,
     formState: { errors },
-  } = useForm<UserAccountState>({ defaultValues: { picture: "" } });
+  } = useForm<UserAccountState>({
+    defaultValues: { picture: "" },
+  });
   const selectedFileRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     reset();
   }, [reset, userAccount]);
-  const formSubmit: SubmitHandler<UserAccountState> = async (data) => {
-    setIsLoading(true);
-    try {
-      const userLinkRef = doc(firestore, `users/${user?.uid}`);
-      await updateDoc(userLinkRef, {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-      });
-      if (userAccount.picture) {
-        const imageRef = ref(storage, `avatars/${user?.uid}/image`);
-        await uploadString(imageRef, userAccount.picture, "data_url");
-        const downloadURL = await getDownloadURL(imageRef);
-        if (isAvatarChanged)
-          await updateDoc(userLinkRef, {
-            picture: downloadURL,
-          });
-      }
-    } catch (error: any) {
-      console.log("handleSendingAvatarError", error.message);
-    }
 
-    setIsLoading(false);
-    setIsAvatarChanged(false);
-    setIsPopUpOpen(true);
+  const validatePlatformLink = (value: string, platform: PlatformsType) => {
+    let isValidateLink = false;
+    const activePlatformPattern = linksList.find(
+      (item) => item.name === platform
+    )?.validatePattern;
+    activePlatformPattern?.map((item) => {
+      if (value.startsWith(item)) return (isValidateLink = true);
+    });
+
+    if (isValidateLink) return true;
+    return false;
+  };
+
+  useEffect(() => {
+    setIsLinksAreCorrect(
+      userAccount.userLink.every((item) => {
+        if (!validatePlatformLink(item.link, item.platform)) {
+          return false;
+        }
+        return true;
+      })
+    );
+  }, [userAccount.userLink]);
+  const formSubmit: SubmitHandler<UserAccountState> = async (data) => {
+    setIsFormConfirmed(true);
+    if (!isLinksAreCorrect) return;
+    updateFirebase({
+      data: userAccount,
+      user: user,
+      setIsLoading: setIsLoading,
+      setIsPopUpOpen: setIsPopUpOpen,
+      setIsChangesSaved: setIsChangesSaved,
+    });
   };
   useEffect(() => {
     setPictureURL(userAccount.picture || "");
@@ -88,7 +102,7 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
           picture: readerEvent.target?.result as string,
         }));
       }
-      setIsAvatarChanged(true);
+      setUserAccount((prev) => ({ ...prev, isAvatarChanged: true }));
     };
   };
   const onHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -224,6 +238,11 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
               </div>
             </div>
           </>
+        )}
+        {!isLinksAreCorrect && isFormConfirmed && (
+          <p className="text-red text-bodyS mt-1">
+            Please check the URL on the Links page
+          </p>
         )}
       </div>
       <span className="h-[1px] inline-block bg-borders mx-4 sm:mx-6"></span>

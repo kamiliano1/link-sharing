@@ -1,10 +1,6 @@
-import { firestore } from "@/app/firebase/clientApp";
-import {
-  UserAccountState,
-  UserLink,
-  userAccountState,
-} from "@/atoms/userAccountAtom";
-import useDataFromFirebase from "@/hooks/useDataFromFirebase";
+import { UserAccountState, userAccountState } from "@/atoms/userAccountAtom";
+import useSaveDataToFirebase from "@/hooks/useSaveDataToFirebase";
+import { notUsePlatforms } from "@/utility/notUserPlatforms";
 import {
   DndContext,
   DragEndEvent,
@@ -17,9 +13,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { AiOutlineLink } from "react-icons/ai";
 import { User } from "firebase/auth";
-import { deleteDoc, doc, runTransaction } from "firebase/firestore";
 import { nanoid } from "nanoid";
 import Image from "next/image";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -29,13 +23,13 @@ import {
   useFieldArray,
   useForm,
 } from "react-hook-form";
+import { AiOutlineLink } from "react-icons/ai";
 import { useRecoilState } from "recoil";
 import Button from "../Button/Button";
 import { SelectPlatformInput } from "../Select/SelectPlatformInput";
 import { linksList } from "../Select/linkList";
 import CustomizeUserLinkSkeleton from "../Skeletons/CustomizeUserLinkSkeleton";
 import DraggableLink from "./DraggableLink";
-import { notUsePlatforms } from "@/utility/notUserPlatforms";
 
 type CustomizeUserLinksProps = {
   user: User | null | undefined;
@@ -48,12 +42,11 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
   loading,
   setIsPopUpOpen,
 }) => {
-  const { getMySnippets } = useDataFromFirebase();
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
   const [isChangesSaved, setIsChangesSaved] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLinksLoaded, setIsLinksLoaded] = useState<boolean>(false);
-
+  const { updateFirebase } = useSaveDataToFirebase();
   const [isSaveButtonNotActive, setIsSaveButtonNotActive] =
     useState<boolean>(false);
   const {
@@ -80,27 +73,6 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
       setIsLinksLoaded(true);
     }
   }, [setValue, loading, userAccount.userLink, isLinksLoaded]);
-  const deleteUserSnippets = async (id: string) => {
-    await deleteDoc(doc(firestore, `users/${user?.uid}/userLinks`, id));
-  };
-  const updateSnippet = async (userLink: UserLink) => {
-    const { platform, link, id, order } = userLink;
-    try {
-      await runTransaction(firestore, async (transaction) => {
-        transaction.set(
-          doc(firestore, `users/${user?.uid}/userLinks`, `${id}`),
-          {
-            platform,
-            link,
-            id,
-            order,
-          }
-        );
-      });
-    } catch (error: any) {
-      console.log("handleCreateLink error", error);
-    }
-  };
   useEffect(() => {
     if (!userAccount.userLink.length && isChangesSaved) {
       setIsSaveButtonNotActive(true);
@@ -112,25 +84,13 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
     setIsChangesSaved(false);
   }, [userAccount]);
   const formSubmit: SubmitHandler<UserAccountState> = async (data) => {
-    setIsLoading(true);
-    let orderedUserLink = data.userLink;
-    orderedUserLink = orderedUserLink.map((item, order) => ({
-      ...item,
-      order: order,
-    }));
-    setUserAccount((prev) => ({ ...prev, userLink: orderedUserLink }));
-    orderedUserLink.map((item) => updateSnippet(item));
-
-    const userLink = await getMySnippets(user?.uid!);
-    const snippetsToDelete = userLink.filter((item) => {
-      return data.userLink.find((element) => element.id === item.id)
-        ? false
-        : true;
+    updateFirebase({
+      data: userAccount,
+      user: user,
+      setIsLoading: setIsLoading,
+      setIsPopUpOpen: setIsPopUpOpen,
+      setIsChangesSaved: setIsChangesSaved,
     });
-    snippetsToDelete.map((item) => deleteUserSnippets(item.id));
-    setIsLoading(false);
-    setIsPopUpOpen(true);
-    setIsChangesSaved(true);
   };
   const validatePlatformLink = async (value: string, index: number) => {
     let isValidateLink = false;
@@ -304,7 +264,7 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
                                 />
                                 {errors.userLink?.[index] && (
                                   <>
-                                    <p className="absolute text-red text-bodyXS  top-[-1.5rem] sm:top-4 right-4">
+                                    <p className="absolute text-red text-bodyXS top-[-1.5rem] sm:top-4 right-4">
                                       {errors.userLink?.[index]?.link?.message}
                                     </p>
                                   </>

@@ -34,6 +34,7 @@ const useDataFromFirebase = () => {
             picture: bookmarkData.picture,
             userLink: bookmarkData.userLink,
             isLoaded: true,
+            isAvatarChanged: false,
           });
           getSnippets(user.uid, setUserAccount);
         }
