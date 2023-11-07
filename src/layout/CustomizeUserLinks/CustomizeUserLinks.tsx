@@ -98,7 +98,8 @@ const CustomizeUserLinks: React.FC<CustomizeUserLinksProps> = ({
       (item) => item.name === watch(`userLink.${index}.platform`)
     )?.validatePattern;
     activePlatformPattern?.map((item) => {
-      if (value.startsWith(item)) return (isValidateLink = true);
+      if (value.toLowerCase().startsWith(item.toLowerCase()))
+        return (isValidateLink = true);
     });
 
     if (isValidateLink) return true;

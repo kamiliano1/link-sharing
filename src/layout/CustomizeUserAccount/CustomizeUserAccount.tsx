@@ -31,6 +31,7 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
   const [isLinksAreCorrect, setIsLinksAreCorrect] = useState<boolean>(true);
+  const [uploadImageError, setUploadImageError] = useState<string>("");
   const [isFormConfirmed, setIsFormConfirmed] = useState<boolean>(false);
   const [isChangesSaved, setIsChangesSaved] = useState<boolean>(false);
   const [pictureURL, setPictureURL] = useState<string>(
@@ -56,7 +57,8 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
       (item) => item.name === platform
     )?.validatePattern;
     activePlatformPattern?.map((item) => {
-      if (value.startsWith(item)) return (isValidateLink = true);
+      if (value.toLowerCase().startsWith(item.toLowerCase()))
+        return (isValidateLink = true);
     });
 
     if (isValidateLink) return true;
@@ -88,9 +90,13 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
     setPictureURL(userAccount.picture || "");
   }, [userAccount.picture]);
   const onSelectAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUploadImageError("");
     const reader = new FileReader();
     if (e.target.files?.[0]) {
-      if (e.target.files[0].size / 1024 > 1024) return;
+      if (e.target.files[0].size / 1024 > 1024) {
+        setUploadImageError("Too big image size");
+        return;
+      }
       reader.readAsDataURL(e.target.files[0]);
     }
     reader.onload = (readerEvent) => {
@@ -151,9 +157,16 @@ const CustomizeUserAccount: React.FC<CustomizeUserAccountProps> = ({
                 <LiaImageSolid className="text-[2.5rem] " />
                 <p className="w-[116px]">+ Upload Image</p>
               </div>
-              <p className="text-bodyXS text-grey sm:max-w-[127px] sm:ml-6">
-                Image must be below 1024x1024px. Use PNG or JPG format.
-              </p>
+              <div className="sm:max-w-[127px] sm:ml-6">
+                <p className="text-bodyXS text-grey ">
+                  Image must be below 1024x1024px. Use PNG or JPG format.
+                </p>
+                {uploadImageError && (
+                  <p className="text-red text-bodyXS mt-2">
+                    {uploadImageError}
+                  </p>
+                )}
+              </div>
             </div>
             <div className="p-5 mt-6 sm:flex sm:flex-col sm:gap-3 bg-lightGrey rounded-xl">
               <div className="relative sm:flex sm:items-center">

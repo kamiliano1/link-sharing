@@ -10,6 +10,14 @@ import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import useDataFromFirebase from "./useDataFromFirebase";
 import { useRecoilState } from "recoil";
 
+type UpdateFirebaseType = {
+  data: UserAccountState;
+  user: User | null | undefined;
+  setIsLoading: (value: React.SetStateAction<boolean>) => void;
+  setIsPopUpOpen: (value: React.SetStateAction<boolean>) => void;
+  setIsChangesSaved: (value: React.SetStateAction<boolean>) => void;
+};
+
 const useSaveDataToFirebase = () => {
   const [userAccount, setUserAccount] = useRecoilState(userAccountState);
   const { getMySnippets } = useDataFromFirebase();
@@ -40,14 +48,6 @@ const useSaveDataToFirebase = () => {
     } catch (error: any) {
       console.log("handleCreateLink error", error);
     }
-  };
-
-  type UpdateFirebaseType = {
-    data: UserAccountState;
-    user: User | null | undefined;
-    setIsLoading: (value: React.SetStateAction<boolean>) => void;
-    setIsPopUpOpen: (value: React.SetStateAction<boolean>) => void;
-    setIsChangesSaved: (value: React.SetStateAction<boolean>) => void;
   };
 
   const updateFirebase = async ({

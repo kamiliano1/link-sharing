@@ -18,7 +18,7 @@ This is a solution to the [Link-sharing app challenge on Frontend Mentor](https:
       - [React-loading skeleton](#react-loading-skeleton)
       - [react-icons](#react-icons)
       - [react-spinners](#react-spinners)
-      - [Firebase](#firebase)
+      - [firebase](#firebase)
       - [dnd-kit](#dnd-kit)
       - [Radix-UI](#radix-ui)
     - [Continued development](#continued-development)
@@ -65,7 +65,7 @@ Users should be able to:
 - [React hooks form](https://react-hook-form.com/)
 - [React-loading skeleton](https://www.npmjs.com/package/react-loading-skeleton)
 - [React-firebase-hooks](https://www.npmjs.com/package/react-firebase-hooks)
-- [Firebase](https://firebase.google.com/)
+- [firebase](https://firebase.google.com/)
 - [radix-ui](https://www.radix-ui.com/)
 - [dndKit](https://dndkit.com/)
 
@@ -92,6 +92,7 @@ It keeps all the users' information he provided. It's updating on every user cha
   picture?: string;
   userLink: UserLink[];
   isLoaded: boolean;
+  isAvatarChanged: boolean;
 ```
 
 isLoaded is preventing from loading data from the firebase more than one time.
@@ -106,7 +107,7 @@ type UserLink = {
 };
 ```
 
-order was created to have the correct position on the application and on the firebase. When the user uses drag and drop it also updates the order and the Firebase collection
+Order was created to have the correct position on the application and on the firebase. When the user uses drag and drop it also updates the order and the firebase collection
 
 ```ts
 const snippetQuery = query(
@@ -129,9 +130,9 @@ Instead of the SVG icons I've used react-icons.
 
 Was used to show the loading state on the buttons when the changes are updated to the firebase.
 
-#### Firebase
+#### firebase
 
-Was used to save user details to the Firebase. It keeps all provided by user credentials.
+Was used to save user details to the firebase. It keeps all provided by user credentials.
 Links are stored in the userLinks collection:
 
 ```ts
@@ -143,7 +144,7 @@ type UserLink = {
 };
 ```
 
-Avatars are stored in the Firebase storage in the folder:
+Avatars are stored in the firebase storage in the folder:
 
 ```ts
 `avatars/${userId}/image`;
@@ -169,7 +170,7 @@ To improve accessibility:
 
 ### Useful resources
 
-- [Code a Reddit Clone with React, Next.js, Firebase v9, Chakra UI – Full Course](https://www.youtube.com/watch?v=rCm5RVYKWVg&t) - This course helped me on how to implement Firebase to this project.
+- [Code a Reddit Clone with React, Next.js, firebase v9, Chakra UI – Full Course](https://www.youtube.com/watch?v=rCm5RVYKWVg&t) - This course helped me on how to implement firebase to this project.
 
 ## Author
 
