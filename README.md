@@ -51,6 +51,7 @@ Users should be able to:
 
 - Solution URL: [https://github.com/kamiliano1/link-sharing](https://github.com/kamiliano1/link-sharing)
 - Live Site URL: [https://link-sharing-iota.vercel.app/](https://link-sharing-iota.vercel.app/)
+- My profile: [https://link-sharing-iota.vercel.app/previewProfile/kDiRPl8vM7ZsAgsbmn26EF8azgi1](https://link-sharing-iota.vercel.app/previewProfile/kDiRPl8vM7ZsAgsbmn26EF8azgi1)
 
 ## My process
 
